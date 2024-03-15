@@ -1,39 +1,38 @@
 package sptech.elderly.entity;
 
-//import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
 
-@Getter @Setter @NoArgsConstructor
-//@Entity @Table(name = "users")
-public class Usuario {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
+import java.util.List;
+
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Entity @Table(name = "users")
+public class Usuario{
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-//    @Column(name = "nome")
-    @NotBlank
+    @Column(name = "name", nullable = false)
     private String nome;
 
-//    @Column(name = "email")
-    @NotBlank
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-//    @Column(name = "password")
-    @NotBlank
-    private String password;
+    @Column(name = "password", nullable = false)
+    private String senha;
 
-//    @Column(name = "documento")
-    @NotBlank @CPF
+    @Column(name = "document", nullable = false)
     private String documento;
 
-//    @Column(name = "")
-    @Valid
-    private Especialidade especialidade;
+    @JoinColumn(name = "gender_id") @ManyToOne
+    private Genero generos;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Curriculo> curriculos;
+
+    @OneToMany
+    private Mensagem mensagem;
 }

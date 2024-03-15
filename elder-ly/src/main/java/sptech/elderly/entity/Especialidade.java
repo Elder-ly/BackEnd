@@ -1,8 +1,6 @@
 package sptech.elderly.entity;
 
-//import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,16 +8,16 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
-//@Entity @Table(name = "/especialidades")
+@Entity @Table(name = "specialties")
 public class Especialidade {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-    @NotNull
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-//    @Column(name = "nome")
-    @NotBlank
+    @Column(name = "name")
     private String nome;
+
+    @OneToMany(mappedBy = "especialidade")
+    private List<Curriculo> curriculos;
 }

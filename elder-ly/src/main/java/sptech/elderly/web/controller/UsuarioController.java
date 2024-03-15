@@ -11,10 +11,13 @@ import java.util.List;
 
 @RestController @RequestMapping("/user")
 public class UsuarioController {
+    private Integer proximoId = 1;
     private List<Usuario> users = new ArrayList<>();
 
     @PostMapping
     public ResponseEntity<Usuario> create(@RequestBody @Valid Usuario novoUser){
+
+        novoUser.setId((long) proximoId++);
         users.add(novoUser);
         return ResponseEntity.status(201).body(novoUser);
     }
