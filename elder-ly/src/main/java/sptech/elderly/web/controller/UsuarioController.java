@@ -46,12 +46,6 @@ public class UsuarioController {
             return ResponseEntity.status(204).build();
         }
 
-//        List<UsuarioSimples> lista = users.stream()
-//                              .map(user -> new UsuarioSimples(user))
-//                              .toList();
-
-//      return ResponseEntity.status(200).body(lista);
-
         return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(users));
     }
 
