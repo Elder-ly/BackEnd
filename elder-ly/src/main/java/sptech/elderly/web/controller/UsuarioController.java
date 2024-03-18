@@ -40,14 +40,14 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(users.get(userId));
     }
 
-    @GetMapping("/cliente")
-    public ResponseEntity<List<UsuarioSimples>> getByClient(){
-        if (users.isEmpty()){
-            return ResponseEntity.status(204).build();
-        }
-
-        return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(users));
-    }
+//    @GetMapping("/cliente")
+//    public ResponseEntity<List<UsuarioSimples>> getByClient(){
+//        if (users.isEmpty()){
+//            return ResponseEntity.status(204).build();
+//        }
+//
+//        return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(users));
+//    }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Usuario> update(@PathVariable int userId, @RequestBody Usuario updateuser){

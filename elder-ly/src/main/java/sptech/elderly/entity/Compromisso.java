@@ -9,22 +9,22 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "messages")
-public class Mensagem {
+@Entity @Table(name = "appointments")
+public class Compromisso {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "content")
-    private String conteudo;
+    @Column(name = "description")
+    private String descricao;
 
     @Column(name = "timestamp")
     private LocalDateTime horario;
 
-    @ManyToOne @JoinColumn(name = "destination_id")
-    private Usuario destinatario;
+    @ManyToOne @JoinColumn(name = "caregiver_id")
+    private Usuario funcionario;
 
-    @ManyToOne @JoinColumn(name = "sender_id")
-    private Usuario remetente;
+    @ManyToOne @JoinColumn(name = "client_id")
+    private Usuario cliente;
 }

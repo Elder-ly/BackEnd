@@ -14,6 +14,6 @@ public class Genero {
     @Column(name = "id")
     private Long id;
 
-    @Column
+    @Column(name = "gender")
     private String genero;
 }

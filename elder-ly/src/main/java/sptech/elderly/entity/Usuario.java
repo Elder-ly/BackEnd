@@ -1,12 +1,8 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
+import jakarta.validation.Valid;
+import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "users")
@@ -27,12 +23,9 @@ public class Usuario{
     @Column(name = "document", nullable = false)
     private String documento;
 
-    @JoinColumn(name = "gender_id") @ManyToOne
-    private Genero generos;
+    @ManyToOne @JoinColumn(name = "gender_id")
+    private Genero genero;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Curriculo> curriculos;
-
-    @OneToMany
-    private Mensagem mensagem;
+//    @ManyToOne @JoinColumn(name = "user_type_id")
+//    private TipoUsuario tipoUsuario;
 }
