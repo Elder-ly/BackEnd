@@ -3,7 +3,8 @@ package sptech.elderly.web.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sptech.elderly.entity.Usuario;
+import sptech.elderly.classe.Usuario;
+import sptech.elderly.entity.UsuarioEntity;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class UsuarioSimples {
 
     public static List<UsuarioSimples> toUserCliente(List<Usuario> users){
         return users.stream()
-                .map(user -> new UsuarioSimples(user))
+                .filter(user -> user.getEspecialidade() == null)
+                .map(UsuarioSimples::new)
                 .toList();
     }
 }

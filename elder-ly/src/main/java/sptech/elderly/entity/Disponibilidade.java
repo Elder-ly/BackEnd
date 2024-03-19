@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity @Table(name = "availabilities")
 public class Disponibilidade {
 
@@ -19,9 +19,9 @@ public class Disponibilidade {
     @Column(name = "timestamp")
     private LocalDateTime horario;
 
-    @Column(name = "descrition")
+    @Column(name = "description")
     private String descricao;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private Usuario usuario;
+    private UsuarioEntity usuarioEntity;
 }

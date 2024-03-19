@@ -8,9 +8,9 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity @Table(name = "specialites")
-public class Especialidade {
+public class EspecialidadeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -19,6 +19,6 @@ public class Especialidade {
     @Column(name = "name")
     private String nome;
 
-    @OneToMany(mappedBy = "especialidade")
+    @OneToMany(mappedBy = "especialidadeEntity")
     private List<Curriculo> curriculos;
 }

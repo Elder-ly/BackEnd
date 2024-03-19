@@ -8,9 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity @Table(name = "messages")
-public class Mensagem {
+public class MensagemEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,8 +23,8 @@ public class Mensagem {
     private LocalDateTime horario;
 
     @ManyToOne @JoinColumn(name = "destination_id")
-    private Usuario destinatario;
+    private UsuarioEntity destinatario;
 
     @ManyToOne @JoinColumn(name = "sender_id")
-    private Usuario remetente;
+    private UsuarioEntity remetente;
 }

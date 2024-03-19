@@ -1,72 +1,97 @@
 package sptech.elderly.web.controller;
 
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sptech.elderly.entity.Usuario;
+import org.springframework.web.server.ResponseStatusException;
+import sptech.elderly.classe.Usuario;
+import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.web.dto.UsuarioSimples;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController @RequestMapping("/user")
+@RestController @RequestMapping("api/v1/usuarios")
 public class UsuarioController {
     private Integer proximoId = 1;
-    private List<Usuario> users = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
+
+    private void validarEmail(String email){
+        if (!email.contains("@")){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email deve conter '@'");
+        }
+
+        if (usuarios.stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email))){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
+        }
+    }
+
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody @Valid Usuario novoUser){
+    public ResponseEntity<Usuario> create(@RequestBody Usuario novoUser){
+        validarEmail(novoUser.getEmail());
 
         novoUser.setId((long) proximoId++);
-        users.add(novoUser);
+        usuarios.add(novoUser);
         return ResponseEntity.status(201).body(novoUser);
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> getUsers(){
-        if (users.isEmpty()){
+    public ResponseEntity<List<Usuario>> get(){
+        if (usuarios.isEmpty()){
             return ResponseEntity.status(204).build();
         }
 
-        return ResponseEntity.status(200).body(users);
+        return ResponseEntity.status(200).body(usuarios);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<Usuario> getById(@PathVariable int userId){
-        if (userId < 0 || userId >= users.size()){
+        List<Usuario> encontrados = usuarios.stream()
+                .filter(u -> u.getId().equals(userId))
+                .toList();
+
+        if (encontrados.isEmpty()){
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(users.get(userId));
+        return ResponseEntity.status(200).body(encontrados.get(0));
     }
 
     @GetMapping("/cliente")
     public ResponseEntity<List<UsuarioSimples>> getByClient(){
-        if (users.isEmpty()){
+        if (usuarios.isEmpty()){
             return ResponseEntity.status(204).build();
         }
 
-        return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(users));
+        return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(usuarios));
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Usuario> update(@PathVariable int userId, @RequestBody Usuario updateuser){
-        if (userId < 0 || userId >= users.size()){
-            return ResponseEntity.status(404).build();
+    public ResponseEntity<Usuario> update(@PathVariable long userId, @RequestBody Usuario usuarioAtualizado){
+        validarEmail(usuarioAtualizado.getEmail());
+
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getId().equals(userId)){
+                long idAntigo = usuarios.get(i).getId();
+                usuarios.set(i, usuarioAtualizado);
+                usuarioAtualizado.setId(idAntigo);
+                return ResponseEntity.status(200).body(usuarios.get(i));
+            }
         }
 
-        users.set(userId, updateuser);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(404).build();
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Usuario> delete(@PathVariable int userId){
-        if (userId < 0 || userId >= users.size()){
-            return ResponseEntity.status(404).build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UsuarioEntity> delete(@PathVariable int id){
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getId().equals(id)){
+                usuarios.remove(i);
+                return ResponseEntity.status(204).build();
+            }
         }
 
-        users.remove(userId);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(404).build();
     }
-
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity @Table(name = "resumes")
 public class Curriculo {
 
@@ -14,8 +14,8 @@ public class Curriculo {
     private Long id;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private Usuario usuario;
+    private UsuarioEntity usuarioEntity;
 
     @ManyToOne @JoinColumn(name = "specialtie_id")
-    private Especialidade especialidade;
+    private EspecialidadeEntity especialidadeEntity;
 }
