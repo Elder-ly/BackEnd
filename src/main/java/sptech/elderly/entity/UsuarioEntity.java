@@ -3,6 +3,7 @@ package sptech.elderly.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
@@ -12,20 +13,29 @@ public class UsuarioEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name")
     private String nome;
 
-    @Column(name = "email", nullable = false, unique = true, length = 45)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "password", nullable = false, length = 8)
+    @Column(name = "password")
     private String senha;
 
-    @Column(name = "document", nullable = false, length = 14)
+    @Column(name = "document")
     private String documento;
 
-    @ManyToOne @JoinColumn(name = "gender_id", nullable = false)
+    @ManyToOne @JoinColumn(name = "user_type_id")
+    private TipoUsuario tipoUsuario;
+
+    @ManyToOne @JoinColumn(name = "gender_id")
     private Genero genero;
+
+    @OneToMany
+    private List<Residencia> residencias;
+
+    @OneToMany
+    private List<Curriculo> curriculos;
 
     @Override
     public boolean equals(Object o) {

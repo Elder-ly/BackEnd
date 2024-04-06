@@ -1,7 +1,6 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,12 +9,14 @@ import lombok.Setter;
 @Entity @Table(name = "resumes")
 public class Curriculo {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @ManyToOne @JoinColumn(name = "specialtie_id")
-    private EspecialidadeEntity especialidadeEntity;
+    private Especialidade especialidade;
 }

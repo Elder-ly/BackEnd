@@ -5,26 +5,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
-@Entity @Table(name = "user_types")
-public class TipoUsuario {
+@Entity @Table(name = "messages")
+public class Mensagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String nome;
+    @Column(name = "content")
+    private String conteudo;
+
+    @Column(name = "date_time")
+    private LocalDateTime dataHora;
+
+    @ManyToOne @JoinColumn(name = "recipient_id")
+    private UsuarioEntity destinatario;
+
+    @ManyToOne @JoinColumn(name = "sender_id")
+    private UsuarioEntity remetente;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TipoUsuario that = (TipoUsuario) o;
-        return Objects.equals(id, that.id);
+        Mensagem mensagem = (Mensagem) o;
+        return Objects.equals(id, mensagem.id);
     }
 
     @Override

@@ -8,22 +8,25 @@ import lombok.Setter;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
-@Entity @Table(name = "user_types")
-public class TipoUsuario {
+@Entity @Table(name = "residences")
+public class Residencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String nome;
+    @ManyToOne @JoinColumn(name = "user_id")
+    private UsuarioEntity usuario;
+
+    @ManyToOne @JoinColumn(name = "adressse_id")
+    private Endereco endereco;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TipoUsuario that = (TipoUsuario) o;
+        Residencia that = (Residencia) o;
         return Objects.equals(id, that.id);
     }
 

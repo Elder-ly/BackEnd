@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
-@Entity @Table(name = "user_types")
-public class TipoUsuario {
+@Entity @Table(name = "specialties")
+public class Especialidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +20,14 @@ public class TipoUsuario {
     @Column(name = "name")
     private String nome;
 
+    @OneToMany
+    private List<Curriculo> curriculos;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TipoUsuario that = (TipoUsuario) o;
+        Especialidade that = (Especialidade) o;
         return Objects.equals(id, that.id);
     }
 
