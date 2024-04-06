@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
-@Entity @Table(name = "ratings")
+@Entity @Table(name = "adresses")
 public class Endereco {
 
     @Id
@@ -35,7 +35,7 @@ public class Endereco {
     @Column(name = "uf")
     private String uf;
 
-    @OneToMany
+    @OneToMany(mappedBy = "endereco")
     private List<Residencia> residencias;
 
     @Override

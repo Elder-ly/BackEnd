@@ -20,7 +20,7 @@ public class Especialidade {
     @Column(name = "name")
     private String nome;
 
-    @OneToMany
+    @OneToMany(mappedBy = "especialidade")
     private List<Curriculo> curriculos;
 
     @Override

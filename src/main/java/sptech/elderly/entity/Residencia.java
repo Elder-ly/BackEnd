@@ -19,7 +19,7 @@ public class Residencia {
     @ManyToOne @JoinColumn(name = "user_id")
     private UsuarioEntity usuario;
 
-    @ManyToOne @JoinColumn(name = "adressse_id")
+    @ManyToOne @JoinColumn(name = "adresse_id")
     private Endereco endereco;
 
     @Override

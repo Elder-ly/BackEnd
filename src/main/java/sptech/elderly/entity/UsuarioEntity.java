@@ -31,10 +31,10 @@ public class UsuarioEntity {
     @ManyToOne @JoinColumn(name = "gender_id")
     private Genero genero;
 
-    @OneToMany
+    @OneToMany(mappedBy = "usuario")
     private List<Residencia> residencias;
 
-    @OneToMany
+    @OneToMany(mappedBy = "usuario")
     private List<Curriculo> curriculos;
 
     @Override
