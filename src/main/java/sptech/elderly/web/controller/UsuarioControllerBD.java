@@ -8,12 +8,18 @@ import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
 
 @RequiredArgsConstructor
-@RestController @RequestMapping("api/v1/usuarios")
+@RestController @RequestMapping("/usuarios")
 public class UsuarioControllerBD {
     private final UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<UsuarioEntity> create(@RequestBody UsuarioEntity novoUser){
+    @PostMapping("/create-cliente")
+    public ResponseEntity<UsuarioEntity> criarCliente(@RequestBody UsuarioEntity novoUser){
+        UsuarioEntity user = usuarioService.salvar(novoUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+
+    @PostMapping("/create-funcionario")
+    public ResponseEntity<UsuarioEntity> criarFuncionario(@RequestBody UsuarioEntity novoUser){
         UsuarioEntity user = usuarioService.salvar(novoUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
@@ -23,4 +29,6 @@ public class UsuarioControllerBD {
         UsuarioEntity user = usuarioService.buscarPorId(userId);
         return ResponseEntity.ok(user);
     }
+
+
 }
