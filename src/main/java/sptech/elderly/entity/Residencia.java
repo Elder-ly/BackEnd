@@ -14,7 +14,7 @@ public class Residencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne @JoinColumn(name = "user_id")
     private UsuarioEntity usuario;

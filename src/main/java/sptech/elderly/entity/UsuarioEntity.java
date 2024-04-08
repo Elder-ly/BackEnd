@@ -3,6 +3,7 @@ package sptech.elderly.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
 public class UsuarioEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "name")
     private String nome;
@@ -25,10 +26,10 @@ public class UsuarioEntity {
     @Column(name = "document")
     private String documento;
 
-    @ManyToOne @JoinColumn(name = "user_type_id")
+    @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private TipoUsuario tipoUsuario;
 
-    @ManyToOne @JoinColumn(name = "gender_id")
+    @ManyToOne @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
     @OneToMany(mappedBy = "usuario")
