@@ -1,9 +1,10 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,19 +18,19 @@ public class UsuarioEntity {
     @Column(name = "name")
     private String nome;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String senha;
 
-    @Column(name = "document")
+    @Column(name = "document", unique = true)
     private String documento;
 
     @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private TipoUsuario tipoUsuario;
 
-    @ManyToOne @JoinColumn(name = "gender_id", referencedColumnName = "id")
+    @ManyToOne(optional = true) @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
     @OneToMany(mappedBy = "usuario")

@@ -10,7 +10,9 @@ import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.UsuarioCreateDto;
+import sptech.elderly.validacao.DocumentoCnpj;
+import sptech.elderly.validacao.DocumentoCpf;
+import sptech.elderly.web.dto.usuario.UsuarioCreateDto;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
@@ -27,11 +29,6 @@ public class UsuarioService {
     public void salvar(UsuarioCreateDto novoUser) {
         UsuarioEntity usuario = new UsuarioEntity();
 
-        Genero generoId = generoRepository.findById(novoUser.getGeneroId())
-                .orElseThrow(
-                        () -> new RuntimeException("Genero não encontrado.")
-                );
-
         TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoUser.getTipoUsuarioId())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
@@ -40,9 +37,24 @@ public class UsuarioService {
         usuario.setNome(novoUser.nome());
         usuario.setEmail(novoUser.email());
         usuario.setSenha(novoUser.senha());
-        usuario.setDocumento(novoUser.documento());
-        usuario.setGenero(generoId);
         usuario.setTipoUsuario(tipoUsuarioId);
+
+        if (novoUser.documento().length() == 14){
+            DocumentoCpf.cpf = novoUser.documento();
+            usuario.setDocumento(DocumentoCpf.cpf);
+        } else if (novoUser.documento().length() == 18){
+            DocumentoCnpj.cnpj = novoUser.documento();
+            usuario.setDocumento(DocumentoCnpj.cnpj);
+        }
+
+        if (novoUser.getGeneroId() != null) {
+            Genero generoId = generoRepository.findById(novoUser.getGeneroId())
+                    .orElseThrow(
+                            () -> new RuntimeException("Genero não encontrado.")
+                    );
+
+            usuario.setGenero(generoId);
+        }
 
         usuarioRepository.save(usuario);
     }
