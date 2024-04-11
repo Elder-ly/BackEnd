@@ -2,8 +2,10 @@ package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Genero;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
@@ -13,6 +15,8 @@ import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.validacao.DocumentoCnpj;
 import sptech.elderly.validacao.DocumentoCpf;
 import sptech.elderly.web.dto.usuario.UsuarioCreateDto;
+
+import java.util.List;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
@@ -33,6 +37,7 @@ public class UsuarioService {
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
+
 
         usuario.setNome(novoUser.nome());
         usuario.setEmail(novoUser.email());
@@ -64,5 +69,9 @@ public class UsuarioService {
         return usuarioRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("Usuário não encontrado.")
         );
+    }
+
+    public List<UsuarioEntity> buscarUsuarios() {
+        return usuarioRepository.findAll();
     }
 }

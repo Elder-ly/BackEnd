@@ -6,7 +6,7 @@
 //import org.springframework.web.server.ResponseStatusException;
 //import sptech.elderly.classe.Usuario;
 //import sptech.elderly.entity.UsuarioEntity;
-//import sptech.elderly.web.dto.UsuarioSimples;
+//import sptech.elderly.web.dto.usuario.UsuarioSimples;
 //
 //import java.util.ArrayList;
 //import java.util.List;
