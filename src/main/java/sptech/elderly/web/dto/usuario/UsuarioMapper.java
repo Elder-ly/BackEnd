@@ -1,8 +1,10 @@
 package sptech.elderly.web.dto.usuario;
 
 import sptech.elderly.entity.Genero;
+import sptech.elderly.entity.Residencia;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.web.dto.residencia.CriarResidenciaInput;
 
 public class UsuarioMapper {
 
@@ -28,6 +30,9 @@ public class UsuarioMapper {
         usuario.setDocumento(novoUser.documento());
         usuario.setTipoUsuario(tipoUsuarioId);
         usuario.setGenero(null);
+
+        Residencia residencia = new Residencia();
+        residencia.setUsuario(usuario);
 
         return usuario;
     }

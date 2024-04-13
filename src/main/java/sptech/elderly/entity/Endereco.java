@@ -35,8 +35,8 @@ public class Endereco {
     @Column(name = "uf")
     private String uf;
 
-    @OneToMany(mappedBy = "endereco")
-    private List<Residencia> residencias;
+    @OneToOne(mappedBy = "endereco")
+    private Residencia residencia;
 
     @Override
     public boolean equals(Object o) {

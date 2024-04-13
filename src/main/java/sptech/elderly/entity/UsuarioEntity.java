@@ -33,8 +33,8 @@ public class UsuarioEntity {
     @ManyToOne(optional = true) @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Residencia> residencias;
+    @OneToOne(mappedBy = "usuario")
+    private Residencia residencia;
 
     @OneToMany(mappedBy = "usuario")
     private List<Curriculo> curriculos;

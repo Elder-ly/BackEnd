@@ -21,7 +21,7 @@ public class UsuarioControllerBD {
 
     private final UsuarioService usuarioService;
 
-    @PostMapping()
+    @PostMapping("/cliente")
     public ResponseEntity<CriarUsuarioInput> criarUsuario(@RequestBody @Valid CriarUsuarioInput novoUser){
         this.usuarioService.salvar(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);

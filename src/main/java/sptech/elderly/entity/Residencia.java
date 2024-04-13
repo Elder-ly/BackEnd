@@ -16,10 +16,10 @@ public class Residencia {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne @JoinColumn(name = "user_id")
+    @OneToOne @JoinColumn(name = "user_id")
     private UsuarioEntity usuario;
 
-    @ManyToOne @JoinColumn(name = "adresse_id")
+    @OneToOne @JoinColumn(name = "adresse_id")
     private Endereco endereco;
 
     @Override
