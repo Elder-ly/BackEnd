@@ -2,10 +2,8 @@ package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Genero;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
@@ -14,7 +12,7 @@ import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.validacao.DocumentoCnpj;
 import sptech.elderly.validacao.DocumentoCpf;
-import sptech.elderly.web.dto.usuario.UsuarioCreateDto;
+import sptech.elderly.web.dto.usuario.CreateUsuarioInput;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class UsuarioService {
     @Autowired
     private TipoUsuarioRepository tipoUsuarioRepository;
 
-    public void salvar(UsuarioCreateDto novoUser) {
+    public UsuarioEntity salvar(CreateUsuarioInput novoUser) {
         UsuarioEntity usuario = new UsuarioEntity();
 
         TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoUser.getTipoUsuarioId())
@@ -61,7 +59,7 @@ public class UsuarioService {
             usuario.setGenero(generoId);
         }
 
-        usuarioRepository.save(usuario);
+       return usuarioRepository.save(usuario);
     }
 
     @Transactional(readOnly = true)
@@ -73,5 +71,9 @@ public class UsuarioService {
 
     public List<UsuarioEntity> buscarUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    public UsuarioEntity atualizarUsuario(){
+        ;
     }
 }
