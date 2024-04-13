@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.UsuarioSimples;
-import sptech.elderly.web.dto.usuario.CreateUsuarioInput;
+import sptech.elderly.web.dto.usuario.CriarUsuarioInput;
 
 import java.util.List;
 
@@ -22,13 +22,13 @@ public class UsuarioControllerBD {
     private final UsuarioService usuarioService;
 
     @PostMapping()
-    public ResponseEntity<CreateUsuarioInput> criarUsuario(@RequestBody @Valid CreateUsuarioInput novoUser){
-        usuarioService.salvar(novoUser);
+    public ResponseEntity<CriarUsuarioInput> criarUsuario(@RequestBody @Valid CriarUsuarioInput novoUser){
+        this.usuarioService.salvar(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
 
-    @GetMapping("/buscar-funcionario")
-    public ResponseEntity<List<UsuarioSimples>> buscarUsuarios(){
+    @GetMapping("/buscar-clientes")
+    public ResponseEntity<List<UsuarioSimples>> buscarClientes(){
         var usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
@@ -43,7 +43,7 @@ public class UsuarioControllerBD {
     }
 
     @PatchMapping()
-    public ResponseEntity<UsuarioEntity> atualizarUsuario(@RequestBody ){
-
+    public ResponseEntity<UsuarioEntity> atualizarUsuario(){
+        return null;
     }
 }

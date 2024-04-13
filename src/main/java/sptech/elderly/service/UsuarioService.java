@@ -2,17 +2,18 @@ package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Genero;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.validacao.DocumentoCnpj;
-import sptech.elderly.validacao.DocumentoCpf;
-import sptech.elderly.web.dto.usuario.CreateUsuarioInput;
+import sptech.elderly.web.dto.usuario.CriarUsuarioInput;
+import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.util.List;
 
@@ -28,38 +29,30 @@ public class UsuarioService {
     @Autowired
     private TipoUsuarioRepository tipoUsuarioRepository;
 
-    public UsuarioEntity salvar(CreateUsuarioInput novoUser) {
-        UsuarioEntity usuario = new UsuarioEntity();
+    public UsuarioEntity salvar(CriarUsuarioInput novoUser) {
+        UsuarioEntity novoUsuario;
+
+        if (usuarioRepository.existsByEmail(novoUser.email())) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
+        }
 
         TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoUser.getTipoUsuarioId())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-
-        usuario.setNome(novoUser.nome());
-        usuario.setEmail(novoUser.email());
-        usuario.setSenha(novoUser.senha());
-        usuario.setTipoUsuario(tipoUsuarioId);
-
-        if (novoUser.documento().length() == 14){
-            DocumentoCpf.cpf = novoUser.documento();
-            usuario.setDocumento(DocumentoCpf.cpf);
-        } else if (novoUser.documento().length() == 18){
-            DocumentoCnpj.cnpj = novoUser.documento();
-            usuario.setDocumento(DocumentoCnpj.cnpj);
-        }
-
         if (novoUser.getGeneroId() != null) {
             Genero generoId = generoRepository.findById(novoUser.getGeneroId())
                     .orElseThrow(
-                            () -> new RuntimeException("Genero não encontrado.")
+                            () -> new RuntimeException("Gênero não encontrado.")
                     );
 
-            usuario.setGenero(generoId);
+            novoUsuario = UsuarioMapper.of(novoUser, tipoUsuarioId, generoId);
+        } else {
+            novoUsuario = UsuarioMapper.of(novoUser, tipoUsuarioId);
         }
 
-       return usuarioRepository.save(usuario);
+        return this.usuarioRepository.save(novoUsuario);
     }
 
     @Transactional(readOnly = true)
@@ -71,9 +64,5 @@ public class UsuarioService {
 
     public List<UsuarioEntity> buscarUsuarios() {
         return usuarioRepository.findAll();
-    }
-
-    public UsuarioEntity atualizarUsuario(){
-        ;
     }
 }

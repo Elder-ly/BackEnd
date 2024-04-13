@@ -8,6 +8,6 @@ import java.io.Serializable;
 /**
  * DTO for {@link sptech.elderly.entity.UsuarioEntity}
  */
-public record LoginUsuarioInput(@Email @NotBlank String email,
+public record LogarUsuarioInput(@Email @NotBlank String email,
                                 @NotBlank String senha) implements Serializable {
 }

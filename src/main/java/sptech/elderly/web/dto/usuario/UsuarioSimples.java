@@ -24,7 +24,7 @@ public class UsuarioSimples {
 
     public static List<UsuarioSimples> buscarUsuarios(List<UsuarioEntity> users){
         return users.stream()
-                .filter(usuario -> usuario.getId() == 3)
+                .filter(usuario -> usuario.getTipoUsuario().getId() == 3)
                 .map(UsuarioSimples::new)
                 .toList();
     }
