@@ -33,12 +33,6 @@ public class UsuarioEntity {
     @ManyToOne(optional = true) @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
-    @OneToOne(mappedBy = "usuario")
-    private Residencia residencia;
-
-    @OneToMany(mappedBy = "usuario")
-    private List<Curriculo> curriculos;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

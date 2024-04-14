@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
+import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
+import sptech.elderly.web.dto.usuario.CriarUsuarioEndereco;
 import sptech.elderly.web.dto.usuario.UsuarioSimples;
-import sptech.elderly.web.dto.usuario.CriarUsuarioInput;
+import sptech.elderly.web.dto.usuario.CriarClienteInput;
 
 import java.util.List;
 
@@ -22,8 +24,9 @@ public class UsuarioControllerBD {
     private final UsuarioService usuarioService;
 
     @PostMapping("/cliente")
-    public ResponseEntity<CriarUsuarioInput> criarUsuario(@RequestBody @Valid CriarUsuarioInput novoUser){
-        this.usuarioService.salvar(novoUser);
+    public ResponseEntity<CriarUsuarioEndereco> criarUsuario(@RequestBody @Valid CriarUsuarioEndereco novoUser){
+
+        this.usuarioService.salvarCliente(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
 

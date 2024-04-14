@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor
@@ -34,9 +33,6 @@ public class Endereco {
 
     @Column(name = "uf")
     private String uf;
-
-    @OneToOne(mappedBy = "endereco")
-    private Residencia residencia;
 
     @Override
     public boolean equals(Object o) {
