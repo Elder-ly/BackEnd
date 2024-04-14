@@ -33,6 +33,9 @@ public class UsuarioEntity {
     @ManyToOne(optional = true) @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Curriculo> curriculos;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

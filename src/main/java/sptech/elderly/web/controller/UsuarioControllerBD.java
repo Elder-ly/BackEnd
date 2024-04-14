@@ -7,10 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
-import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
-import sptech.elderly.web.dto.usuario.CriarUsuarioEndereco;
-import sptech.elderly.web.dto.usuario.UsuarioSimples;
-import sptech.elderly.web.dto.usuario.CriarClienteInput;
+import sptech.elderly.web.dto.usuario.CriarCliente;
+import sptech.elderly.web.dto.usuario.CriarFuncionario;
+import sptech.elderly.web.dto.usuario.UsuarioSimplesCliente;
 
 import java.util.List;
 
@@ -24,19 +23,26 @@ public class UsuarioControllerBD {
     private final UsuarioService usuarioService;
 
     @PostMapping("/cliente")
-    public ResponseEntity<CriarUsuarioEndereco> criarUsuario(@RequestBody @Valid CriarUsuarioEndereco novoUser){
+    public ResponseEntity<CriarCliente> criarCliente(@RequestBody @Valid CriarCliente novoUser){
 
         this.usuarioService.salvarCliente(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
 
+    @PostMapping("/funcionario")
+    public ResponseEntity<CriarFuncionario> criarFuncionario(@RequestBody @Valid CriarFuncionario novoUser){
+
+        this.usuarioService.salvarFuncionario(novoUser);
+        return status(HttpStatus.CREATED).body(novoUser);
+    }
+
     @GetMapping("/buscar-clientes")
-    public ResponseEntity<List<UsuarioSimples>> buscarClientes(){
+    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes(){
         var usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
-                : status(200).body(UsuarioSimples.buscarUsuarios(usuarios));
+                : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
     }
 
     @GetMapping("/{codigo}")

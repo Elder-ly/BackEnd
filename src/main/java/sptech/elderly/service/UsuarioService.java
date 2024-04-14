@@ -11,8 +11,10 @@ import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
-import sptech.elderly.web.dto.usuario.CriarClienteInput;
-import sptech.elderly.web.dto.usuario.CriarUsuarioEndereco;
+import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
+import sptech.elderly.web.dto.usuario.CriarFuncionario;
+import sptech.elderly.web.dto.usuario.CriarUsuarioInput;
+import sptech.elderly.web.dto.usuario.CriarCliente;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.util.List;
@@ -35,19 +37,25 @@ public class UsuarioService {
     @Autowired
     private EnderecoService enderecoService;
 
-    public UsuarioEntity salvarCliente(CriarUsuarioEndereco novoUser) {
-        if (usuarioRepository.existsByEmail(novoUser.novoUsuario().email())) {
+    @Autowired
+    private EspecialidadeService especialidadeService;
+
+    @Autowired
+    private CurriculoService curriculoService;
+
+    public UsuarioEntity salvarCliente(CriarCliente novoCliente) {
+        if (usuarioRepository.existsByEmail(novoCliente.novoUsuario().email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoUser.novoUsuario().getTipoUsuarioId())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.novoUsuario().getTipoUsuarioId())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-        Endereco endereco = enderecoService.salvar(novoUser.novoEndereco());
+        Endereco endereco = enderecoService.salvar(novoCliente.novoEndereco());
 
-        UsuarioEntity novoUsuario = UsuarioMapper.ofCliente(novoUser.novoUsuario(), tipoUsuarioId);
+        UsuarioEntity novoUsuario = UsuarioMapper.ofCliente(novoCliente.novoUsuario(), tipoUsuarioId);
         novoUsuario = usuarioRepository.save(novoUsuario);
 
         residenciaService.salvar(novoUsuario, endereco);
@@ -55,29 +63,34 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarFuncionario(CriarClienteInput novoUser, CriarEnderecoInput novoEndereco) {
-        Endereco endereco = enderecoService.salvar(novoEndereco);
-        UsuarioEntity novoUsuario;
-
-        if (usuarioRepository.existsByEmail(novoUser.email())) {
+    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
+        if (usuarioRepository.existsByEmail(novoFuncionario.novoUsuario().email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoUser.getTipoUsuarioId())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().getTipoUsuarioId())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-
-        Genero generoId = generoRepository.findById(novoUser.getGeneroId())
+        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().getGeneroId())
                 .orElseThrow(
                         () -> new RuntimeException("Gênero não encontrado.")
                 );
 
-        novoUsuario = UsuarioMapper.ofFuncionario(novoUser, tipoUsuarioId, generoId);
-        usuarioRepository.save(novoUsuario);
+        Endereco endereco = enderecoService.salvar(novoFuncionario.novoEndereco());
 
-        return this.usuarioRepository.save(novoUsuario);
+        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionario(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
+        novoUsuario = usuarioRepository.save(novoUsuario);
+
+        for (CriarEspecialidadeInput especialidadeInput : novoFuncionario.especialidades()){
+            Especialidade especialidade = especialidadeService.salvar(especialidadeInput);
+            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
+        }
+
+        residenciaService.salvar(novoUsuario, endereco);
+
+        return novoUsuario;
     }
 
     @Transactional(readOnly = true)

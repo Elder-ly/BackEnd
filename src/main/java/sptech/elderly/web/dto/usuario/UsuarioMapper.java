@@ -6,7 +6,7 @@ import sptech.elderly.entity.UsuarioEntity;
 
 public class UsuarioMapper {
 
-    public static UsuarioEntity ofFuncionario(CriarClienteInput novoUser, TipoUsuario tipoUsuarioId, Genero generoId) {
+    public static UsuarioEntity ofFuncionario(CriarUsuarioInput novoUser, TipoUsuario tipoUsuarioId, Genero generoId) {
         UsuarioEntity usuario = new UsuarioEntity();
 
         usuario.setNome(novoUser.nome());
@@ -19,7 +19,7 @@ public class UsuarioMapper {
         return usuario;
     }
 
-    public static UsuarioEntity ofCliente(CriarClienteInput novoUser, TipoUsuario tipoUsuarioId) {
+    public static UsuarioEntity ofCliente(CriarUsuarioInput novoUser, TipoUsuario tipoUsuarioId) {
         UsuarioEntity usuario = new UsuarioEntity();
 
         usuario.setNome(novoUser.nome());
