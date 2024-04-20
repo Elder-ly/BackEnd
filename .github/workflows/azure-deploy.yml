@@ -20,9 +20,9 @@ jobs:
 
       - name: maven build, clean
         env:
-          DB_URL: ${{ secrets.DB_URL}}
-          DB_USER: ${{ secrets.DB_USER}}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           mvn clean package -DskipTests
 
