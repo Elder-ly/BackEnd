@@ -13,13 +13,11 @@ public class UsuarioSimplesCliente {
     private String nome;
     private String email;
     private String documento;
-    private String senha;
 
     public UsuarioSimplesCliente(UsuarioEntity user) {
         this.nome = user.getNome();
         this.email = user.getEmail();
         this.documento = user.getDocumento();
-        this.senha = user.getSenha();
     }
 
     public static List<UsuarioSimplesCliente> buscarUsuarios(List<UsuarioEntity> users){

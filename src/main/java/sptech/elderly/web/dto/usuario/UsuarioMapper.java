@@ -11,7 +11,6 @@ public class UsuarioMapper {
 
         usuario.setNome(novoUser.nome());
         usuario.setEmail(novoUser.email());
-        usuario.setSenha(novoUser.senha());
         usuario.setDocumento(novoUser.documento());
         usuario.setTipoUsuario(tipoUsuarioId);
         usuario.setGenero(generoId);
@@ -24,7 +23,6 @@ public class UsuarioMapper {
 
         usuario.setNome(novoUser.nome());
         usuario.setEmail(novoUser.email());
-        usuario.setSenha(novoUser.senha());
         usuario.setDocumento(novoUser.documento());
         usuario.setTipoUsuario(tipoUsuarioId);
         usuario.setGenero(null);

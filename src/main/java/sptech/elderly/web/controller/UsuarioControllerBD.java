@@ -12,6 +12,7 @@ import sptech.elderly.web.dto.usuario.CriarFuncionario;
 import sptech.elderly.web.dto.usuario.UsuarioSimplesCliente;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
@@ -48,6 +49,12 @@ public class UsuarioControllerBD {
     @GetMapping("/{codigo}")
     public ResponseEntity<UsuarioEntity> buscarIdUsuario(@PathVariable Integer codigo){
         UsuarioEntity user = usuarioService.buscarPorId(codigo);
+        return ok(user);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email){
+        UsuarioEntity user = usuarioService.buscarPorEmail(email);
         return ok(user);
     }
 

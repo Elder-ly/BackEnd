@@ -10,14 +10,13 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.usuario.CriarFuncionario;
-import sptech.elderly.web.dto.usuario.CriarUsuarioInput;
 import sptech.elderly.web.dto.usuario.CriarCliente;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
@@ -48,7 +47,7 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.novoUsuario().getTipoUsuarioId())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.novoUsuario().tipoUsuario())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
@@ -68,12 +67,12 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().getTipoUsuarioId())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().tipoUsuario())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().getGeneroId())
+        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().tipoGenero())
                 .orElseThrow(
                         () -> new RuntimeException("Gênero não encontrado.")
                 );
@@ -96,11 +95,18 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public UsuarioEntity buscarPorId(Integer userId) {
         return usuarioRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado.")
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
         );
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioEntity buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
+        );
     }
 }

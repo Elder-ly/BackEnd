@@ -12,8 +12,7 @@ import java.io.Serializable;
 
 public record CriarUsuarioInput(@NotBlank String nome,
                                 @Email @NotBlank String email,
-                                @NotBlank @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()-+=])[A-Za-z\\d!@#$%^&*()-+=]{8}$") String senha,
                                 @NotBlank String documento,
-                                Integer getGeneroId,
-                                Integer getTipoUsuarioId) implements Serializable {
+                                Integer tipoGenero,
+                                Integer tipoUsuario) implements Serializable {
 }

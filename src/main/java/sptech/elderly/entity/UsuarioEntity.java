@@ -21,9 +21,6 @@ public class UsuarioEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password")
-    private String senha;
-
     @Column(name = "document", unique = true)
     private String documento;
 
