@@ -1,7 +1,6 @@
 package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,37 +9,32 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.usuario.CriarFuncionario;
 import sptech.elderly.web.dto.usuario.CriarCliente;
+import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private GeneroRepository generoRepository;
+    private final GeneroRepository generoRepository;
 
-    @Autowired
-    private TipoUsuarioRepository tipoUsuarioRepository;
+    private final TipoUsuarioRepository tipoUsuarioRepository;
 
-    @Autowired
-    private ResidenciaService residenciaService;
+    private final ResidenciaService residenciaService;
 
-    @Autowired
-    private EnderecoService enderecoService;
+    private final EnderecoService enderecoService;
 
-    @Autowired
-    private EspecialidadeService especialidadeService;
+    private final EspecialidadeService especialidadeService;
 
-    @Autowired
-    private CurriculoService curriculoService;
+    private final CurriculoService curriculoService;
 
     public UsuarioEntity salvarCliente(CriarCliente novoCliente) {
         if (usuarioRepository.existsByEmail(novoCliente.novoUsuario().email())) {
@@ -54,7 +48,7 @@ public class UsuarioService {
 
         Endereco endereco = enderecoService.salvar(novoCliente.novoEndereco());
 
-        UsuarioEntity novoUsuario = UsuarioMapper.ofCliente(novoCliente.novoUsuario(), tipoUsuarioId);
+        UsuarioEntity novoUsuario = UsuarioMapper.ofClienteEntity(novoCliente.novoUsuario(), tipoUsuarioId);
         novoUsuario = usuarioRepository.save(novoUsuario);
 
         residenciaService.salvar(novoUsuario, endereco);
@@ -69,38 +63,46 @@ public class UsuarioService {
 
         TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().tipoUsuario())
                 .orElseThrow(
-                        () -> new RuntimeException("Tipo usuário não encontrado.")
+                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
                 );
 
         Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().tipoGenero())
                 .orElseThrow(
-                        () -> new RuntimeException("Gênero não encontrado.")
+                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
                 );
 
         Endereco endereco = enderecoService.salvar(novoFuncionario.novoEndereco());
 
-        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionario(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
+        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionarioEntity(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
         novoUsuario = usuarioRepository.save(novoUsuario);
 
-        for (CriarEspecialidadeInput especialidadeInput : novoFuncionario.especialidades()){
-            Especialidade especialidade = especialidadeService.salvar(especialidadeInput);
+        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
+        for (Especialidade especialidade : especialidades) {
             curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
         }
 
         residenciaService.salvar(novoUsuario, endereco);
-
         return novoUsuario;
     }
 
     @Transactional(readOnly = true)
-    public UsuarioEntity buscarPorId(Integer userId) {
-        return usuarioRepository.findById(userId).orElseThrow(
+    public UsuarioConsultaDto buscarPorId(Integer userId) {
+        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
         );
+
+        return UsuarioMapper.toDto(usuario);
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
-        return usuarioRepository.findAll();
+        // Buscar todos os usuários
+        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
+
+        // Usar um HashSet para remover duplicações
+        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
+
+        // Converter o Set de volta para uma lista e retornar
+        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

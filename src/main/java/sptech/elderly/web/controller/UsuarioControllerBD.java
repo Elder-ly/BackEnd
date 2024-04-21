@@ -7,12 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
-import sptech.elderly.web.dto.usuario.CriarCliente;
-import sptech.elderly.web.dto.usuario.CriarFuncionario;
-import sptech.elderly.web.dto.usuario.UsuarioSimplesCliente;
+import sptech.elderly.web.dto.usuario.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
@@ -38,7 +35,7 @@ public class UsuarioControllerBD {
     }
 
     @GetMapping("/buscar-clientes")
-    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes(){
+    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
         var usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
@@ -46,10 +43,20 @@ public class UsuarioControllerBD {
                 : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
     }
 
+    @GetMapping
+    public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
+        var usuarios = usuarioService.buscarUsuarios();
+
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioMapper.toDto(usuarios));
+    }
+
     @GetMapping("/{codigo}")
-    public ResponseEntity<UsuarioEntity> buscarIdUsuario(@PathVariable Integer codigo){
-        UsuarioEntity user = usuarioService.buscarPorId(codigo);
-        return ok(user);
+    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
+        var usuario = usuarioService.buscarPorId(codigo);
+
+        return ok(usuario);
     }
 
     @GetMapping("/email/{email}")
