@@ -59,4 +59,3 @@ jobs:
           app-name: 'elderly-backend-dev'
           slot-name: 'Production'
           package: '*.jar'
-          
