@@ -56,34 +56,34 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
-        if (usuarioRepository.existsByEmail(novoFuncionario.novoUsuario().email())) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
-        }
-
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().tipoUsuario())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
-                );
-
-        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().tipoGenero())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
-                );
-
-        Endereco endereco = enderecoService.salvar(novoFuncionario.novoEndereco());
-
-        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionarioEntity(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
-        novoUsuario = usuarioRepository.save(novoUsuario);
-
-        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
-        for (Especialidade especialidade : especialidades) {
-            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
-        }
-
-        residenciaService.salvar(novoUsuario, endereco);
-        return novoUsuario;
-    }
+//    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
+//        if (usuarioRepository.existsByEmail(novoFuncionario.novoUsuario().email())) {
+//            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
+//        }
+//
+//        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().tipoUsuario())
+//                .orElseThrow(
+//                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
+//                );
+//
+//        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().tipoGenero())
+//                .orElseThrow(
+//                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
+//                );
+//
+//        Endereco endereco = enderecoService.salvar(novoFuncionario.novoEndereco());
+//
+//        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionarioEntity(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
+//        novoUsuario = usuarioRepository.save(novoUsuario);
+//
+//        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
+//        for (Especialidade especialidade : especialidades) {
+//            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
+//        }
+//
+//        residenciaService.salvar(novoUsuario, endereco);
+//        return novoUsuario;
+//    }
 
     @Transactional(readOnly = true)
     public UsuarioConsultaDto buscarPorId(Integer userId) {

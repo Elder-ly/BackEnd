@@ -30,7 +30,7 @@ public class UsuarioControllerBD {
     @PostMapping("/funcionario")
     public ResponseEntity<CriarFuncionario> criarFuncionario(@RequestBody @Valid CriarFuncionario novoUser){
 
-        this.usuarioService.salvarFuncionario(novoUser);
+//        this.usuarioService.salvarFuncionario(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
 
