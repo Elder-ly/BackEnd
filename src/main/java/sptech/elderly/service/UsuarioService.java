@@ -5,41 +5,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sptech.elderly.entity.Endereco;
-import sptech.elderly.entity.TipoUsuario;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
+import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.usuario.CriarCliente;
+import sptech.elderly.web.dto.usuario.CriarFuncionario;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
-@Service
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service @RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private  UsuarioMapper usuarioMapper;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private GeneroRepository generoRepository;
+    private final  UsuarioMapper usuarioMapper;
 
-    @Autowired
-    private TipoUsuarioRepository tipoUsuarioRepository;
+    private final GeneroRepository generoRepository;
 
-    @Autowired
-    private ResidenciaService residenciaService;
+    private final TipoUsuarioRepository tipoUsuarioRepository;
 
-    @Autowired
-    private EnderecoService enderecoService;
+    private final ResidenciaService residenciaService;
 
-//    @Autowired
-//    private EspecialidadeService especialidadeService;
+    private final EnderecoService enderecoService;
 
-    @Autowired
-    private CurriculoService curriculoService;
+    private final EspecialidadeService especialidadeService;
+
+    private final CurriculoService curriculoService;
 
     public UsuarioEntity salvarCliente(CriarCliente novoCliente) {
         if (usuarioRepository.existsByEmail(novoCliente.email())) {
@@ -51,7 +47,7 @@ public class UsuarioService {
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-        Endereco endereco = enderecoService.salvar(novoCliente.criarEnderecoInput());
+        Endereco endereco = enderecoService.salvar(novoCliente.endereco());
 
         UsuarioEntity novoUsuario = usuarioMapper.criarCliente(novoCliente, tipoUsuarioId);
         novoUsuario = usuarioRepository.save(novoUsuario);
@@ -61,34 +57,35 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-//    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
-//        if (usuarioRepository.existsByEmail(novoFuncionario.novoUsuario().email())) {
-//            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
-//        }
-//
-//        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.novoUsuario().tipoUsuario())
-//                .orElseThrow(
-//                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
-//                );
-//
-//        Genero generoId = generoRepository.findById(novoFuncionario.novoUsuario().tipoGenero())
-//                .orElseThrow(
-//                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
-//                );
-//
-//        Endereco endereco = enderecoService.salvar(novoFuncionario.novoEndereco());
-//
-//        UsuarioEntity novoUsuario = UsuarioMapper.ofFuncionarioEntity(novoFuncionario.novoUsuario(), tipoUsuarioId, generoId);
-//        novoUsuario = usuarioRepository.save(novoUsuario);
-//
-//        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
-//        for (Especialidade especialidade : especialidades) {
-//            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
-//        }
-//
-//        residenciaService.salvar(novoUsuario, endereco);
-//        return novoUsuario;
-//    }
+    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
+        if (usuarioRepository.existsByEmail(novoFuncionario.email())) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
+        }
+
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.tipoUsuario())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
+                );
+
+        Genero generoId = generoRepository.findById(novoFuncionario.genero())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
+                );
+
+        Endereco endereco = enderecoService.salvar(novoFuncionario.endereco());
+
+        UsuarioEntity novoUsuario = usuarioMapper.criarFuncionario(novoFuncionario, tipoUsuarioId, generoId);
+        novoUsuario = usuarioRepository.save(novoUsuario);
+
+        List<Especialidade> especialidades = especialidadeService.salvar(especialidadesNomes);
+
+        for (Especialidade especialidade : especialidades) {
+            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
+        }
+
+        residenciaService.salvar(novoUsuario, endereco);
+        return novoUsuario;
+    }
 
 //    @Transactional(readOnly = true)
 //    public UsuarioConsultaDto buscarPorId(Integer userId) {

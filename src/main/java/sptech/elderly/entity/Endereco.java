@@ -23,8 +23,11 @@ public class Endereco {
     @Column(name = "public_place")
     private String logradouro;
 
+    @Column(name = "neighborhood")
+    private String bairro;
+
     @Column(name = "number")
-    private String numeroCasa;
+    private String numero;
 
     @Column(name = "complement")
     private String complemento;

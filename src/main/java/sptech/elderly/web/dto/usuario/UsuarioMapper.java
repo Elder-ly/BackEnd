@@ -1,23 +1,14 @@
 package sptech.elderly.web.dto.usuario;
 
 import org.mapstruct.Mapper;
+import sptech.elderly.entity.Genero;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
-//    public static UsuarioEntity ofFuncionarioEntity(CriarUsuarioInput novoUser, TipoUsuario tipoUsuarioId, Genero generoId) {
-//        UsuarioEntity usuario = new UsuarioEntity();
-//
-//        usuario.setNome(novoUser.nome());
-//        usuario.setEmail(novoUser.email());
-//        usuario.setDocumento(novoUser.documento());
-//        usuario.setTipoUsuario(tipoUsuarioId);
-//        usuario.setGenero(generoId);
-//
-//        return usuario;
-//    }
+    public UsuarioEntity criarFuncionario(CriarFuncionario novoUser, TipoUsuario tipoUsuarioId, Genero generoId);
 
     public UsuarioEntity criarCliente(CriarCliente novoUser, TipoUsuario tipoUsuarioId);
 

@@ -7,8 +7,8 @@ import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 public record CriarCliente(@NotBlank String nome,
                            @Email @NotBlank String email,
                            @NotBlank String documento,
-                           Integer tipoGenero,
+                           Integer genero,
                            Integer tipoUsuario,
-                           CriarEnderecoInput  criarEnderecoInput) {
+                           CriarEnderecoInput endereco) {
 
 }

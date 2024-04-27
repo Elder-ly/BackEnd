@@ -1,14 +1,14 @@
-//package sptech.elderly.web.dto.especialidade;
-//
-//import sptech.elderly.entity.Especialidade;
-//
-//import java.util.List;
-//
-//public class EspecialidadeMapper {
-//
-//    public static Especialidade ofEspecialidade(CriarEspecialidadeInput especialidadeInput){
-//        Especialidade especialidade = new Especialidade();
-//        especialidade.setNome(especialidadeInput.nome());
-//        return especialidade;
-//    }
-//}
+package sptech.elderly.web.dto.especialidade;
+
+import org.mapstruct.Mapper;
+import sptech.elderly.entity.Especialidade;
+
+import java.util.List;
+
+@Mapper(componentModel = "spring")
+public interface EspecialidadeMapper {
+
+    Especialidade map(String nome);
+
+    public List<Especialidade> criarEspecialidade(List<String> especialidades);
+}

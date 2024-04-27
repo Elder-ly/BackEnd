@@ -15,11 +15,11 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
+@RequiredArgsConstructor
 @RestController @RequestMapping("/usuarios")
 public class UsuarioControllerBD {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @PostMapping("/cliente")
     public ResponseEntity<CriarCliente> criarCliente(@RequestBody @Valid CriarCliente novoUser){
@@ -28,13 +28,13 @@ public class UsuarioControllerBD {
         return status(HttpStatus.CREATED).body(novoUser);
     }
 
-//    @PostMapping("/funcionario")
-//    public ResponseEntity<CriarFuncionario> criarFuncionario(@RequestBody @Valid CriarFuncionario novoUser){
-//
-////        this.usuarioService.salvarFuncionario(novoUser);
-//        return status(HttpStatus.CREATED).body(novoUser);
-//    }
-//
+    @PostMapping("/funcionario")
+    public ResponseEntity<CriarFuncionario> criarFuncionario(@RequestBody @Valid CriarFuncionario novoUser){
+
+        this.usuarioService.salvarFuncionario(novoUser);
+        return status(HttpStatus.CREATED).body(novoUser);
+    }
+
 //    @GetMapping("/buscar-clientes")
 //    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
 //        var usuarios = usuarioService.buscarUsuarios();
@@ -43,7 +43,7 @@ public class UsuarioControllerBD {
 //                ? status(204).build()
 //                : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
 //    }
-//
+
 //    @GetMapping
 //    public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
 //        var usuarios = usuarioService.buscarUsuarios();
