@@ -1,13 +1,14 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "user_types")
 public class TipoUsuario {
 
@@ -18,17 +19,4 @@ public class TipoUsuario {
 
     @Column(name = "name")
     private String nome;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TipoUsuario that = (TipoUsuario) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

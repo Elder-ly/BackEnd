@@ -1,15 +1,14 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "users")
 public class UsuarioEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

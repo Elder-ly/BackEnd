@@ -1,6 +1,7 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "messages")
 public class Mensagem {
 
@@ -28,17 +29,4 @@ public class Mensagem {
 
     @ManyToOne @JoinColumn(name = "sender_id")
     private UsuarioEntity remetente;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Mensagem mensagem = (Mensagem) o;
-        return Objects.equals(id, mensagem.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

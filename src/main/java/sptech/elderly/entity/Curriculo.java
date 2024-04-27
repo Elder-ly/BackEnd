@@ -1,11 +1,12 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "resumes")
 public class Curriculo {
 

@@ -1,6 +1,7 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "proposals")
 public class Proposta {
 
@@ -38,17 +39,4 @@ public class Proposta {
 
     @ManyToOne @JoinColumn(name = "sender_id")
     private UsuarioEntity remetente;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Proposta mensagem = (Proposta) o;
-        return Objects.equals(id, mensagem.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
