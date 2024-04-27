@@ -1,13 +1,13 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.Objects;
-
-@Getter @Setter @NoArgsConstructor
+@Getter
+@NoArgsConstructor
+@EqualsAndHashCode
 @Entity @Table(name = "residences")
 public class Residencia {
 
@@ -22,16 +22,11 @@ public class Residencia {
     @ManyToOne @JoinColumn(name = "adresse_id")
     private Endereco endereco;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Residencia that = (Residencia) o;
-        return Objects.equals(id, that.id);
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 }

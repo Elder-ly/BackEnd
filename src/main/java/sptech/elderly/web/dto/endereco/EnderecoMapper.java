@@ -1,19 +1,10 @@
 package sptech.elderly.web.dto.endereco;
 
+import org.mapstruct.Mapper;
 import sptech.elderly.entity.Endereco;
 
-public class EnderecoMapper {
+@Mapper(componentModel = "spring")
+public interface EnderecoMapper {
 
-    public static Endereco ofEndereco(CriarEnderecoInput novoEndereco){
-        Endereco endereco = new Endereco();
-
-        endereco.setCep(novoEndereco.cep());
-        endereco.setLogradouro(novoEndereco.logradouro());
-        endereco.setNumeroCasa(novoEndereco.numeroCasa());
-        endereco.setComplemento(novoEndereco.complemento());
-        endereco.setCidade(novoEndereco.cidade());
-        endereco.setUf(novoEndereco.uf());
-
-        return endereco;
-    }
+    public Endereco ofEndereco(CriarEnderecoInput novoEndereco);
 }

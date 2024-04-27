@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity @Table(name = "users")
 public class UsuarioEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,22 +28,9 @@ public class UsuarioEntity {
     @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private TipoUsuario tipoUsuario;
 
-    @ManyToOne(optional = true) @JoinColumn(name = "gender_id", referencedColumnName = "id")
+    @ManyToOne @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Curriculo> curriculos;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsuarioEntity usuarioEntity = (UsuarioEntity) o;
-        return Objects.equals(id, usuarioEntity.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

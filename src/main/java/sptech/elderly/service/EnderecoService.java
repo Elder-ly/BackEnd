@@ -8,14 +8,16 @@ import sptech.elderly.repository.EnderecoRepository;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 
-@Service @RequiredArgsConstructor
+@Service
 public class EnderecoService {
 
     @Autowired
     private EnderecoRepository enderecoRepository;
 
+    @Autowired
+    private EnderecoMapper enderecoMapper;
+
     public Endereco salvar(CriarEnderecoInput novoEndereco) {
-        Endereco endereco = EnderecoMapper.ofEndereco(novoEndereco);
-        return this.enderecoRepository.save(endereco);
+        return this.enderecoRepository.save(enderecoMapper.ofEndereco(novoEndereco));
     }
 }

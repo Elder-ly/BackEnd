@@ -11,14 +11,14 @@ import sptech.elderly.repository.CurriculoRepository;
 @Service @RequiredArgsConstructor
 public class CurriculoService {
 
-    @Autowired
-    private CurriculoRepository curriculoRepository;
-    public void associarEspecialidadeUsuario(UsuarioEntity novoUsuario, Especialidade especialidade) {
-        Curriculo curriculo = new Curriculo();
-
-        curriculo.setUsuario(novoUsuario);
-        curriculo.setEspecialidade(especialidade);
-
-        curriculoRepository.save(curriculo);
-    }
+//    @Autowired
+//    private CurriculoRepository curriculoRepository;
+//    public void associarEspecialidadeUsuario(UsuarioEntity novoUsuario, Especialidade especialidade) {
+//        Curriculo curriculo = new Curriculo();
+//
+//        curriculo.setUsuario(novoUsuario);
+//        curriculo.setEspecialidade(especialidade);
+//
+//        curriculoRepository.save(curriculo);
+//    }
 }

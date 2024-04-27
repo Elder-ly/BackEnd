@@ -1,54 +1,59 @@
 package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import sptech.elderly.entity.*;
+import sptech.elderly.entity.Endereco;
+import sptech.elderly.entity.TipoUsuario;
+import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.usuario.CriarFuncionario;
 import sptech.elderly.web.dto.usuario.CriarCliente;
-import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-@Service @RequiredArgsConstructor
+@Service
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    private final GeneroRepository generoRepository;
+    @Autowired
+    private  UsuarioMapper usuarioMapper;
 
-    private final TipoUsuarioRepository tipoUsuarioRepository;
+    @Autowired
+    private GeneroRepository generoRepository;
 
-    private final ResidenciaService residenciaService;
+    @Autowired
+    private TipoUsuarioRepository tipoUsuarioRepository;
 
-    private final EnderecoService enderecoService;
+    @Autowired
+    private ResidenciaService residenciaService;
 
-    private final EspecialidadeService especialidadeService;
+    @Autowired
+    private EnderecoService enderecoService;
 
-    private final CurriculoService curriculoService;
+//    @Autowired
+//    private EspecialidadeService especialidadeService;
+
+    @Autowired
+    private CurriculoService curriculoService;
 
     public UsuarioEntity salvarCliente(CriarCliente novoCliente) {
-        if (usuarioRepository.existsByEmail(novoCliente.novoUsuario().email())) {
+        if (usuarioRepository.existsByEmail(novoCliente.email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.novoUsuario().tipoUsuario())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.tipoUsuario())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-        Endereco endereco = enderecoService.salvar(novoCliente.novoEndereco());
+        Endereco endereco = enderecoService.salvar(novoCliente.criarEnderecoInput());
 
-        UsuarioEntity novoUsuario = UsuarioMapper.ofClienteEntity(novoCliente.novoUsuario(), tipoUsuarioId);
+        UsuarioEntity novoUsuario = usuarioMapper.criarCliente(novoCliente, tipoUsuarioId);
         novoUsuario = usuarioRepository.save(novoUsuario);
 
         residenciaService.salvar(novoUsuario, endereco);
@@ -85,30 +90,30 @@ public class UsuarioService {
 //        return novoUsuario;
 //    }
 
-    @Transactional(readOnly = true)
-    public UsuarioConsultaDto buscarPorId(Integer userId) {
-        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
-        );
-
-        return UsuarioMapper.toDto(usuario);
-    }
-
-    public List<UsuarioEntity> buscarUsuarios() {
-        // Buscar todos os usuários
-        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
-
-        // Usar um HashSet para remover duplicações
-        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
-
-        // Converter o Set de volta para uma lista e retornar
-        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public UsuarioEntity buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
-        );
-    }
+//    @Transactional(readOnly = true)
+//    public UsuarioConsultaDto buscarPorId(Integer userId) {
+//        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
+//        );
+//
+//        return UsuarioMapper.toDto(usuario);
+//    }
+//
+//    public List<UsuarioEntity> buscarUsuarios() {
+//        // Buscar todos os usuários
+//        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
+//
+//        // Usar um HashSet para remover duplicações
+//        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
+//
+//        // Converter o Set de volta para uma lista e retornar
+//        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public UsuarioEntity buscarPorEmail(String email) {
+//        return usuarioRepository.findByEmail(email).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
+//        );
+//    }
 }
