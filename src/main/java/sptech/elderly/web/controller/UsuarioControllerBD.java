@@ -74,7 +74,7 @@ public class UsuarioControllerBD {
 
         return usuarios.isEmpty()
                 ? status(204).build()
-                : status(200).body(UsuarioMapperClass.toDto(usuarios));w
+                : status(200).body(UsuarioMapperClass.toDto(usuarios));
     }
 
     @GetMapping("/{codigo}")
