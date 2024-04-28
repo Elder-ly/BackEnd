@@ -6,11 +6,13 @@ import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
 
 @Mapper(componentModel = "spring")
-public interface UsuarioMapper {
+public interface ClienteMapper {
 
-    public UsuarioEntity criarFuncionario(CriarFuncionario novoUser, TipoUsuario tipoUsuarioId, Genero generoId);
+    public UsuarioEntity criarCliente(CriarCliente novoUser);
 
-    public UsuarioEntity criarCliente(CriarCliente novoUser, TipoUsuario tipoUsuarioId);
+    public TipoUsuario mapTipoUsuario(Integer tipoUsuario);
+
+    public Genero mapGenero(Integer genero);
 
 //    public static UsuarioConsultaDto toDto(UsuarioEntity usuario){
 //        UsuarioConsultaDto usuarioConsultaDto = new UsuarioConsultaDto();
@@ -25,11 +27,11 @@ public interface UsuarioMapper {
 //
 //        return usuarioConsultaDto;
 //    }
-//
+
 //    public static List<UsuarioConsultaDto> toDto(List<UsuarioEntity> usuarios){
 //         List<UsuarioConsultaDto> usuarioConsultaDtos = usuarios
 //                .stream()
-//                .map(UsuarioMapper:: toDto)
+//                .map(FuncionarioMapper:: toDto)
 //                .collect(Collectors.toList());
 //
 //        return usuarioConsultaDtos;

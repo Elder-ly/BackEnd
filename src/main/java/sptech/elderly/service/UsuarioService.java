@@ -1,7 +1,6 @@
 package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,13 +8,12 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
+import sptech.elderly.web.dto.usuario.ClienteMapper;
 import sptech.elderly.web.dto.usuario.CriarCliente;
 import sptech.elderly.web.dto.usuario.CriarFuncionario;
-import sptech.elderly.web.dto.usuario.UsuarioMapper;
+import sptech.elderly.web.dto.usuario.FuncionarioMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
@@ -23,7 +21,9 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    private final  UsuarioMapper usuarioMapper;
+    private final FuncionarioMapper funcionarioMapper;
+
+    private final ClienteMapper clienteMapper;
 
     private final GeneroRepository generoRepository;
 
@@ -49,7 +49,9 @@ public class UsuarioService {
 
         Endereco endereco = enderecoService.salvar(novoCliente.endereco());
 
-        UsuarioEntity novoUsuario = usuarioMapper.criarCliente(novoCliente, tipoUsuarioId);
+        UsuarioEntity novoUsuario = clienteMapper.criarCliente(novoCliente);
+        novoUsuario.setTipoUsuario(tipoUsuarioId);
+
         novoUsuario = usuarioRepository.save(novoUsuario);
 
         residenciaService.salvar(novoUsuario, endereco);
@@ -74,10 +76,14 @@ public class UsuarioService {
 
         Endereco endereco = enderecoService.salvar(novoFuncionario.endereco());
 
-        UsuarioEntity novoUsuario = usuarioMapper.criarFuncionario(novoFuncionario, tipoUsuarioId, generoId);
+        UsuarioEntity novoUsuario = funcionarioMapper.criarFuncionario(novoFuncionario);
+        novoUsuario.setTipoUsuario(tipoUsuarioId);
+        novoUsuario.setGenero(generoId);
+
+
         novoUsuario = usuarioRepository.save(novoUsuario);
 
-        List<Especialidade> especialidades = especialidadeService.salvar(especialidadesNomes);
+        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
 
         for (Especialidade especialidade : especialidades) {
             curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
@@ -93,7 +99,7 @@ public class UsuarioService {
 //                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
 //        );
 //
-//        return UsuarioMapper.toDto(usuario);
+//        return FuncionarioMapper.toDto(usuario);
 //    }
 //
 //    public List<UsuarioEntity> buscarUsuarios() {

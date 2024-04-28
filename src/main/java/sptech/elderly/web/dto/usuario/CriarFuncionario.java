@@ -9,9 +9,9 @@ import java.util.List;
 public record CriarFuncionario(@NotBlank String nome,
                                @Email @NotBlank String email,
                                @NotBlank String documento,
-                               Integer genero,
                                Integer tipoUsuario,
-                               CriarEnderecoInput  criarEnderecoInput,
+                               Integer genero,
                                CriarEnderecoInput endereco,
-                               List<@NotBlank String> especialidades) {
+                               List<@NotBlank String> especialidades
+                               ) {
 }

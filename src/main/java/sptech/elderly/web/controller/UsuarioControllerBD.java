@@ -76,7 +76,7 @@ public class UsuarioControllerBD {
 //
 //        return usuarios.isEmpty()
 //                ? status(204).build()
-//                : status(200).body(UsuarioMapper.toDto(usuarios));
+//                : status(200).body(FuncionarioMapper.toDto(usuarios));
 //    }
 //
 //    @GetMapping("/{codigo}")
@@ -85,7 +85,7 @@ public class UsuarioControllerBD {
 //
 //        return ok(usuario);
 //    }
-//
+
 //    @GetMapping("/email/{email}")
 //    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email){
 //        UsuarioEntity user = usuarioService.buscarPorEmail(email);
