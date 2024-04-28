@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
@@ -37,4 +38,7 @@ public class Endereco {
 
     @Column(name = "uf")
     private String uf;
+
+    @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL)
+    private List<Residencia> residencias;
 }

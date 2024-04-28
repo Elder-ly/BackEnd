@@ -1,5 +1,6 @@
 package sptech.elderly.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -8,31 +9,35 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.usuario.ClienteMapper;
-import sptech.elderly.web.dto.usuario.CriarCliente;
-import sptech.elderly.web.dto.usuario.CriarFuncionario;
-import sptech.elderly.web.dto.usuario.FuncionarioMapper;
+import sptech.elderly.web.dto.usuario.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
 
-
+//  Atributos Usuarios
     private final UsuarioRepository usuarioRepository;
 
     private final FuncionarioMapper funcionarioMapper;
 
     private final ClienteMapper clienteMapper;
 
+//  Atributo Genero
     private final GeneroRepository generoRepository;
 
+//  TipoUsuario
     private final TipoUsuarioRepository tipoUsuarioRepository;
 
+//  Endereço
     private final ResidenciaService residenciaService;
 
     private final EnderecoService enderecoService;
 
+//  Especialidade
     private final EspecialidadeService especialidadeService;
 
     private final CurriculoService curriculoService;
@@ -93,30 +98,30 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-//    @Transactional(readOnly = true)
-//    public UsuarioConsultaDto buscarPorId(Integer userId) {
-//        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
-//                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
-//        );
-//
-//        return FuncionarioMapper.toDto(usuario);
-//    }
-//
-//    public List<UsuarioEntity> buscarUsuarios() {
-//        // Buscar todos os usuários
-//        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
-//
-//        // Usar um HashSet para remover duplicações
-//        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
-//
-//        // Converter o Set de volta para uma lista e retornar
-//        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public UsuarioEntity buscarPorEmail(String email) {
-//        return usuarioRepository.findByEmail(email).orElseThrow(
-//                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
-//        );
-//    }
+    @Transactional
+    public UsuarioConsultaDto buscarPorId(Integer userId) {
+        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
+        );
+
+        return UsuarioMapperClass.toDto(usuario);
+    }
+
+    public List<UsuarioEntity> buscarUsuarios() {
+        // Buscar todos os usuários
+        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
+
+        // Usar um HashSet para remover duplicações
+        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
+
+        // Converter o Set de volta para uma lista e retornar
+        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UsuarioEntity buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
+        );
+    }
 }

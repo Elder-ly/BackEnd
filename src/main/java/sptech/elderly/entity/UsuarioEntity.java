@@ -31,5 +31,8 @@ public class UsuarioEntity {
     private Genero genero;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Residencia> residencias;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Curriculo> curriculos;
 }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,6 @@ import static org.springframework.http.ResponseEntity.status;
 public class UsuarioControllerBD {
 
     private final UsuarioService usuarioService;
-
 
     @Operation(description = "Cria um usuário do tipo cliente.")
     @ApiResponses(value = {
@@ -61,36 +59,36 @@ public class UsuarioControllerBD {
     }
 
 
-//    @GetMapping("/buscar-clientes")
-//    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
-//        var usuarios = usuarioService.buscarUsuarios();
-//
-//        return usuarios.isEmpty()
-//                ? status(204).build()
-//                : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
-//    }
+    @GetMapping("/buscar-clientes")
+    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
+        var usuarios = usuarioService.buscarUsuarios();
 
-//    @GetMapping
-//    public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
-//        var usuarios = usuarioService.buscarUsuarios();
-//
-//        return usuarios.isEmpty()
-//                ? status(204).build()
-//                : status(200).body(FuncionarioMapper.toDto(usuarios));
-//    }
-//
-//    @GetMapping("/{codigo}")
-//    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
-//        var usuario = usuarioService.buscarPorId(codigo);
-//
-//        return ok(usuario);
-//    }
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
+    }
 
-//    @GetMapping("/email/{email}")
-//    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email){
-//        UsuarioEntity user = usuarioService.buscarPorEmail(email);
-//        return ok(user);
-//    }
+    @GetMapping
+    public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
+        var usuarios = usuarioService.buscarUsuarios();
+
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioMapperClass.toDto(usuarios));w
+    }
+
+    @GetMapping("/{codigo}")
+    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
+        var usuario = usuarioService.buscarPorId(codigo);
+
+        return ok(usuario);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email){
+        UsuarioEntity user = usuarioService.buscarPorEmail(email);
+        return ok(user);
+    }
 
 
     @PatchMapping()
