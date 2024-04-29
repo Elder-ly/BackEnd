@@ -14,33 +14,38 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service @RequiredArgsConstructor
 public class GoogleCalendarService {
     private Calendar service;
 
-    private void inicializarCalendar(String accessToken) throws GeneralSecurityException, IOException {
+    private void autenticarCalendar(String accessToken) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
         Credential credentials = new GoogleCredential().setAccessToken(accessToken);
         service = new Calendar(HTTP_TRANSPORT, JSON_FACTORY, credentials);
     }
 
-    public Event inserirEvento(String acessToken, String emailCliente, String emailFuncionario) throws IOException, GeneralSecurityException {
-        inicializarCalendar(acessToken);
+    public Event inserirEvento(String acessToken,
+                               String nomeProposta,
+                               String emailCliente,
+                               String emailFuncionario,
+                               DateTime dataHoraInicio,
+                               DateTime dataHoraFim) throws IOException, GeneralSecurityException {
+        autenticarCalendar(acessToken);
         Event event = new Event()
-                .setSummary("Elder.ly - Java")
+                .setSummary("Elder.ly - " + nomeProposta)
                 .setLocation("Endereço")
                 .setDescription("Evento indicando o combinado com seu cuidador.");
-
-        DateTime startDateTime = new DateTime("2024-04-28T09:00:00-03:00");
+        DateTime startDateTime = new DateTime(String.valueOf(dataHoraInicio));
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("America/Sao_Paulo");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime("2024-04-28T20:00:00-03:00");
+        DateTime endDateTime = new DateTime(String.valueOf(dataHoraFim));
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
                 .setTimeZone("America/Sao_Paulo");
