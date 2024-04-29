@@ -3,7 +3,9 @@ package sptech.elderly.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
@@ -42,19 +44,19 @@ public class UsuarioService {
 
     private final CurriculoService curriculoService;
 
-    public UsuarioEntity salvarCliente(CriarCliente novoCliente) {
-        if (usuarioRepository.existsByEmail(novoCliente.email())) {
+    public UsuarioEntity salvarCliente(CriarClienteInput input) {
+        if (usuarioRepository.existsByEmail(input.email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoCliente.tipoUsuario())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(input.tipoUsuario())
                 .orElseThrow(
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
-        Endereco endereco = enderecoService.salvar(novoCliente.endereco());
+        Endereco endereco = enderecoService.salvar(input.endereco());
 
-        UsuarioEntity novoUsuario = clienteMapper.criarCliente(novoCliente);
+        UsuarioEntity novoUsuario = clienteMapper.criarCliente(input);
         novoUsuario.setTipoUsuario(tipoUsuarioId);
 
         novoUsuario = usuarioRepository.save(novoUsuario);
@@ -64,31 +66,31 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarFuncionario(CriarFuncionario novoFuncionario) {
-        if (usuarioRepository.existsByEmail(novoFuncionario.email())) {
+    public UsuarioEntity salvarFuncionario(CriarFuncionarioInput input) {
+        if (usuarioRepository.existsByEmail(input.email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
 
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(novoFuncionario.tipoUsuario())
+        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(input.tipoUsuario())
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
                 );
 
-        Genero generoId = generoRepository.findById(novoFuncionario.genero())
+        Genero generoId = generoRepository.findById(input.genero())
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
                 );
 
-        Endereco endereco = enderecoService.salvar(novoFuncionario.endereco());
+        Endereco endereco = enderecoService.salvar(input.endereco());
 
-        UsuarioEntity novoUsuario = funcionarioMapper.criarFuncionario(novoFuncionario);
+        UsuarioEntity novoUsuario = funcionarioMapper.criarFuncionario(input);
         novoUsuario.setTipoUsuario(tipoUsuarioId);
         novoUsuario.setGenero(generoId);
 
 
         novoUsuario = usuarioRepository.save(novoUsuario);
 
-        List<Especialidade> especialidades = especialidadeService.salvar(novoFuncionario.especialidades());
+        List<Especialidade> especialidades = especialidadeService.salvar(input.especialidades());
 
         for (Especialidade especialidade : especialidades) {
             curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
@@ -108,13 +110,10 @@ public class UsuarioService {
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
-        // Buscar todos os usuários
         List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
 
-        // Usar um HashSet para remover duplicações
         Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
 
-        // Converter o Set de volta para uma lista e retornar
         return usuariosSemDuplicacao.stream().collect(Collectors.toList());
     }
 
@@ -123,5 +122,44 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email).orElseThrow(
                 () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
         );
+    }
+
+    public UsuarioEntity atualizarCliente(Integer id, AtualizarClienteInput input){
+        UsuarioEntity usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
+
+        if (input.endereco() != null){
+            enderecoService.atualizarEndereco(idEndereco(usuario) ,input.endereco());
+        }
+
+        return usuarioRepository.save(clienteMapper.partialUpdate(input, usuario));
+    }
+
+    public void excluirCliente(@PathVariable Integer id){
+        UsuarioEntity usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
+
+        if (usuario.getResidencias() != null){
+            usuario.getResidencias()
+                    .forEach(residencia -> {
+                        usuarioRepository.delete(residencia.getUsuario());
+                    });
+
+            enderecoService.excluirEndereco(idEndereco(usuario));
+        }
+
+        usuarioRepository.delete(usuario);
+    }
+
+    public Integer idEndereco(UsuarioEntity usuario) {
+        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
+            Residencia residencia = usuario.getResidencias().get(0);
+            Endereco endereco = residencia.getEndereco();
+            if (endereco != null) {
+                return endereco.getId();
+            }
+        }
+
+        return null;
     }
 }

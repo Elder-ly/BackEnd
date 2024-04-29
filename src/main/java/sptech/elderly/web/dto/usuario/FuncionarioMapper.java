@@ -5,12 +5,9 @@ import sptech.elderly.entity.Genero;
 import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Mapper(componentModel = "spring")
 public interface FuncionarioMapper {
-    public UsuarioEntity criarFuncionario(CriarFuncionario novoFuncionario);
+    public UsuarioEntity criarFuncionario(CriarFuncionarioInput novoFuncionario);
 
     public TipoUsuario mapTipoUsuario(Integer tipoUsuario);
 

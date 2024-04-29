@@ -35,7 +35,7 @@ public class UsuarioControllerBD {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PostMapping("/cliente")
-    public ResponseEntity<CriarCliente> criarCliente(@RequestBody @Valid CriarCliente novoUser){
+    public ResponseEntity<CriarClienteInput> criarCliente(@RequestBody @Valid CriarClienteInput novoUser){
         this.usuarioService.salvarCliente(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
@@ -52,8 +52,7 @@ public class UsuarioControllerBD {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PostMapping("/funcionario")
-    public ResponseEntity<CriarFuncionario> criarFuncionario(@RequestBody @Valid CriarFuncionario novoUser){
-
+    public ResponseEntity<CriarFuncionarioInput> criarFuncionario(@RequestBody @Valid CriarFuncionarioInput novoUser){
         this.usuarioService.salvarFuncionario(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
@@ -91,8 +90,15 @@ public class UsuarioControllerBD {
     }
 
 
-    @PatchMapping()
-    public ResponseEntity<UsuarioEntity> atualizarUsuario(){
-        return null;
+    @PatchMapping("/{id}")
+    public ResponseEntity<AtualizarClienteInput> atualizarCliente(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
+        usuarioService.atualizarCliente(id, input);
+        return status(200).body(input);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirCliente(@PathVariable Integer id){
+        usuarioService.excluirCliente(id);
+        return status(204).build();
     }
 }

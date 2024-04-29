@@ -11,10 +11,10 @@ public interface EnderecoMapper {
 
     public Endereco ofEndereco(CriarEnderecoInput novoEndereco);
 
-    Endereco toEntity(EnderecoConsultaDto enderecoConsultaDto);
+    Endereco toEntity(AtualizarEnderecoInput input);
 
     EnderecoConsultaDto toDto(Endereco endereco);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Endereco partialUpdate(EnderecoConsultaDto enderecoConsultaDto, @MappingTarget Endereco endereco);
+    Endereco partialUpdate(AtualizarEnderecoInput input, @MappingTarget Endereco endereco);
 }
