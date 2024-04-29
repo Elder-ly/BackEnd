@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record CriarEventoInput(
-        @NotBlank String accessToken,
         @NotBlank String nomeProposta,
         @NotBlank @Email String emailCliente,
         @NotBlank @Email String emailFuncionario,

@@ -7,6 +7,7 @@ import sptech.elderly.web.dto.google.CriarEventoInput;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/calendarios")
@@ -19,15 +20,23 @@ public class CalendarioController {
 
     @PostMapping("/eventos")
     public Event inserirEvento(
+            @RequestHeader String accessToken,
             @RequestBody CriarEventoInput eventoInput
             ) throws GeneralSecurityException, IOException {
 
         return service.inserirEvento(
-                eventoInput.accessToken(),
+                accessToken,
                 eventoInput.nomeProposta(),
                 eventoInput.emailCliente(),
                 eventoInput.emailFuncionario(),
                 eventoInput.dataHoraInicio(),
                 eventoInput.dataHoraFim());
+    }
+
+    @GetMapping("/eventos/{id}")
+    public List<Event> listarEventosCuidador(
+            @RequestHeader String accessToken,
+            @PathVariable Integer id) throws IOException, GeneralSecurityException {
+        return service.listarEventos(accessToken);
     }
 }
