@@ -19,7 +19,7 @@ import static org.springframework.http.ResponseEntity.status;
 
 @RequiredArgsConstructor
 @RestController @RequestMapping("/usuarios")
-public class UsuarioControllerBD {
+public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
@@ -73,31 +73,30 @@ public class UsuarioControllerBD {
 
         return usuarios.isEmpty()
                 ? status(204).build()
-                : status(200).body(UsuarioMapperClass.toDto(usuarios));
+                : status(200).body(UsuarioMapper.toDto(usuarios));
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/cliente/{codigo}")
     public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
-        var usuario = usuarioService.buscarPorId(codigo);
+        var usuario = usuarioService.buscarUsuarioId(codigo);
 
         return ok(usuario);
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UsuarioEntity> buscarPorEmail(@PathVariable String email){
+    public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
         UsuarioEntity user = usuarioService.buscarPorEmail(email);
-        return ok(user);
+        return ok(UsuarioMapper.toDto(user));
     }
 
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<AtualizarClienteInput> atualizarCliente(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
-        usuarioService.atualizarCliente(id, input);
+    @PutMapping("/{id}")
+    public ResponseEntity<AtualizarClienteInput> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
+        usuarioService.atualizarUsuario(id, input);
         return status(200).body(input);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirCliente(@PathVariable Integer id){
+    public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){
         usuarioService.excluirCliente(id);
         return status(204).build();
     }

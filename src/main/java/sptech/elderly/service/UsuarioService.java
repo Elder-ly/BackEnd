@@ -3,7 +3,6 @@ package sptech.elderly.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,10 +53,16 @@ public class UsuarioService {
                         () -> new RuntimeException("Tipo usuário não encontrado.")
                 );
 
+        Genero generoId = generoRepository.findById(input.genero())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
+                );
+
         Endereco endereco = enderecoService.salvar(input.endereco());
 
         UsuarioEntity novoUsuario = clienteMapper.criarCliente(input);
         novoUsuario.setTipoUsuario(tipoUsuarioId);
+        novoUsuario.setGenero(generoId);
 
         novoUsuario = usuarioRepository.save(novoUsuario);
 
@@ -88,25 +93,25 @@ public class UsuarioService {
         novoUsuario.setGenero(generoId);
 
 
-        novoUsuario = usuarioRepository.save(novoUsuario);
-
-        List<Especialidade> especialidades = especialidadeService.salvar(input.especialidades());
-
-        for (Especialidade especialidade : especialidades) {
-            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
-        }
-
-        residenciaService.salvar(novoUsuario, endereco);
+//        novoUsuario = usuarioRepository.save(novoUsuario);
+//
+//        List<Especialidade> especialidades = especialidadeService.salvar();
+//
+//        for (Especialidade especialidade : especialidades) {
+//            curriculoService.associarEspecialidadeUsuario(novoUsuario, especialidade);
+//        }
+//
+//        residenciaService.salvar(novoUsuario, endereco);
         return novoUsuario;
     }
 
     @Transactional
-    public UsuarioConsultaDto buscarPorId(Integer userId) {
+    public UsuarioConsultaDto buscarUsuarioId(Integer userId) {
         UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
         );
 
-        return UsuarioMapperClass.toDto(usuario);
+        return UsuarioMapper.toDto(usuario);
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
@@ -120,17 +125,13 @@ public class UsuarioService {
     @Transactional
     public UsuarioEntity buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
+                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Email não encontrado")
         );
     }
 
-    public UsuarioEntity atualizarCliente(Integer id, AtualizarClienteInput input){
+    public UsuarioEntity atualizarUsuario(Integer id, AtualizarClienteInput input){
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
-
-        if (input.endereco() != null){
-            enderecoService.atualizarEndereco(idEndereco(usuario) ,input.endereco());
-        }
 
         return usuarioRepository.save(clienteMapper.partialUpdate(input, usuario));
     }
@@ -144,22 +145,8 @@ public class UsuarioService {
                     .forEach(residencia -> {
                         usuarioRepository.delete(residencia.getUsuario());
                     });
-
-            enderecoService.excluirEndereco(idEndereco(usuario));
         }
 
         usuarioRepository.delete(usuario);
-    }
-
-    public Integer idEndereco(UsuarioEntity usuario) {
-        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
-            Residencia residencia = usuario.getResidencias().get(0);
-            Endereco endereco = residencia.getEndereco();
-            if (endereco != null) {
-                return endereco.getId();
-            }
-        }
-
-        return null;
     }
 }

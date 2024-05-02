@@ -6,16 +6,22 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Endereco;
+import sptech.elderly.entity.Residencia;
+import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.EnderecoRepository;
+import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.web.dto.endereco.AtualizarEnderecoInput;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 
 @Service @RequiredArgsConstructor
 public class EnderecoService {
+
     private final EnderecoRepository enderecoRepository;
 
     private final EnderecoMapper enderecoMapper;
+
+    private final UsuarioService usuarioService;
 
     public Endereco salvar(CriarEnderecoInput novoEndereco) {
         return this.enderecoRepository.save(enderecoMapper.ofEndereco(novoEndereco));
@@ -39,6 +45,18 @@ public class EnderecoService {
                     });
         }
 
-        enderecoRepository.delete(endereco);
+        enderecoRepository.delete();
+    }
+
+    public Integer idEndereco(UsuarioEntity usuario) {
+        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
+            Residencia residencia = usuario.getResidencias().get(0);
+            Endereco endereco = residencia.getEndereco();
+            if (endereco != null) {
+                return endereco.getId();
+            }
+        }
+
+        return null;
     }
 }

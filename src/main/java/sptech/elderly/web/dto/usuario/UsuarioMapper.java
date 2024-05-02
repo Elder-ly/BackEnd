@@ -3,15 +3,14 @@ package sptech.elderly.web.dto.usuario;
 
 import sptech.elderly.entity.*;
 import sptech.elderly.web.dto.endereco.EnderecoConsultaDto;
-import sptech.elderly.web.dto.especialidade.EspecialidadeConsultaDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UsuarioMapperClass {
+public class UsuarioMapper {
     public static List<UsuarioConsultaDto> toDto(List<UsuarioEntity> usuarios) {
         List<UsuarioConsultaDto> usuarioConsultaDtos = usuarios.stream()
-                .map(UsuarioMapperClass::toDto)  // Use a referência do método toDto da própria classe UsuarioMapper
+                .map(UsuarioMapper::toDto)  // Use a referência do método toDto da própria classe UsuarioMapper
                 .collect(Collectors.toList());
 
         return usuarioConsultaDtos;

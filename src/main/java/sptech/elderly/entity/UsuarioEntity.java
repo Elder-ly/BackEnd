@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
@@ -23,6 +24,12 @@ public class UsuarioEntity {
 
     @Column(name = "document", unique = true)
     private String documento;
+
+    @Column(name = "birth_date")
+    private Date dataNascimento;
+
+//    @Column(name = "biography")
+//    private String biografia;
 
     @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private TipoUsuario tipoUsuario;
