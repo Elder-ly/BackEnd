@@ -21,8 +21,6 @@ public class EnderecoService {
 
     private final EnderecoMapper enderecoMapper;
 
-    private final UsuarioService usuarioService;
-
     public Endereco salvar(CriarEnderecoInput novoEndereco) {
         return this.enderecoRepository.save(enderecoMapper.ofEndereco(novoEndereco));
     }
@@ -45,18 +43,6 @@ public class EnderecoService {
                     });
         }
 
-        enderecoRepository.delete();
-    }
-
-    public Integer idEndereco(UsuarioEntity usuario) {
-        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
-            Residencia residencia = usuario.getResidencias().get(0);
-            Endereco endereco = residencia.getEndereco();
-            if (endereco != null) {
-                return endereco.getId();
-            }
-        }
-
-        return null;
+        enderecoRepository.delete(endereco);
     }
 }

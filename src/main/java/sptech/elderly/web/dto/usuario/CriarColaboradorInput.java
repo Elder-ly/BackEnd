@@ -5,12 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 
-public record CriarFuncionarioInput(@NotBlank String nome,
+import java.util.Date;
+
+public record CriarColaboradorInput(@NotBlank String nome,
                                     @Email @NotBlank String email,
-                                    @NotNull String dataNascimento,
                                     @NotBlank String documento,
-                                    Integer tipoUsuario,
+                                    @NotNull Date dataNascimento,
+                                    @NotBlank String biografia,
                                     Integer genero,
-                                    CriarEnderecoInput endereco
-                               ) {
+                                    Integer tipoUsuario,
+                                    CriarEnderecoInput endereco) {
 }

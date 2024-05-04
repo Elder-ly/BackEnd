@@ -15,10 +15,5 @@ public record AtualizarClienteInput(@NotBlank String nome,
                                     @NotBlank String email,
                                     @NotBlank String documento,
                                     @NotNull Date dataNascimento,
-                                    GeneroDto genero) implements Serializable {
-    /**
-     * DTO for {@link Genero}
-     */
-    public record GeneroDto(String nome) implements Serializable {
-    }
+                                    Integer genero) implements Serializable {
 }

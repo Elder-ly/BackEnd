@@ -28,8 +28,8 @@ public class UsuarioEntity {
     @Column(name = "birth_date")
     private Date dataNascimento;
 
-//    @Column(name = "biography")
-//    private String biografia;
+    @Column(name = "biography")
+    private String biografia;
 
     @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
     private TipoUsuario tipoUsuario;

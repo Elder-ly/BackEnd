@@ -25,51 +25,55 @@ public class UsuarioController {
 
     @Operation(description = "Cria um usuário do tipo cliente.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso."),
-            @ApiResponse(responseCode = "400", description = "Erro ao criar usuário."),
+            @ApiResponse(responseCode = "200", description = "Cliente criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar cliente."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
-            @ApiResponse(responseCode = "422", description = "Entidade não processável."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
-            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+            @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
     @PostMapping("/cliente")
-    public ResponseEntity<CriarClienteInput> criarCliente(@RequestBody @Valid CriarClienteInput novoUser){
-        this.usuarioService.salvarCliente(novoUser);
-        return status(HttpStatus.CREATED).body(novoUser);
+    public ResponseEntity<CriarClienteInput> criarCliente(@RequestBody @Valid CriarClienteInput novoCliente){
+        usuarioService.salvarCliente(novoCliente);
+        return status(HttpStatus.CREATED).body(novoCliente);
     }
 
-    @Operation(description = "Cria um funcionário.")
+    @Operation(description = "Cria um usuário do tipo colaborador.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Funcionário criado com sucesso."),
-            @ApiResponse(responseCode = "400", description = "Erro ao criar Funcionário."),
+            @ApiResponse(responseCode = "200", description = "Colaborador criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar Colaborador."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
-            @ApiResponse(responseCode = "422", description = "Entidade não processável."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
-            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+            @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
-    @PostMapping("/funcionario")
-    public ResponseEntity<CriarFuncionarioInput> criarFuncionario(@RequestBody @Valid CriarFuncionarioInput novoUser){
-        this.usuarioService.salvarFuncionario(novoUser);
+    @PostMapping("/colaborador")
+    public ResponseEntity<CriarColaboradorInput> criarFuncionario(@RequestBody @Valid CriarColaboradorInput novoUser){
+        usuarioService.salvarColaborador(novoUser);
         return status(HttpStatus.CREATED).body(novoUser);
     }
-
 
     @GetMapping("/buscar-clientes")
     public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
-        var usuarios = usuarioService.buscarUsuarios();
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
                 : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
     }
 
+    @GetMapping("/buscar-colaboradores")
+    public ResponseEntity<List<UsuarioSimplesColaborador>> buscarColaboradores() {
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
+
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioSimplesColaborador.buscarUsuarios(usuarios));
+    }
+
     @GetMapping
     public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
-        var usuarios = usuarioService.buscarUsuarios();
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
@@ -78,22 +82,22 @@ public class UsuarioController {
 
     @GetMapping("/cliente/{codigo}")
     public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
-        var usuario = usuarioService.buscarUsuarioId(codigo);
+        UsuarioEntity usuario = usuarioService.buscarUsuarioId(codigo);
 
-        return ok(usuario);
+        return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
         UsuarioEntity user = usuarioService.buscarPorEmail(email);
-        return ok(UsuarioMapper.toDto(user));
+        return status(200).body(UsuarioMapper.toDto(user));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AtualizarClienteInput> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
-        usuarioService.atualizarUsuario(id, input);
-        return status(200).body(input);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<AtualizarClienteInput> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
+//        usuarioService.atualizarUsuario(id, input);
+//        return status(200).body(input);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){

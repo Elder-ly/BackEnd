@@ -6,8 +6,8 @@ import sptech.elderly.entity.TipoUsuario;
 import sptech.elderly.entity.UsuarioEntity;
 
 @Mapper(componentModel = "spring")
-public interface FuncionarioMapper {
-    public UsuarioEntity criarFuncionario(CriarFuncionarioInput novoFuncionario);
+public interface ColaboradorMapper {
+    public UsuarioEntity criarFuncionario(CriarColaboradorInput novoFuncionario);
 
     public TipoUsuario mapTipoUsuario(Integer tipoUsuario);
 

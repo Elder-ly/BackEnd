@@ -16,18 +16,17 @@ import static org.springframework.http.ResponseEntity.status;
 @RestController @RequestMapping("/usuarios")
 public class EnderecoController {
 
-    private final EnderecoService enderecoService;
     private final UsuarioService usuarioService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AtualizarEnderecoInput> atualizarEndereco(@PathVariable Integer id, @RequestBody @Valid AtualizarEnderecoInput input){
-        usuarioService.atualizarUsuario(id, input);
-        return status(200).body(input);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirEndereco(@PathVariable Integer id){
-        enderecoService.excluirEndereco(id);
-        return status(204).build();
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<AtualizarEnderecoInput> atualizarEndereco(@PathVariable Integer id, @RequestBody @Valid AtualizarEnderecoInput input){
+//        usuarioService.atualizarEndereco(id, input);
+//        return status(200).body(input);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> excluirEndereco(@PathVariable Integer id){
+//        usuarioService.excluirEndereco(id);
+//        return status(204).build();
+//    }
 }
