@@ -1,6 +1,7 @@
 package sptech.elderly.web.dto.usuario;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public record AtualizarColaboradorInput(String nome,
                                         String email,
                                         String documento,
-                                        Date dataNascimento,
+                                        LocalDate dataNascimento,
                                         String biografia,
                                         List<Integer> id) implements Serializable {
 }
