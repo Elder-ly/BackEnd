@@ -33,9 +33,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
     @PostMapping("/cliente")
-    public ResponseEntity<CriarClienteInput> criarCliente(@RequestBody @Valid CriarClienteInput novoCliente){
-        usuarioService.salvarCliente(novoCliente);
-        return status(HttpStatus.CREATED).body(novoCliente);
+    public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarClienteInput novoCliente){
+        UsuarioEntity usuario = usuarioService.salvarCliente(novoCliente);
+        return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
     @Operation(description = "Cria um usuário do tipo colaborador.")
@@ -48,9 +48,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
     @PostMapping("/colaborador")
-    public ResponseEntity<CriarColaboradorInput> criarFuncionario(@RequestBody @Valid CriarColaboradorInput novoUser){
-        usuarioService.salvarColaborador(novoUser);
-        return status(HttpStatus.CREATED).body(novoUser);
+    public ResponseEntity<UsuarioConsultaDto> criarFuncionario(@RequestBody @Valid CriarColaboradorInput novoUser){
+        UsuarioEntity usuario = usuarioService.salvarColaborador(novoUser);
+        return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
     @GetMapping("/buscar-clientes")
@@ -80,7 +80,7 @@ public class UsuarioController {
                 : status(200).body(UsuarioMapper.toDto(usuarios));
     }
 
-    @GetMapping("/cliente/{codigo}")
+    @GetMapping("/{codigo}")
     public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
         UsuarioEntity usuario = usuarioService.buscarUsuarioId(codigo);
 
@@ -93,9 +93,15 @@ public class UsuarioController {
         return status(200).body(UsuarioMapper.toDto(user));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarColaboradorInput input){
+        UsuarioEntity usuario = usuarioService.atualizarColaborador(id, input);
+        return status(200).body(UsuarioMapper.toDto(usuario));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){
-        usuarioService.excluirCliente(id);
+        usuarioService.excluirUsuario(id);
         return status(204).build();
     }
 }

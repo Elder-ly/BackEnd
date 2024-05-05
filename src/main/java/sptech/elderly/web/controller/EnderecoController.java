@@ -13,7 +13,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
 @RequiredArgsConstructor
-@RestController @RequestMapping("/usuarios")
+@RestController @RequestMapping("/enderecos")
 public class EnderecoController {
 
     private final UsuarioService usuarioService;

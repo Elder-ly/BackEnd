@@ -10,7 +10,6 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.usuario.*;
 
 import java.util.HashSet;
@@ -64,13 +63,12 @@ public class UsuarioService {
                 );
 
         Endereco endereco = enderecoService.salvar(input.endereco());
-
         UsuarioEntity novoUsuario = clienteMapper.criarCliente(input);
+
         novoUsuario.setTipoUsuario(tipoUsuarioId);
         novoUsuario.setGenero(generoId);
 
         novoUsuario = usuarioRepository.save(novoUsuario);
-
         residenciaService.salvar(novoUsuario, endereco);
 
         return novoUsuario;
@@ -132,16 +130,7 @@ public class UsuarioService {
         return buscarUsuarioId(usuario.getId());
     }
 
-//    public UsuarioEntity atualizarUsuario(Integer id, AtualizarClienteInput input){
-//        UsuarioEntity usuario = usuarioRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
-//
-//        return usuarioRepository.save(clienteMapper.partialUpdate(input, usuario));
-//    }
-
-
-
-    public void excluirCliente(@PathVariable Integer id){
+    public void excluirUsuario(@PathVariable Integer id){
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
 
@@ -155,22 +144,34 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
-    public void excluirEndereco(Integer id) {
-//        UsuarioEntity usuario = usuarioRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
-//
-//        enderecoService.excluirEndereco(idEndereco(usuario));
-    }
+    public UsuarioEntity atualizarColaborador(Integer id, AtualizarColaboradorInput input) {
+        UsuarioEntity usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
 
-//    public Integer idEndereco(UsuarioEntity usuario) {
-//        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
-//            Residencia residencia = usuario.getResidencias().get(0);
-//            Endereco endereco = residencia.getEndereco();
-//            if (endereco != null) {
-//                return endereco.getId();
-//            }
-//        }
-//
-//        return null;
-//    }
+        if (input.nome() != null){
+            usuario.setNome(input.nome());
+        }
+
+        if(input.email() != null){
+            usuario.setEmail(input.email());
+        }
+
+        if(input.documento() != null){
+            usuario.setDocumento(input.documento());
+        }
+
+        if(input.dataNascimento() != null){
+            usuario.setDataNascimento(input.dataNascimento());
+        }
+
+        if(input.biografia() != null){
+            usuario.setBiografia(input.biografia());
+        }
+
+        if(input.id() != null){
+            usuario.setCurriculos(curriculoService.buscarCurriculos(usuario, input.id()));
+        }
+
+        return usuarioRepository.save(usuario);
+    }
 }

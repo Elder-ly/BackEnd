@@ -28,4 +28,15 @@ public class CurriculoService {
 
         curriculoRepository.delete(curriculo);
     }
+
+    public List<Curriculo> buscarCurriculos(UsuarioEntity usuario, List<Integer> idEspecialidades) {
+        Curriculo novoCurriculo = new Curriculo();
+
+        for(Integer idEspecialidade : idEspecialidades) {
+            curriculoRepository.findById(idEspecialidade);
+            novoCurriculo.setUsuario(usuario);
+        }
+
+        return curriculoRepository.findAll();
+    }
 }

@@ -14,6 +14,5 @@ public record CriarColaboradorInput(@NotBlank String nome,
                                     @NotNull Date dataNascimento,
                                     Integer genero,
                                     Integer tipoUsuario,
-                                    CriarEnderecoInput endereco,
-                                    List<String> especialidades) {
+                                    CriarEnderecoInput endereco) {
 }

@@ -47,6 +47,10 @@ public class UsuarioMapper {
     }
 
     private static List<String> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
+        if (curriculos == null){
+            return null;
+        }
+
         return curriculos.stream()
                 .map(curriculo -> curriculo.getEspecialidade())
                 .map(Especialidade::getNome)
