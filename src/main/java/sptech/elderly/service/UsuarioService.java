@@ -125,26 +125,4 @@ public class UsuarioService {
                 () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado")
         );
     }
-
-    public String gerarStringCsv() {
-        List<UsuarioEntity> colaboradores = usuarioRepository.findAll();
-        Boolean deuRuim = false;
-
-        try(StringWriter arq = new StringWriter()) {
-            for (int i = 0; i < colaboradores.size(); i++) {
-                UsuarioEntity colaborador = colaboradores.get(i);
-                arq.append(String.format("%s;%s;%s;%s\n",
-                        colaborador.getId(),
-                        colaborador.getNome(),
-                        colaborador.getEmail(),
-                        colaborador.getDocumento()
-                ));
-            }
-
-            return arq.toString();
-        } catch (IOException erro) {
-            System.out.println("Erro ao gravar o arquivo");
-            return "Erro ao gravar o arquivo";
-        }
-    }
 }

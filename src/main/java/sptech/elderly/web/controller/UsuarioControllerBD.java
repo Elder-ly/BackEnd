@@ -97,10 +97,4 @@ public class UsuarioControllerBD {
     public ResponseEntity<UsuarioEntity> atualizarUsuario(){
         return null;
     }
-
-    @GetMapping(value = "colaboradores/csv", produces = "text/csv")
-    public ResponseEntity<byte[]> baixarCsvCuidadores() throws UnsupportedEncodingException {
-        byte[] a = usuarioService.gerarStringCsv().getBytes();
-        return ResponseEntity.status(200).body(usuarioService.gerarStringCsv().getBytes());
-    }
 }
