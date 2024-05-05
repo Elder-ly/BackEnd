@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
@@ -26,7 +26,7 @@ public class UsuarioEntity {
     private String documento;
 
     @Column(name = "birth_date")
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     @Column(name = "biography")
     private String biografia;

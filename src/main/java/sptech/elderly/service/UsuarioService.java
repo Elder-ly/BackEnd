@@ -10,6 +10,7 @@ import sptech.elderly.entity.*;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
+import sptech.elderly.util.ListUtils;
 import sptech.elderly.web.dto.usuario.*;
 
 import java.io.FileWriter;
@@ -100,6 +101,7 @@ public class UsuarioService {
         novoUsuario.setTipoUsuario(tipoUsuarioId);
         novoUsuario.setGenero(generoId);
 
+        novoUsuario = usuarioRepository.save(novoUsuario);
         residenciaService.salvar(novoUsuario, endereco);
 
         return novoUsuario;
@@ -174,5 +176,35 @@ public class UsuarioService {
         }
 
         return usuarioRepository.save(usuario);
+    }
+
+    public String gerarStringCsv() {
+        List<ColaboradorOutput> colaboradores = UsuarioMapper.ofColaborador(buscarUsuarios());
+
+        try(StringWriter arq = new StringWriter()) {
+            arq.append(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
+                    "ID", "Nome", "E-mail", "Documento", "CEP", "Logradouro", "Número", "Complemento", "Bairro", "Cidade", "UF", "Especialidades"));
+            for (ColaboradorOutput colaborador : colaboradores) {
+                arq.append(String.format("%d;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;[%s]\n",
+                        colaborador.id(),
+                        colaborador.nome(),
+                        colaborador.email(),
+                        colaborador.documento(),
+                        colaborador.endereco().cep(),
+                        colaborador.endereco().logradouro(),
+                        colaborador.endereco().numero(),
+                        colaborador.endereco().complemento(),
+                        colaborador.endereco().bairro(),
+                        colaborador.endereco().cidade(),
+                        colaborador.endereco().uf(),
+                        ListUtils.mapToString(colaborador.especialidades())
+                ));
+            }
+
+            return arq.toString();
+        } catch (IOException erro) {
+            System.out.println("Erro ao gravar o arquivo");
+            return "Erro ao gravar o arquivo";
+        }
     }
 }

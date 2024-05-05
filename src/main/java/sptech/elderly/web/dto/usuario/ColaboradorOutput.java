@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public record ColaboradorOutput(@NotNull Integer id,
                                 @NotBlank String nome,
                                 @NotBlank String email,
                                 @NotBlank String documento,
+                                @NotBlank LocalDate dataNascimento,
                                 EnderecoOutput endereco,
                                 List<String> especialidades) implements Serializable {
 }
