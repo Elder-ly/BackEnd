@@ -12,9 +12,6 @@ import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.web.dto.usuario.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -100,6 +97,7 @@ public class UsuarioService {
         novoUsuario.setTipoUsuario(tipoUsuarioId);
         novoUsuario.setGenero(generoId);
 
+        novoUsuario = usuarioRepository.save(novoUsuario);
         residenciaService.salvar(novoUsuario, endereco);
 
         return novoUsuario;
@@ -170,7 +168,7 @@ public class UsuarioService {
         }
 
         if(input.id() != null){
-            usuario.setCurriculos(curriculoService.buscarCurriculos(usuario, input.id()));
+            usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.id()));
         }
 
         return usuarioRepository.save(usuario);
