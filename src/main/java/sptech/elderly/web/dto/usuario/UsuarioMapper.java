@@ -69,6 +69,7 @@ public class UsuarioMapper {
                             usuario.getNome(),
                             usuario.getEmail(),
                             usuario.getDocumento(),
+                            usuario.getDataNascimento(),
                             enderecoOutput,
                             mapCurriculosToEspecialidades(usuario.getCurriculos())
                     );

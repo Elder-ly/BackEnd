@@ -4,6 +4,7 @@ import com.google.api.client.util.IOUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -105,5 +106,11 @@ public class UsuarioController {
     public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){
         usuarioService.excluirUsuario(id);
         return status(204).build();
+    }
+
+    @GetMapping(value = "colaboradores/csv", produces = "text/csv")
+    public ResponseEntity<String> baixarCsvCuidadores(HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "inline; filename=cuidadores_elderly.csv");
+        return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
     }
 }
