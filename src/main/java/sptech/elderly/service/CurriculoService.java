@@ -8,16 +8,35 @@ import sptech.elderly.entity.Especialidade;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.CurriculoRepository;
 
+import java.util.List;
+
 @Service @RequiredArgsConstructor
 public class CurriculoService {
 
     private final CurriculoRepository curriculoRepository;
-    public void associarEspecialidadeUsuario(UsuarioEntity novoUsuario, Especialidade especialidade) {
+
+    public void salvarEspecialidades(List<Especialidade> especialidades) {
         Curriculo curriculo = new Curriculo();
 
-        curriculo.setUsuario(novoUsuario);
-        curriculo.setEspecialidade(especialidade);
+        curriculo.setEspecialidade(especialidades.get(0));
 
         curriculoRepository.save(curriculo);
+    }
+
+    public void excluirEspecialidade(Especialidade especialidade) {
+        Curriculo curriculo = curriculoRepository.findByEspecialidade(especialidade);
+
+        curriculoRepository.delete(curriculo);
+    }
+
+    public List<Curriculo> buscarCurriculos(UsuarioEntity usuario, List<Integer> idEspecialidades) {
+        Curriculo novoCurriculo = new Curriculo();
+
+        for(Integer idEspecialidade : idEspecialidades) {
+            curriculoRepository.findById(idEspecialidade);
+            novoCurriculo.setUsuario(usuario);
+        }
+
+        return curriculoRepository.findAll();
     }
 }

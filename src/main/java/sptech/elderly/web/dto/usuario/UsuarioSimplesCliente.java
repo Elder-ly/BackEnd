@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sptech.elderly.entity.UsuarioEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
@@ -13,11 +14,13 @@ public class UsuarioSimplesCliente {
     private String nome;
     private String email;
     private String documento;
+    private Date dataNascimento;
 
     public UsuarioSimplesCliente(UsuarioEntity user) {
         this.nome = user.getNome();
         this.email = user.getEmail();
         this.documento = user.getDocumento();
+        this.dataNascimento = user.getDataNascimento();
     }
 
     public static List<UsuarioSimplesCliente> buscarUsuarios(List<UsuarioEntity> users){
