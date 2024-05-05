@@ -1,5 +1,6 @@
 package sptech.elderly.web.controller;
 
+import com.google.api.client.util.IOUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,10 +13,11 @@ import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.*;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.http.ResponseEntity.status;
+import static org.springframework.http.ResponseEntity.*;
 
 @RequiredArgsConstructor
 @RestController @RequestMapping("/usuarios")
