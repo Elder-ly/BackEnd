@@ -13,6 +13,8 @@ import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.util.ListUtils;
 import sptech.elderly.web.dto.usuario.*;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
