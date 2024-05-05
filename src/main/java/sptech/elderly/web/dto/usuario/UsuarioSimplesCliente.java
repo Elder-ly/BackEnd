@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sptech.elderly.entity.UsuarioEntity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class UsuarioSimplesCliente {
     private String nome;
     private String email;
     private String documento;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     public UsuarioSimplesCliente(UsuarioEntity user) {
         this.nome = user.getNome();
