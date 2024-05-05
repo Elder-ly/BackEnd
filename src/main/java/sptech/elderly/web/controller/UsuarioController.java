@@ -63,12 +63,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/buscar-colaboradores")
-    public ResponseEntity<List<UsuarioSimplesColaborador>> buscarColaboradores() {
+    public ResponseEntity<List<ColaboradorOutput>> buscarColaboradores() {
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
-                : status(200).body(UsuarioSimplesColaborador.buscarUsuarios(usuarios));
+                : status(200).body(UsuarioMapper.ofColaborador(usuarios));
     }
 
     @GetMapping
@@ -92,12 +92,6 @@ public class UsuarioController {
         UsuarioEntity user = usuarioService.buscarPorEmail(email);
         return status(200).body(UsuarioMapper.toDto(user));
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<AtualizarClienteInput> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid AtualizarClienteInput input){
-//        usuarioService.atualizarUsuario(id, input);
-//        return status(200).body(input);
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){

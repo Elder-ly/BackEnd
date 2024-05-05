@@ -2,10 +2,7 @@ package sptech.elderly.web.dto.usuario;
 
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import sptech.elderly.entity.*;
-import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
@@ -54,6 +51,24 @@ public class UsuarioMapper {
                 .map(curriculo -> curriculo.getEspecialidade())
                 .map(Especialidade::getNome)
                 .filter(nome -> nome != null && !nome.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    public static List<ColaboradorOutput> ofColaborador(List<UsuarioEntity> users){
+        return users.stream()
+                .filter(usuario -> usuario.getTipoUsuario().getId() == 2)
+                .map(usuario -> {
+                    EnderecoOutput enderecoOutput = usuario.getResidencias().isEmpty() ? null : EnderecoMapper.toDto(usuario.getResidencias().get(0).getEndereco());
+
+                    return new ColaboradorOutput(
+                            usuario.getId(),
+                            usuario.getNome(),
+                            usuario.getEmail(),
+                            usuario.getDocumento(),
+                            enderecoOutput,
+                            mapCurriculosToEspecialidades(usuario.getCurriculos())
+                    );
+                })
                 .collect(Collectors.toList());
     }
 }

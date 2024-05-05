@@ -45,6 +45,10 @@ public class UsuarioService {
     private final CurriculoService curriculoService;
 
     public UsuarioEntity salvarCliente(CriarClienteInput input) {
+        if (input.tipoUsuario() != 3){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
+        }
+
         if (usuarioRepository.existsByEmail(input.email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
@@ -73,6 +77,10 @@ public class UsuarioService {
     }
 
     public UsuarioEntity salvarColaborador(CriarColaboradorInput input) {
+        if (input.tipoUsuario() != 2){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
+        }
+
         if (usuarioRepository.existsByEmail(input.email())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
         }
@@ -112,9 +120,7 @@ public class UsuarioService {
 
         Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
 
-        return usuariosSemDuplicacao
-                .stream()
-                .collect(Collectors.toList());
+        return usuariosSemDuplicacao.stream().collect(Collectors.toList());
     }
 
     @Transactional
