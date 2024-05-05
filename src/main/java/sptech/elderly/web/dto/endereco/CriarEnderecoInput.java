@@ -11,8 +11,8 @@ import java.io.Serializable;
 public record CriarEnderecoInput(@NotBlank String cep,
                                  @NotBlank String logradouro,
                                  @NotBlank String numero,
-                                 @NotBlank String bairro,
                                  @NotBlank String complemento,
+                                 @NotBlank String uf,
                                  @NotBlank String cidade,
-                                 @NotBlank String uf) implements Serializable {
+                                 @NotBlank String bairro) implements Serializable {
 }

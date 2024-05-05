@@ -1,9 +1,6 @@
 package sptech.elderly.web.dto.especialidade;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 import sptech.elderly.entity.Especialidade;
 
 import java.util.List;
@@ -11,14 +8,19 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface EspecialidadeMapper {
 
+    List<Especialidade> toEntities(List<String> nomes);
+
     Especialidade map(String nome);
 
-    public List<Especialidade> criarEspecialidade(List<String> especialidades);
+    Especialidade toEntity(EspecialidadeOutput especialidadeOutput);
 
-    Especialidade toEntity(EspecialidadeConsultaDto especialidadeConsultaDto);
-
-    EspecialidadeConsultaDto toDto(Especialidade especialidade);
+    EspecialidadeOutput toDto(Especialidade especialidade);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Especialidade partialUpdate(EspecialidadeConsultaDto especialidadeConsultaDto, @MappingTarget Especialidade especialidade);
+    Especialidade partialUpdate(EspecialidadeOutput especialidadeOutput, @MappingTarget Especialidade especialidade);
+
+    Especialidade toUpdate(AtualizarEspecialidade input);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    Especialidade partialUpdate(AtualizarEspecialidade especialidadeInput, @MappingTarget Especialidade especialidade);
 }

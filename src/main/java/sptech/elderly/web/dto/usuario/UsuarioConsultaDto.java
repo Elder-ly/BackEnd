@@ -3,8 +3,7 @@ package sptech.elderly.web.dto.usuario;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sptech.elderly.web.dto.endereco.EnderecoConsultaDto;
-import sptech.elderly.web.dto.especialidade.EspecialidadeConsultaDto;
+import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,6 +19,6 @@ public class UsuarioConsultaDto implements Serializable {
     String documento;
     String tipoUsuario;
     String genero;
-    EnderecoConsultaDto endereco;
+    EnderecoOutput endereco;
     List<String> especialidades;
 }

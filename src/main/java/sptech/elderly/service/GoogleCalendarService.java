@@ -10,23 +10,27 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.UsuarioRepository;
+import sptech.elderly.util.ListaObj;
+import sptech.elderly.web.dto.google.EventoConsultaDTO;
+import sptech.elderly.web.dto.google.EventoMapper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-@Service @RequiredArgsConstructor
+@Service
 public class GoogleCalendarService {
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
+    private final UsuarioRepository usuarioRepository;
+    private final EventoMapper eventoMapper;
+
+    public GoogleCalendarService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+        this.eventoMapper = new EventoMapper();
+    }
 
     private Calendar service;
 
@@ -37,17 +41,24 @@ public class GoogleCalendarService {
         service = new Calendar(HTTP_TRANSPORT, JSON_FACTORY, credentials);
     }
 
-    public Event inserirEvento(String accessToken,
-                               String nomeProposta,
-                               String emailCliente,
-                               String emailFuncionario,
-                               DateTime dataHoraInicio,
-                               DateTime dataHoraFim) throws IOException, GeneralSecurityException {
+    public EventoConsultaDTO inserirEvento(String accessToken,
+                                           String nomeProposta,
+                                           String emailCliente,
+                                           String emailFuncionario,
+                                           DateTime dataHoraInicio,
+                                           DateTime dataHoraFim,
+                                           String recorrencia,
+                                           String descricao) throws IOException, GeneralSecurityException {
         autenticarCalendar(accessToken);
         Event event = new Event()
                 .setSummary("Elder.ly - " + nomeProposta)
-                .setLocation("Endereço")
-                .setDescription("Evento indicando o combinado com seu cuidador.");
+                // .setLocation("Endereço") TODO: Pegar endereço pelo email do cliente
+                .setDescription(
+                        descricao != null
+                                ? descricao
+                                : "Evento combinado com seu cuidador na Elder.ly."
+                );
+
         DateTime startDateTime = new DateTime(String.valueOf(dataHoraInicio));
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
@@ -60,7 +71,9 @@ public class GoogleCalendarService {
                 .setTimeZone("America/Sao_Paulo");
         event.setEnd(end);
 
-        String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=2"};
+        String[] recurrence = recorrencia != null
+                ? new String[] {recorrencia}
+                : new String[] {"RRULE:FREQ=DAILY;COUNT=1"};
         event.setRecurrence(Arrays.asList(recurrence));
 
         EventAttendee[] attendees = new EventAttendee[] {
@@ -80,15 +93,19 @@ public class GoogleCalendarService {
 
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
-        System.out.printf("Event created: %s\n", event.getHtmlLink());
-        return event;
+        return eventoMapper.toDTO(event);
     }
 
-    public List<Event> listarEventos(String accessToken) throws IOException, GeneralSecurityException {
+    public List<EventoConsultaDTO> listarEventos(String accessToken, String ordenarPor) throws IOException, GeneralSecurityException {
         autenticarCalendar(accessToken);
         Events events = service.events().list("primary").setQ("Elder.ly").execute();
         List<Event> items = events.getItems();
-        return ordenarEventosPorNomeCliente(items, 0, items.size() - 1);
+        var eventsListaObj = eventoMapper.toListaObj(eventoMapper.toDTO(items));
+        if (ordenarPor.equals("nomeCliente")) {
+            return eventoMapper.toList(ordenarEventosPorNomeCliente(eventsListaObj, 0, eventsListaObj.getTamanho() - 1));
+        } else {
+            return eventoMapper.toList(ordenarEventosPorDataInicio(eventsListaObj, 0, eventsListaObj.getTamanho() - 1));
+        }
     }
 
     public List<Event> ordenarEventosPorNomeCliente(List<Event> events, Integer indInicio, Integer indFim) {
@@ -131,6 +148,45 @@ public class GoogleCalendarService {
         return events;
     }
 
+    public ListaObj<EventoConsultaDTO> ordenarEventosPorNomeCliente(ListaObj<EventoConsultaDTO> events, Integer indInicio, Integer indFim) {
+        int i = indInicio;
+        int j = indFim;
+        String pivo = events.getElemento((indInicio + indFim) / 2).getEmailCliente(); // índice do meio
+
+        while (i <= j) { // enquanto o início não ultrapassa o fim
+            String emailAtualI = events.getElemento(i).getEmailCliente();
+            String emailAtualJ = events.getElemento(j).getEmailCliente();
+
+            // move o i para a direita até encontrar alguém maior ou igual ao pivô
+            while (emailAtualI.compareTo(pivo) < 0) {
+                i++;
+                emailAtualI = events.getElemento(i).getEmailCliente();
+            }
+            // move o j para a esquerda até encontrar alguém menor ou igual ao pivô
+            while (emailAtualJ.compareTo(pivo) > 0) {
+                j--;
+                emailAtualJ = events.getElemento(j).getEmailCliente();
+            }
+
+            if (i <= j) { // se i não ultrapassou j
+                // troca
+                EventoConsultaDTO aux = events.getElemento(i);
+                events.setElemento(events.getElemento(j), i);
+                events.setElemento(aux, j);
+                i++;
+                j--;
+            }
+        }
+
+        // particionando: dividindo em partes menores
+        if (indInicio < j) { // se houver elementos à esquerda do pivô
+            ordenarEventosPorNomeCliente(events, indInicio, j);
+        }
+        if (i < indFim) { // se houver elementos à direita do pivô
+            ordenarEventosPorNomeCliente(events, i, indFim);
+        }
+        return events;
+    }
 
     public String encontrarEmailCliente(List<EventAttendee> attendees) {
         for (EventAttendee attendee : attendees) {
@@ -139,5 +195,45 @@ public class GoogleCalendarService {
             }
         }
         return null;
+    }
+
+    public ListaObj<EventoConsultaDTO> ordenarEventosPorDataInicio(ListaObj<EventoConsultaDTO> events, Integer indInicio, Integer indFim) {
+        int i = indInicio;
+        int j = indFim;
+        String pivo = events.getElemento((indInicio + indFim) / 2).getDataHoraInicio(); // índice do meio
+
+        while (i <= j) { // enquanto o início não ultrapassa o fim
+            String emailAtualI = events.getElemento(i).getDataHoraInicio();
+            String emailAtualJ = events.getElemento(j).getDataHoraInicio();
+
+            // move o i para a direita até encontrar alguém maior ou igual ao pivô
+            while (emailAtualI.compareTo(pivo) < 0) {
+                i++;
+                emailAtualI = events.getElemento(i).getDataHoraInicio();
+            }
+            // move o j para a esquerda até encontrar alguém menor ou igual ao pivô
+            while (emailAtualJ.compareTo(pivo) > 0) {
+                j--;
+                emailAtualJ = events.getElemento(j).getDataHoraInicio();
+            }
+
+            if (i <= j) { // se i não ultrapassou j
+                // troca
+                EventoConsultaDTO aux = events.getElemento(i);
+                events.setElemento(events.getElemento(j), i);
+                events.setElemento(aux, j);
+                i++;
+                j--;
+            }
+        }
+
+        // particionando: dividindo em partes menores
+        if (indInicio < j) { // se houver elementos à esquerda do pivô
+            ordenarEventosPorDataInicio(events, indInicio, j);
+        }
+        if (i < indFim) { // se houver elementos à direita do pivô
+            ordenarEventosPorDataInicio(events, i, indFim);
+        }
+        return events;
     }
 }

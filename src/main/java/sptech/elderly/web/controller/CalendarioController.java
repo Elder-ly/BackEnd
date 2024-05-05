@@ -3,7 +3,9 @@ package sptech.elderly.web.controller;
 import com.google.api.services.calendar.model.Event;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.service.GoogleCalendarService;
+import sptech.elderly.util.ListaObj;
 import sptech.elderly.web.dto.google.CriarEventoInput;
+import sptech.elderly.web.dto.google.EventoConsultaDTO;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -19,7 +21,7 @@ public class CalendarioController {
     }
 
     @PostMapping("/eventos")
-    public Event inserirEvento(
+    public EventoConsultaDTO inserirEvento(
             @RequestHeader String accessToken,
             @RequestBody CriarEventoInput eventoInput
             ) throws GeneralSecurityException, IOException {
@@ -30,13 +32,17 @@ public class CalendarioController {
                 eventoInput.emailCliente(),
                 eventoInput.emailFuncionario(),
                 eventoInput.dataHoraInicio(),
-                eventoInput.dataHoraFim());
+                eventoInput.dataHoraFim(),
+                eventoInput.recorrencia(),
+                eventoInput.descricao()
+        );
     }
 
-    @GetMapping("/eventos/{id}")
-    public List<Event> listarEventosCuidador(
+    @GetMapping("/eventos")
+    public List<EventoConsultaDTO> listarEventosCuidador(
             @RequestHeader String accessToken,
-            @PathVariable Integer id) throws IOException, GeneralSecurityException {
-        return service.listarEventos(accessToken);
+            @RequestParam(value = "ordenarPor", required = false, defaultValue = "dataHoraInicio") String ordenarPor
+    ) throws IOException, GeneralSecurityException {
+        return service.listarEventos(accessToken, ordenarPor);
     }
 }

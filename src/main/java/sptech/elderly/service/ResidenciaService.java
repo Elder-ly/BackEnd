@@ -8,11 +8,9 @@ import sptech.elderly.entity.Residencia;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.ResidenciaRepository;
 
-@Service
+@Service @RequiredArgsConstructor
 public class ResidenciaService {
-
-    @Autowired
-    private ResidenciaRepository residenciaRepository;
+    private final ResidenciaRepository residenciaRepository;
 
     public Residencia salvar(UsuarioEntity novoUsuario, Endereco novoEndereco) {
         Residencia residencia = new Residencia();

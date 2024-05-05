@@ -18,5 +18,4 @@ public class Especialidade {
 
     @Column(name = "name")
     private String nome;
-
 }
