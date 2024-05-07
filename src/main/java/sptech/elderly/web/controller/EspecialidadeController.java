@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.Especialidade;
 import sptech.elderly.service.EspecialidadeService;
-import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.especialidade.AtualizarEspecialidade;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
@@ -30,14 +29,14 @@ public class EspecialidadeController {
         return ok(especialidadeService.buscarEspecialidade(id));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Especialidade> atualizarEndereco(@PathVariable Integer id, @RequestBody @Valid AtualizarEspecialidade input){
+    @PutMapping("/{id}")
+    public ResponseEntity<Especialidade> atualizarEspecialidade(@PathVariable Integer id, @RequestBody @Valid AtualizarEspecialidade input){
         Especialidade especialidade = especialidadeService.atualizarEspecialidade(id, input);
         return status(200).body(especialidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirEndereco(@PathVariable Integer id){
+    public ResponseEntity<Void> excluirEspecialidade(@PathVariable Integer id){
         especialidadeService.deletarEspecialidade(id);
         return status(204).build();
     }

@@ -27,6 +27,7 @@ public class UsuarioMapper {
         dto.setNome(usuario.getNome());
         dto.setEmail(usuario.getEmail());
         dto.setDocumento(usuario.getDocumento());
+        dto.setDataNascimento(usuario.getDataNascimento());
         dto.setTipoUsuario(usuario.getTipoUsuario().getNome());
         dto.setGenero(usuario.getGenero() != null ? usuario.getGenero().getNome() : "Sem Gênero");
 

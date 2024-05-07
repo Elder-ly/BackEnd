@@ -1,21 +1,17 @@
 package sptech.elderly.web.controller;
 
-import com.google.api.client.util.IOUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.*;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.*;
@@ -97,8 +93,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarColaboradorInput input){
-        UsuarioEntity usuario = usuarioService.atualizarColaborador(id, input);
+    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarUsuarioInput input){
+        UsuarioEntity usuario = usuarioService.atualizarCliente(id, input);
         return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
