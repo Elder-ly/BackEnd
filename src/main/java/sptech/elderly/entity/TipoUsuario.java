@@ -9,8 +9,8 @@ import lombok.Setter;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "genders")
-public class Genero {
+@Entity @Table(name = "user_types")
+public class TipoUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,97 +1,112 @@
 package sptech.elderly.web.controller;
 
-import org.springframework.http.HttpStatusCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import sptech.elderly.classe.Usuario;
 import sptech.elderly.entity.UsuarioEntity;
-import sptech.elderly.web.dto.UsuarioSimples;
+import sptech.elderly.service.UsuarioService;
+import sptech.elderly.web.dto.usuario.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@RestController @RequestMapping("api/v1/usuarios")
+import static org.springframework.http.ResponseEntity.*;
+
+@RequiredArgsConstructor
+@RestController @RequestMapping("/usuarios")
 public class UsuarioController {
-    private Integer proximoId = 1;
-    private List<Usuario> usuarios = new ArrayList<>();
 
-    private void validarEmail(String email){
-        if (!email.contains("@")){
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email deve conter '@'");
-        }
+    private final UsuarioService usuarioService;
 
-        if (usuarios.stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email))){
-            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
-        }
+    @Operation(description = "Cria um usuário do tipo cliente.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar cliente."),
+            @ApiResponse(responseCode = "401", description = "Não autorizado."),
+            @ApiResponse(responseCode = "403", description = "Acesso proibido."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Entidade não processável.")
+    })
+    @PostMapping("/cliente")
+    public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarClienteInput novoCliente){
+        UsuarioEntity usuario = usuarioService.salvarCliente(novoCliente);
+        return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
+    @Operation(description = "Cria um usuário do tipo colaborador.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Colaborador criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Erro ao criar Colaborador."),
+            @ApiResponse(responseCode = "401", description = "Não autorizado."),
+            @ApiResponse(responseCode = "403", description = "Acesso proibido."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Entidade não processável.")
+    })
+    @PostMapping("/colaborador")
+    public ResponseEntity<UsuarioConsultaDto> criarFuncionario(@RequestBody @Valid CriarColaboradorInput novoUser){
+        UsuarioEntity usuario = usuarioService.salvarColaborador(novoUser);
+        return status(201).body(UsuarioMapper.toDto(usuario));
+    }
 
-    @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario novoUser){
-        validarEmail(novoUser.getEmail());
+    @GetMapping("/buscar-clientes")
+    public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
-        novoUser.setId((long) proximoId++);
-        usuarios.add(novoUser);
-        return ResponseEntity.status(201).body(novoUser);
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioSimplesCliente.buscarUsuarios(usuarios));
+    }
+
+    @GetMapping("/buscar-colaboradores")
+    public ResponseEntity<List<ColaboradorOutput>> buscarColaboradores() {
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
+
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioMapper.ofColaborador(usuarios));
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> get(){
-        if (usuarios.isEmpty()){
-            return ResponseEntity.status(204).build();
-        }
+    public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
+        List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
-        return ResponseEntity.status(200).body(usuarios);
+        return usuarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(UsuarioMapper.toDto(usuarios));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Usuario> getById(@PathVariable int userId){
-        List<Usuario> encontrados = usuarios.stream()
-                .filter(u -> u.getId().equals(userId))
-                .toList();
+    @GetMapping("/{codigo}")
+    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
+        UsuarioEntity usuario = usuarioService.buscarUsuarioId(codigo);
 
-        if (encontrados.isEmpty()){
-            return ResponseEntity.status(404).build();
-        }
-
-        return ResponseEntity.status(200).body(encontrados.get(0));
+        return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
-    @GetMapping("/cliente")
-    public ResponseEntity<List<UsuarioSimples>> getByClient(){
-        if (usuarios.isEmpty()){
-            return ResponseEntity.status(204).build();
-        }
-
-        return ResponseEntity.status(200).body(UsuarioSimples.toUserCliente(usuarios));
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
+        UsuarioEntity user = usuarioService.buscarPorEmail(email);
+        return status(200).body(UsuarioMapper.toDto(user));
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<Usuario> update(@PathVariable long userId, @RequestBody Usuario usuarioAtualizado){
-        validarEmail(usuarioAtualizado.getEmail());
-
-        for (int i = 0; i < usuarios.size(); i++) {
-            if (usuarios.get(i).getId().equals(userId)){
-                long idAntigo = usuarios.get(i).getId();
-                usuarios.set(i, usuarioAtualizado);
-                usuarioAtualizado.setId(idAntigo);
-                return ResponseEntity.status(200).body(usuarios.get(i));
-            }
-        }
-
-        return ResponseEntity.status(404).build();
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarUsuarioInput input){
+        UsuarioEntity usuario = usuarioService.atualizarCliente(id, input);
+        return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UsuarioEntity> delete(@PathVariable int id){
-        for (int i = 0; i < usuarios.size(); i++) {
-            if (usuarios.get(i).getId().equals(id)){
-                usuarios.remove(i);
-                return ResponseEntity.status(204).build();
-            }
-        }
+    public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){
+        usuarioService.excluirUsuario(id);
+        return status(204).build();
+    }
 
-        return ResponseEntity.status(404).build();
+    @GetMapping(value = "colaboradores/csv", produces = "text/csv")
+    public ResponseEntity<String> baixarCsvCuidadores(HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "inline; filename=cuidadores_elderly.csv");
+        return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
     }
 }

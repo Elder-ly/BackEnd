@@ -6,17 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Objects;
-
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "genders")
-public class Genero {
+@Entity @Table(name = "residences")
+public class Residencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
-    private String nome;
+    @ManyToOne @JoinColumn(name = "user_id")
+    private UsuarioEntity usuario;
+
+    @ManyToOne @JoinColumn(name = "adresse_id")
+    private Endereco endereco;
 }

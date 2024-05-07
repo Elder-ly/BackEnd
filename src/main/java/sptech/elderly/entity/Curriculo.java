@@ -1,21 +1,23 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "resumes")
 public class Curriculo {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @ManyToOne @JoinColumn(name = "specialtie_id")
-    private EspecialidadeEntity especialidadeEntity;
+    private Especialidade especialidade;
 }

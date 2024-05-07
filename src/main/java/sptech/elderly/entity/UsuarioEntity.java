@@ -1,42 +1,46 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "users")
 public class UsuarioEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name")
     private String nome;
 
-    @Column(name = "email", nullable = false, unique = true, length = 45)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 8)
-    private String senha;
-
-    @Column(name = "document", nullable = false, length = 14)
+    @Column(name = "document", unique = true)
     private String documento;
 
-    @ManyToOne @JoinColumn(name = "gender_id", nullable = false)
+    @Column(name = "birth_date")
+    private LocalDate dataNascimento;
+
+    @Column(name = "biography")
+    private String biografia;
+
+    @ManyToOne @JoinColumn(name = "user_type_id", referencedColumnName = "id")
+    private TipoUsuario tipoUsuario;
+
+    @ManyToOne @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsuarioEntity usuarioEntity = (UsuarioEntity) o;
-        return Objects.equals(id, usuarioEntity.id);
-    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Residencia> residencias;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Curriculo> curriculos;
 }

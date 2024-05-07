@@ -1,28 +1,30 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "messages")
-public class MensagemEntity {
+public class Mensagem {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "content")
     private String conteudo;
 
-    @Column(name = "timestamp")
-    private LocalDateTime horario;
+    @Column(name = "date_time")
+    private LocalDateTime dataHora;
 
-    @ManyToOne @JoinColumn(name = "destination_id")
+    @ManyToOne @JoinColumn(name = "recipient_id")
     private UsuarioEntity destinatario;
 
     @ManyToOne @JoinColumn(name = "sender_id")

@@ -9,14 +9,17 @@ import lombok.Setter;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "genders")
-public class Genero {
+@Entity @Table(name = "ratings")
+public class Classificacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
-    private String nome;
+    @Column(name = "rating")
+    private Integer classificacao;
+
+    @ManyToOne @JoinColumn(name = "proposal_id")
+    private Proposta proposta;
 }
