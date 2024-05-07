@@ -44,6 +44,12 @@ public class UsuarioService {
 
     private final CurriculoService curriculoService;
 
+    public void validarDocumento(String documento){
+        if (usuarioRepository.existsByDocumento(documento)){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Documento já cadastrado!");
+        }
+    }
+
     public UsuarioEntity salvarCliente(CriarClienteInput input) {
         if (input.tipoUsuario() != 3){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
@@ -62,6 +68,8 @@ public class UsuarioService {
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
                 );
+
+        validarDocumento(input.documento());
 
         Endereco endereco = enderecoService.salvar(input.endereco());
         UsuarioEntity novoUsuario = clienteMapper.criarCliente(input);
@@ -93,6 +101,8 @@ public class UsuarioService {
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
                 );
+
+        validarDocumento(input.documento());
 
         Endereco endereco = enderecoService.salvar(input.endereco());
 
@@ -146,7 +156,7 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
-    public UsuarioEntity atualizarColaborador(Integer id, AtualizarColaboradorInput input) {
+    public UsuarioEntity atualizarCliente(Integer id, AtualizarUsuarioInput input) {
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
 
@@ -170,11 +180,28 @@ public class UsuarioService {
             usuario.setBiografia(input.biografia());
         }
 
-        if(input.id() != null){
-            usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.id()));
+        if(input.endereco() != null){
+            enderecoService.atualizarEndereco(idEndereco(usuario), input.endereco());
+        }
+
+        if(input.especialidades() != null){
+            usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.especialidades()));
         }
 
         return usuarioRepository.save(usuario);
+    }
+
+    public Integer idEndereco(UsuarioEntity usuario) {
+        if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
+            Residencia residencia = usuario.getResidencias().get(0);
+            Endereco endereco = residencia.getEndereco();
+
+            if (endereco != null){
+                return endereco.getId();
+            }
+        }
+
+        return  null;
     }
 
     public String gerarStringCsv() {

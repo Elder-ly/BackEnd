@@ -40,9 +40,9 @@ public class EspecialidadeService {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
 
-        especialidade = especialidadeMapper.partialUpdate(input, especialidade);
+        especialidade.setNome(input.especialidade());
 
-        return especialidadeRepository.saveAndFlush(especialidade);
+        return especialidadeRepository.save(especialidade);
     }
 
     public EspecialidadeOutput buscarEspecialidade(Integer id) {

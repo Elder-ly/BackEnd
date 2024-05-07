@@ -16,11 +16,5 @@ public interface EspecialidadeMapper {
 
     EspecialidadeOutput toDto(Especialidade especialidade);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Especialidade partialUpdate(EspecialidadeOutput especialidadeOutput, @MappingTarget Especialidade especialidade);
-
     Especialidade toUpdate(AtualizarEspecialidade input);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Especialidade partialUpdate(AtualizarEspecialidade especialidadeInput, @MappingTarget Especialidade especialidade);
 }

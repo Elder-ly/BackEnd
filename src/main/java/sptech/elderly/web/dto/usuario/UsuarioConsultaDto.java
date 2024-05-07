@@ -6,6 +6,7 @@ import lombok.Setter;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class UsuarioConsultaDto implements Serializable {
     String nome;
     String email;
     String documento;
+    LocalDate dataNascimento;;
     String tipoUsuario;
     String genero;
     EnderecoOutput endereco;

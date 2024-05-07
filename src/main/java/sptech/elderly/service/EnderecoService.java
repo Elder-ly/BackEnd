@@ -29,7 +29,9 @@ public class EnderecoService {
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Endereço não encontrado"));
 
-        return enderecoMapper.partialUpdate(input, endereco);
+        endereco = enderecoMapper.partialUpdate(input, endereco);
+
+        return enderecoRepository.save(endereco);
     }
 
     public void excluirEndereco(Integer id) {
