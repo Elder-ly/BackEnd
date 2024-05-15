@@ -3,6 +3,7 @@ package sptech.elderly.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,13 @@ public class UsuarioController {
         return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
+    @Operation(description = "Busca todos os clientes cadastrados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Nenhum cliente encontrado."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
     @GetMapping("/buscar-clientes")
     public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
@@ -70,6 +78,13 @@ public class UsuarioController {
                 : status(200).body(UsuarioMapper.ofColaborador(usuarios));
     }
 
+    @Operation(description = "Busca todos os usuários cadastrados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários encontrados com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Nenhum usuário encontrado."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
@@ -79,6 +94,13 @@ public class UsuarioController {
                 : status(200).body(UsuarioMapper.toDto(usuarios));
     }
 
+    @Operation(description = "Busca um usuário por ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
     @GetMapping("/{codigo}")
     public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
         UsuarioEntity usuario = usuarioService.buscarUsuarioId(codigo);
@@ -86,11 +108,19 @@ public class UsuarioController {
         return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
+    @Operation(description = "Busca um usuário por e-mail.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
     @GetMapping("/email/{email}")
     public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
         UsuarioEntity user = usuarioService.buscarPorEmail(email);
         return status(200).body(UsuarioMapper.toDto(user));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarUsuarioInput input){
@@ -104,6 +134,12 @@ public class UsuarioController {
         return status(204).build();
     }
 
+    @Operation(description = "Baixa um arquivo CSV contendo os colaboradores.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV baixado com sucesso."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
     @GetMapping(value = "colaboradores/csv", produces = "text/csv")
     public ResponseEntity<String> baixarCsvCuidadores(HttpServletResponse response) {
         response.setHeader("Content-Disposition", "inline; filename=cuidadores_elderly.csv");
