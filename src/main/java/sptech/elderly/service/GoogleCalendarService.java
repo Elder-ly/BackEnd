@@ -281,4 +281,16 @@ public class GoogleCalendarService {
 
         return usuarios;
     }
+
+    public String inserirCalendarioDisponibilidade(String accessToken) throws GeneralSecurityException, IOException {
+        autenticarCalendar(accessToken);
+
+        com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
+        calendar.setSummary("Disponibilidade");
+        calendar.setTimeZone("America/Sao_Paulo");
+
+        com.google.api.services.calendar.model.Calendar calendarioCriado = service.calendars().insert(calendar).execute();
+
+        return calendarioCriado.getId();
+    }
 }
