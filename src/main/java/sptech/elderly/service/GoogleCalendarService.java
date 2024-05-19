@@ -11,13 +11,18 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import sptech.elderly.entity.Calendario;
+import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.repository.CalendarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.util.ListaObj;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 import sptech.elderly.web.dto.google.EventoMapper;
+import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,10 +30,12 @@ import java.util.List;
 public class GoogleCalendarService {
 
     private final UsuarioRepository usuarioRepository;
+    private final CalendarioRepository calendarioRepository;
     private final EventoMapper eventoMapper;
 
-    public GoogleCalendarService(UsuarioRepository usuarioRepository) {
+    public GoogleCalendarService(UsuarioRepository usuarioRepository, CalendarioRepository calendarioRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.calendarioRepository = calendarioRepository;
         this.eventoMapper = new EventoMapper();
     }
 
@@ -235,5 +242,43 @@ public class GoogleCalendarService {
             ordenarEventosPorDataInicio(events, i, indFim);
         }
         return events;
+    }
+
+    public List<UsuarioEntity> filtrarFuncionariosPorDisponibilidade(
+            String accessToken,
+            DateTime dataHoraInicio,
+            DateTime dataHoraFim,
+            List<UsuarioEntity> usuarios
+    ) throws GeneralSecurityException, IOException {
+        autenticarCalendar(accessToken);
+
+        List<Calendario> calendarios = calendarioRepository.findByUsuarioIn(usuarios);
+
+        FreeBusyRequest request = new FreeBusyRequest();
+        request.setTimeMin(dataHoraInicio);
+        request.setTimeMax(dataHoraFim);
+
+        List<FreeBusyRequestItem> itemList = new ArrayList<>();
+        for (Calendario calendario : calendarios) {
+            FreeBusyRequestItem item = new FreeBusyRequestItem();
+            item.setId(calendario.getCalendarId());
+            itemList.add(item);
+        }
+        request.setItems(itemList);
+
+        Calendar.Freebusy.Query fbq = service.freebusy().query(request);
+        FreeBusyResponse response = fbq.execute();
+
+        // Analisando calendários de "Disponibilidade"
+        for (Calendario calendario : calendarios) {
+            if (response.getCalendars().get(calendario.getCalendarId()).getBusy().isEmpty()) {
+                usuarios.remove(calendario.getUsuario());
+            }
+        }
+
+        // Analisando calendários principais
+        usuarios.removeIf(usuario -> !response.getCalendars().get(usuario.getEmail()).getBusy().isEmpty());
+
+        return usuarios;
     }
 }
