@@ -14,7 +14,7 @@ import sptech.elderly.web.dto.usuario.*;
 
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.status;
 
 @RequiredArgsConstructor
 @RestController @RequestMapping("/usuarios")
@@ -32,9 +32,10 @@ public class UsuarioController {
             @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
     @PostMapping("/cliente")
-    public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarClienteInput novoCliente){
+    public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarUsuarioInput novoCliente){
         UsuarioEntity usuario = usuarioService.salvarCliente(novoCliente);
-        return status(201).body(UsuarioMapper.toDto(usuario));
+        UsuarioConsultaDto dto = UsuarioMapper.toDto(usuario);
+        return status(201).body(dto);
     }
 
     @Operation(description = "Cria um usuário do tipo colaborador.")
@@ -47,7 +48,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "422", description = "Entidade não processável.")
     })
     @PostMapping("/colaborador")
-    public ResponseEntity<UsuarioConsultaDto> criarFuncionario(@RequestBody @Valid CriarColaboradorInput novoUser){
+    public ResponseEntity<UsuarioConsultaDto> criarFuncionario(@RequestBody @Valid CriarUsuarioInput novoUser){
         UsuarioEntity usuario = usuarioService.salvarColaborador(novoUser);
         return status(201).body(UsuarioMapper.toDto(usuario));
     }
@@ -74,9 +75,11 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
+        List<UsuarioConsultaDto> usuarioConsultaDto = UsuarioMapper.toDto(usuarios);
+
         return usuarios.isEmpty()
                 ? status(204).build()
-                : status(200).body(UsuarioMapper.toDto(usuarios));
+                : status(200).body(usuarioConsultaDto);
     }
 
     @GetMapping("/{codigo}")
@@ -94,7 +97,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarUsuarioInput input){
-        UsuarioEntity usuario = usuarioService.atualizarCliente(id, input);
+        UsuarioEntity usuario = usuarioService.atualizarUsuario(id, input);
         return status(200).body(UsuarioMapper.toDto(usuario));
     }
 

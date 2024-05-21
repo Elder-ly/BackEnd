@@ -19,8 +19,8 @@ public class UsuarioConsultaDto implements Serializable {
     String email;
     String documento;
     LocalDate dataNascimento;;
-    String tipoUsuario;
-    String genero;
+    Integer tipoUsuario;
+    Integer genero;
     EnderecoOutput endereco;
     List<String> especialidades;
 }

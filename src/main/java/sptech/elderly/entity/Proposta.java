@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "proposals")

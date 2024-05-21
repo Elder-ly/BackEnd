@@ -10,9 +10,9 @@ import java.io.Serializable;
  */
 public record CriarEnderecoInput(@NotBlank String cep,
                                  @NotBlank String logradouro,
-                                 @NotBlank String numero,
-                                 @NotBlank String complemento,
-                                 @NotBlank String uf,
+                                 String complemento,
+                                 @NotBlank String bairro,
+                                 String numero,
                                  @NotBlank String cidade,
-                                 @NotBlank String bairro) implements Serializable {
+                                 @NotBlank String uf) implements Serializable {
 }
