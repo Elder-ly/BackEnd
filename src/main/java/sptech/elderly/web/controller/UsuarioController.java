@@ -57,7 +57,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso."),
             @ApiResponse(responseCode = "204", description = "Nenhum cliente encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/buscar-clientes")
@@ -73,7 +72,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Colaboradores encontrados com sucesso."),
             @ApiResponse(responseCode = "204", description = "Nenhum colaborador encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/buscar-colaboradores")

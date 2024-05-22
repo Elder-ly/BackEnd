@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.util.List;
+
 import static org.springframework.http.ResponseEntity.*;
 
 @RequiredArgsConstructor
@@ -72,4 +74,17 @@ public class EspecialidadeController {
         especialidadeService.deletarEspecialidade(id);
         return status(204).build();
     }
+
+    @Operation(summary = "Busca todas as especialidades cadastradas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Especialidades encontradas com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Nenhuma especialidade encontrada."),
+            @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
+    })
+    @GetMapping
+    public ResponseEntity<List<Especialidade>> buscarEspecialidades(){
+        return ok(especialidadeService.buscarEspecialidade());
+    }
+
+
 }
