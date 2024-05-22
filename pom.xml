@@ -85,6 +85,12 @@
 			<artifactId>google-auth-library-oauth2-http</artifactId>
 			<version>1.23.0</version>
 		</dependency>
+
+		<!-- Dependência do JavaMailSender -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

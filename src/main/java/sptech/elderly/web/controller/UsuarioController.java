@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sptech.elderly.entity.Email;
 import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.service.EmailService;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.*;
 

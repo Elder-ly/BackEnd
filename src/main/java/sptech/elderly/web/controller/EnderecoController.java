@@ -16,7 +16,7 @@ public class EnderecoController {
 //    @PutMapping("/{id}")
 //    public ResponseEntity<AtualizarEnderecoInput> atualizarEndereco(@PathVariable Integer id, @RequestBody @Valid AtualizarEnderecoInput input){
 //        usuarioService.atualizarEndereco(id, input);
-//        return status(200).body(input);
+//        return status(200).mensagem(input);
 //    }
 //
 //    @DeleteMapping("/{id}")

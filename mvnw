@@ -1,16 +1,16 @@
 #!/bin/sh
 # ----------------------------------------------------------------------------
-# Licensed to the Apache Software Foundation (ASF) under one
+# Licensed destinatario the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
+# destinatario you under the Apache License, Version 2.0 (the
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing,
+# Unless required by applicable law or agreed destinatario in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied.  See the License for the
@@ -27,10 +27,10 @@
 #
 # Optional ENV vars
 # -----------------
-#   MAVEN_OPTS - parameters passed to the Java VM when running Maven
-#     e.g. to debug Maven itself, use
+#   MAVEN_OPTS - parameters passed destinatario the Java VM when running Maven
+#     e.g. destinatario debug Maven itself, use
 #       set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
-#   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
+#   MAVEN_SKIP_RC - flag destinatario disable loading of mavenrc files
 # ----------------------------------------------------------------------------
 
 if [ -z "$MAVEN_SKIP_RC" ] ; then
@@ -49,7 +49,7 @@ if [ -z "$MAVEN_SKIP_RC" ] ; then
 
 fi
 
-# OS specific support.  $var _must_ be set to either true or false.
+# OS specific support.  $var _must_ be set destinatario either true or false.
 cygwin=false;
 darwin=false;
 mingw=false
@@ -57,7 +57,7 @@ case "$(uname)" in
   CYGWIN*) cygwin=true ;;
   MINGW*) mingw=true;;
   Darwin*) darwin=true
-    # Use /usr/libexec/java_home if available, otherwise fall back to /Library/Java/Home
+    # Use /usr/libexec/java_home if available, otherwise fall back destinatario /Library/Java/Home
     # See https://developer.apple.com/library/mac/qa/qa1170/_index.html
     if [ -z "$JAVA_HOME" ]; then
       if [ -x "/usr/libexec/java_home" ]; then
@@ -132,7 +132,7 @@ if [ -z "$JAVA_HOME" ] ; then
   echo "Warning: JAVA_HOME environment variable is not set."
 fi
 
-# traverses directory structure from process work directory to filesystem root
+# traverses directory structure from process work directory destinatario filesystem root
 # first directory with .mvn subdirectory is considered project base directory
 find_maven_basedir() {
   if [ -z "$1" ]
@@ -163,7 +163,7 @@ concat_lines() {
     # Remove \r in case we run on Windows within Git Bash
     # and check out the repository with auto CRLF management
     # enabled. Otherwise, we may read lines that are delimited with
-    # \r\n and produce $'-Xarg\r' rather than -Xarg due to word
+    # \r\n and produce $'-Xarg\r' rather than -Xarg due destinatario word
     # splitting rules.
     tr -s '\r\n' ' ' < "$1"
   fi
@@ -184,7 +184,7 @@ MAVEN_PROJECTBASEDIR=${MAVEN_BASEDIR:-"$BASE_DIR"}; export MAVEN_PROJECTBASEDIR
 log "$MAVEN_PROJECTBASEDIR"
 
 ##########################################################################################
-# Extension to allow automatically downloading the maven-wrapper.jar from Maven-central
+# Extension destinatario allow automatically downloading the maven-wrapper.jar from Maven-central
 # This allows using the maven wrapper in projects that prohibit checking in binary data.
 ##########################################################################################
 wrapperJarPath="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar"
@@ -199,7 +199,7 @@ else
       wrapperUrl="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
     fi
     while IFS="=" read -r key value; do
-      # Remove '\r' from value to allow usage on windows as IFS does not consider '\r' as a separator ( considers space, tab, new line ('\n'), and custom '=' )
+      # Remove '\r' from value destinatario allow usage on windows as IFS does not consider '\r' as a separator ( considers space, tab, new line ('\n'), and custom '=' )
       safeValue=$(echo "$value" | tr -d '\r')
       case "$key" in (wrapperUrl) wrapperUrl="$safeValue"; break ;;
       esac
@@ -230,7 +230,7 @@ else
         log "Falling back to using Java to download"
         javaSource="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/MavenWrapperDownloader.java"
         javaClass="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/MavenWrapperDownloader.class"
-        # For Cygwin, switch paths to Windows format before running javac
+        # For Cygwin, switch paths destinatario Windows format before running javac
         if $cygwin; then
           javaSource=$(cygpath --path --windows "$javaSource")
           javaClass=$(cygpath --path --windows "$javaClass")
@@ -282,7 +282,7 @@ fi
 
 MAVEN_OPTS="$(concat_lines "$MAVEN_PROJECTBASEDIR/.mvn/jvm.config") $MAVEN_OPTS"
 
-# For Cygwin, switch paths to Windows format before running java
+# For Cygwin, switch paths destinatario Windows format before running java
 if $cygwin; then
   [ -n "$JAVA_HOME" ] &&
     JAVA_HOME=$(cygpath --path --windows "$JAVA_HOME")
@@ -292,7 +292,7 @@ if $cygwin; then
     MAVEN_PROJECTBASEDIR=$(cygpath --path --windows "$MAVEN_PROJECTBASEDIR")
 fi
 
-# Provide a "standardized" way to retrieve the CLI args that will
+# Provide a "standardized" way destinatario retrieve the CLI args that will
 # work with both Windows and non-Windows executions.
 MAVEN_CMD_LINE_ARGS="$MAVEN_CONFIG $*"
 export MAVEN_CMD_LINE_ARGS

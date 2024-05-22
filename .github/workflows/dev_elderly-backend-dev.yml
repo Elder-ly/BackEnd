@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - elderly-backend-dev
+name: Build and deploy JAR app destinatario Azure Web App - elderly-backend-dev
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.deploy-destinatario-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
   
@@ -45,15 +45,15 @@ jobs:
         with:
           name: java-app
       
-      - name: Login to Azure
+      - name: Login destinatario Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_280DFF7DD4464721B61DA4F4360D0F0F }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_93E89CA7247C4BEF970B52AFCC70AD28 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_477E1107D2FA419F810732FEE3EDB7BD }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy destinatario Azure Web App
+        id: deploy-destinatario-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'elderly-backend-dev'
