@@ -43,4 +43,5 @@ public class UsuarioEntity {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Curriculo> curriculos;
+
 }

@@ -87,5 +87,4 @@ public class EspecialidadeController {
     public ResponseEntity<List<Especialidade>> buscarEspecialidades(){
         return status(200).body(especialidadeService.buscarEspecialidade());
     }
-
 }

@@ -54,5 +54,4 @@ public class EspecialidadeService {
         return especialidadeRepository.findAll();
     }
 
-
 }
