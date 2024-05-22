@@ -27,7 +27,7 @@ public class CalendarioController {
 
     @Operation(summary = "Insere um novo evento no calendário.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Evento inserido com sucesso."),
+            @ApiResponse(responseCode = "201", description = "Evento inserido com sucesso."),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos para a criação do evento."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),
@@ -53,6 +53,7 @@ public class CalendarioController {
     @Operation(summary = "Lista eventos do cuidador.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Eventos listados com sucesso."),
+            @ApiResponse(responseCode = "204", description = "Nenhum evento encontrado."),
             @ApiResponse(responseCode = "400", description = "Requisição inválida."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),

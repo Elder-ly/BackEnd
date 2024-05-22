@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.Especialidade;
+import sptech.elderly.repository.EspecialidadeRepository;
 import sptech.elderly.service.EspecialidadeService;
 import sptech.elderly.web.dto.especialidade.AtualizarEspecialidade;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
@@ -24,6 +25,7 @@ import static org.springframework.http.ResponseEntity.*;
 public class EspecialidadeController {
 
     private final EspecialidadeService especialidadeService;
+    private final EspecialidadeRepository especialidadeRepository;
 
     @Operation(summary = "Cria uma nova especialidade.")
     @ApiResponses(value = {
@@ -83,8 +85,7 @@ public class EspecialidadeController {
     })
     @GetMapping
     public ResponseEntity<List<Especialidade>> buscarEspecialidades(){
-        return ok(especialidadeService.buscarEspecialidade());
+        return status(200).body(especialidadeService.buscarEspecialidade());
     }
-
 
 }
