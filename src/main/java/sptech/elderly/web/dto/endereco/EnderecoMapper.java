@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import sptech.elderly.entity.Endereco;
-import sptech.elderly.entity.UsuarioEntity;
 
-@RequiredArgsConstructor @Component
+@Component @RequiredArgsConstructor
 public class EnderecoMapper {
 
     private final ModelMapper mapper;

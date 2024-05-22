@@ -34,8 +34,7 @@ public class UsuarioController {
     @PostMapping("/cliente")
     public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarUsuarioInput novoCliente){
         UsuarioEntity usuario = usuarioService.salvarCliente(novoCliente);
-        UsuarioConsultaDto dto = UsuarioMapper.toDto(usuario);
-        return status(201).body(dto);
+        return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
     @Operation(description = "Cria um usuário do tipo colaborador.")
@@ -84,15 +83,14 @@ public class UsuarioController {
 
     @GetMapping("/{codigo}")
     public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
-        UsuarioEntity usuario = usuarioService.buscarUsuarioId(codigo);
-
-        return status(200).body(UsuarioMapper.toDto(usuario));
+        UsuarioConsultaDto usuario = usuarioService.buscarUsuarioId(codigo);
+        return status(200).body(usuario);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
-        UsuarioEntity user = usuarioService.buscarPorEmail(email);
-        return status(200).body(UsuarioMapper.toDto(user));
+        UsuarioConsultaDto user = usuarioService.buscarPorEmail(email);
+        return status(200).body(user);
     }
 
     @PutMapping("/{id}")

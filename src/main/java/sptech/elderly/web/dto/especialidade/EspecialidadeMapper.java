@@ -8,7 +8,7 @@ import sptech.elderly.entity.Especialidade;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor @Component
+@Component @RequiredArgsConstructor
 public class EspecialidadeMapper {
 
     private final ModelMapper mapper;

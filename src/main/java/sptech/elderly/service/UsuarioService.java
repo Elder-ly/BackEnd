@@ -70,16 +70,33 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
 
-        return getUsuarioEntity(input);
-    }
-
-    public UsuarioEntity getUsuarioEntity(CriarUsuarioInput input) {
         validarEmail(input.email());
         validarDocumento(input.documento());
 
         UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
 
-        novoUsuario.setTipoUsuario(validarTipoUsuario(input.tipoUsuario()));
+        novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.CLIENTE.getCodigo()));
+        novoUsuario.setGenero(validarGenero(input.genero()));
+
+        Endereco endereco = enderecoService.salvar(input.endereco());
+
+        novoUsuario = usuarioRepository.save(novoUsuario);
+        residenciaService.salvar(novoUsuario, endereco);
+
+        return novoUsuario;
+    }
+
+    public UsuarioEntity salvarColaborador(CriarUsuarioInput input) {
+        if (input.tipoUsuario() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
+        }
+
+        validarEmail(input.email());
+        validarDocumento(input.documento());
+
+        UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
+
+        novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.COLABORADOR.getCodigo()));
         novoUsuario.setGenero(validarGenero(input.genero()));
 
         Endereco endereco = enderecoService.salvar(input.endereco());
@@ -89,19 +106,13 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarColaborador(CriarUsuarioInput input) {
-        if (input.tipoUsuario() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
-        }
-
-        return getUsuarioEntity(input);
-    }
-
     @Transactional
-    public UsuarioEntity buscarUsuarioId(Integer userId) {
-        return usuarioRepository.findById(userId).orElseThrow(
+    public UsuarioConsultaDto buscarUsuarioId(Integer userId) {
+        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Usuário", userId)
         );
+
+        return UsuarioMapper.toDto(usuario);
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
@@ -113,7 +124,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioEntity buscarPorEmail(String email) {
+    public UsuarioConsultaDto buscarPorEmail(String email) {
         UsuarioEntity usuario = usuarioRepository.findByEmail(email).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Email", email)
         );

@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import sptech.elderly.entity.*;
+import sptech.elderly.enums.TipoUsuarioEnum;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor @Component
+@Component @RequiredArgsConstructor
 public class UsuarioMapper {
 
     private final ModelMapper mapper;
@@ -33,7 +34,9 @@ public class UsuarioMapper {
         dto.setEmail(usuario.getEmail());
         dto.setDocumento(usuario.getDocumento());
         dto.setDataNascimento(usuario.getDataNascimento());
-        dto.setTipoUsuario(usuario.getTipoUsuario().getId());
+        dto.setBiografia(usuario.getBiografia());
+        dto.setFotoPerfil(usuario.getFotoPerfil());
+        dto.setTipoUsuario(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() ? TipoUsuarioEnum.COLABORADOR.getCodigo() : TipoUsuarioEnum.CLIENTE.getCodigo());
         dto.setGenero(usuario.getGenero() != null ? usuario.getGenero().getId() : null);
 
         if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {

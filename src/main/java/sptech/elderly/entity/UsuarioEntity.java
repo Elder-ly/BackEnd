@@ -41,7 +41,7 @@ public class UsuarioEntity {
     @ManyToOne @JoinColumn(name = "gender_id", referencedColumnName = "id")
     private Genero genero;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Residencia> residencias;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)

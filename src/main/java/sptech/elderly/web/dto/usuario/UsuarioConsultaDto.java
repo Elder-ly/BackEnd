@@ -14,13 +14,15 @@ import java.util.List;
  */
 @Getter @Setter @NoArgsConstructor
 public class UsuarioConsultaDto implements Serializable {
-    Integer id;
-    String nome;
-    String email;
-    String documento;
-    LocalDate dataNascimento;;
-    Integer tipoUsuario;
-    Integer genero;
-    EnderecoOutput endereco;
-    List<String> especialidades;
+    private Integer id;
+    private String nome;
+    private String email;
+    private String documento;
+    private LocalDate dataNascimento;
+    private String biografia;
+    private String fotoPerfil;
+    private Integer tipoUsuario;
+    private Integer genero;
+    private EnderecoOutput endereco;
+    private List<String> especialidades;
 }
