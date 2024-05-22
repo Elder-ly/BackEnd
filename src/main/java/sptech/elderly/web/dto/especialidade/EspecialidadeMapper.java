@@ -1,20 +1,25 @@
 package sptech.elderly.web.dto.especialidade;
 
-import org.mapstruct.*;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import sptech.elderly.entity.Especialidade;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface EspecialidadeMapper {
+@Component @RequiredArgsConstructor
+public class EspecialidadeMapper {
 
-    List<Especialidade> toEntities(List<String> nomes);
+    private final ModelMapper mapper;
 
-    Especialidade map(String nome);
+    public List<Especialidade> toEntities(List<String> nomes){
+        return nomes.stream()
+                .map(nome -> mapper.map(nome, Especialidade.class))
+                .collect(Collectors.toList());
+    }
 
-    Especialidade toEntity(EspecialidadeOutput especialidadeOutput);
-
-    EspecialidadeOutput toDto(Especialidade especialidade);
-
-    Especialidade toUpdate(AtualizarEspecialidade input);
+    public EspecialidadeOutput toDto(Especialidade especialidade){
+        return mapper.map(especialidade, EspecialidadeOutput.class);
+    }
 }

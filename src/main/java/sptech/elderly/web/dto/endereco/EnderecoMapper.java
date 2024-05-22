@@ -1,19 +1,20 @@
 package sptech.elderly.web.dto.endereco;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import sptech.elderly.entity.Endereco;
 
-@Mapper(componentModel = "spring")
-public interface EnderecoMapper {
+@Component @RequiredArgsConstructor
+public class EnderecoMapper {
 
-    public Endereco ofEndereco(CriarEnderecoInput novoEndereco);
+    private final ModelMapper mapper;
 
-    Endereco toEntity(AtualizarEnderecoInput input);
+    public Endereco mapearEndereco(CriarEnderecoInput input){
+        return mapper.map(input, Endereco.class);
+    }
 
-    static EnderecoOutput toDto(Endereco endereco){
+    public static EnderecoOutput toDto(Endereco endereco){
         return new EnderecoOutput(
                 endereco.getId(),
                 endereco.getCep(),
@@ -25,12 +26,4 @@ public interface EnderecoMapper {
                 endereco.getUf()
         );
     }
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Endereco partialUpdate(AtualizarEnderecoInput input, @MappingTarget Endereco endereco);
-
-    Endereco toEntity(EnderecoOutput enderecoOutput);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Endereco partialUpdate(EnderecoOutput enderecoOutput, @MappingTarget Endereco endereco);
 }

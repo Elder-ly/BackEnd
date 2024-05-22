@@ -1,23 +1,29 @@
 package sptech.elderly.web.dto.usuario;
 
-
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import sptech.elderly.entity.*;
+import sptech.elderly.enums.TipoUsuarioEnum;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+@Component @RequiredArgsConstructor
 public class UsuarioMapper {
 
+    private final ModelMapper mapper;
+
+    public UsuarioEntity mapearEntidade(CriarUsuarioInput input){
+        return mapper.map(input, UsuarioEntity.class);
+    }
+
     public static List<UsuarioConsultaDto> toDto(List<UsuarioEntity> usuarios) {
-        List<UsuarioConsultaDto> usuarioConsultaDtos = usuarios.stream()
+        return usuarios.stream()
                 .map(UsuarioMapper::toDto)
                 .collect(Collectors.toList());
-
-        return usuarioConsultaDtos;
     }
 
     public static UsuarioConsultaDto toDto(UsuarioEntity usuario) {
@@ -28,9 +34,10 @@ public class UsuarioMapper {
         dto.setEmail(usuario.getEmail());
         dto.setDocumento(usuario.getDocumento());
         dto.setDataNascimento(usuario.getDataNascimento());
-        dto.setTipoUsuario(usuario.getTipoUsuario().getNome());
-        dto.setGenero(usuario.getGenero() != null ? usuario.getGenero().getNome() : "Sem Gênero");
-
+        dto.setBiografia(usuario.getBiografia());
+        dto.setFotoPerfil(usuario.getFotoPerfil());
+        dto.setTipoUsuario(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() ? TipoUsuarioEnum.COLABORADOR.getCodigo() : TipoUsuarioEnum.CLIENTE.getCodigo());
+        dto.setGenero(usuario.getGenero() != null ? usuario.getGenero().getId() : null);
 
         if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
             Residencia residencia = usuario.getResidencias().get(0);
@@ -53,7 +60,7 @@ public class UsuarioMapper {
         }
 
         return curriculos.stream()
-                .map(curriculo -> curriculo.getEspecialidade())
+                .map(Curriculo::getEspecialidade)
                 .map(Especialidade::getNome)
                 .filter(nome -> nome != null && !nome.isEmpty())
                 .collect(Collectors.toList());

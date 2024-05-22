@@ -1,16 +1,11 @@
 package sptech.elderly.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Endereco;
-import sptech.elderly.entity.Residencia;
-import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.EnderecoRepository;
-import sptech.elderly.repository.UsuarioRepository;
-import sptech.elderly.web.dto.endereco.AtualizarEnderecoInput;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 
@@ -18,18 +13,17 @@ import sptech.elderly.web.dto.endereco.EnderecoMapper;
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
-
     private final EnderecoMapper enderecoMapper;
 
     public Endereco salvar(CriarEnderecoInput novoEndereco) {
-        return this.enderecoRepository.save(enderecoMapper.ofEndereco(novoEndereco));
+        return this.enderecoRepository.save(enderecoMapper.mapearEndereco(novoEndereco));
     }
 
-    public Endereco atualizarEndereco(Integer id, AtualizarEnderecoInput input) {
+    public Endereco atualizarEndereco(Integer id, CriarEnderecoInput input) {
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Endereço não encontrado"));
 
-        endereco = enderecoMapper.partialUpdate(input, endereco);
+        endereco = enderecoMapper.mapearEndereco(input);
 
         return enderecoRepository.save(endereco);
     }

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.*;
+import sptech.elderly.enums.TipoUsuarioEnum;
+import sptech.elderly.exceptions.DadosDuplicadosException;
+import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.GeneroRepository;
 import sptech.elderly.repository.TipoUsuarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
@@ -20,18 +23,14 @@ import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class UsuarioService {
-
 //  Atributos Usuarios
     private final UsuarioRepository usuarioRepository;
-
-    private final ColaboradorMapper colaboradorMapper;
-
-    private final ClienteMapper clienteMapper;
+    private final UsuarioMapper usuarioMapper;
 
 //  Atributo Genero
     private final GeneroRepository generoRepository;
 
-//  TipoUsuario
+//  TipoUsuarioEnum
     private final TipoUsuarioRepository tipoUsuarioRepository;
 
 //  Endereço
@@ -39,43 +38,50 @@ public class UsuarioService {
 
     private final EnderecoService enderecoService;
 
-//  EspecialidadeController
-    private final EspecialidadeService especialidadeService;
-
+//  CurriculoService
     private final CurriculoService curriculoService;
+
+//  EmailService
+    private final EmailService emailService;
 
     public void validarDocumento(String documento){
         if (usuarioRepository.existsByDocumento(documento)){
-            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Documento já cadastrado!");
+            throw new DadosDuplicadosException("Usuário", "Documento", documento);
         }
     }
 
-    public UsuarioEntity salvarCliente(CriarClienteInput input) {
-        if (input.tipoUsuario() != 3){
+    public void validarEmail(String email){
+        if(usuarioRepository.existsByEmail(email)){
+            throw new DadosDuplicadosException("Usuário", "Email", email);
+        }
+    }
+
+    public Genero validarGenero(Integer generoId){
+        return generoRepository.findById(generoId).orElseThrow(
+                        () -> new RecursoNaoEncontradoException("Genero", generoId)
+                );
+    }
+
+    public TipoUsuario validarTipoUsuario(Integer tipoUsuarioId){
+        return tipoUsuarioRepository.findById(tipoUsuarioId).orElseThrow(
+                        () -> new RecursoNaoEncontradoException("TipoUsuario", tipoUsuarioId)
+                );
+    }
+
+    public UsuarioEntity salvarCliente(CriarUsuarioInput input) {
+        if (input.tipoUsuario() != TipoUsuarioEnum.CLIENTE.getCodigo()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
 
-        if (usuarioRepository.existsByEmail(input.email())) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
-        }
-
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(input.tipoUsuario())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado")
-                );
-
-        Genero generoId = generoRepository.findById(input.genero())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
-                );
-
+        validarEmail(input.email());
         validarDocumento(input.documento());
 
-        Endereco endereco = enderecoService.salvar(input.endereco());
-        UsuarioEntity novoUsuario = clienteMapper.criarCliente(input);
+        UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
 
-        novoUsuario.setTipoUsuario(tipoUsuarioId);
-        novoUsuario.setGenero(generoId);
+        novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.CLIENTE.getCodigo()));
+        novoUsuario.setGenero(validarGenero(input.genero()));
+
+        Endereco endereco = enderecoService.salvar(input.endereco());
 
         novoUsuario = usuarioRepository.save(novoUsuario);
         residenciaService.salvar(novoUsuario, endereco);
@@ -83,46 +89,62 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarColaborador(CriarColaboradorInput input) {
-        if (input.tipoUsuario() != 2){
+    public UsuarioEntity salvarColaborador(CriarUsuarioInput input) {
+        if (input.tipoUsuario() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
 
-        if (usuarioRepository.existsByEmail(input.email())) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email ja cadastrado!");
-        }
-
-        TipoUsuario tipoUsuarioId = tipoUsuarioRepository.findById(input.tipoUsuario())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Tipo usuário não encontrado.")
-                );
-
-        Genero generoId = generoRepository.findById(input.genero())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Gênero não encontrado.")
-                );
-
+        validarEmail(input.email());
         validarDocumento(input.documento());
+
+        UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
+
+        novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.COLABORADOR.getCodigo()));
+        novoUsuario.setGenero(validarGenero(input.genero()));
 
         Endereco endereco = enderecoService.salvar(input.endereco());
 
-        UsuarioEntity novoUsuario = colaboradorMapper.criarFuncionario(input);
-        novoUsuario.setTipoUsuario(tipoUsuarioId);
-        novoUsuario.setGenero(generoId);
-
         novoUsuario = usuarioRepository.save(novoUsuario);
         residenciaService.salvar(novoUsuario, endereco);
+
+        String htmlContent = """
+                 <html>
+                        <body style='font-family: Roboto, sans-serif; text-align: center;'>
+                            <div style='padding: 3px; text-align: center; width: 35%;'>
+                                <img style='height: 50px;' src='https://github.com/Elder-ly/FrontEnd/blob/dev/src/assets/img/logo.svg?raw=true' alt='Elder.ly Logo'>
+                            </div>
+                            <h1 style='color: #0f456c'>Bem-vindo ao Elder.ly!</h1>
+                            <p style='color: #135686'>
+                                Seja muito bem-vindo à nossa comunidade dedicada ao cuidado de idosos. Você foi convidado pelo seu agente para fazer parte dessa inovação. <br>
+                                Para começar a utilizar a plataforma, por favor, complete seu cadastro clicando no botão abaixo:
+                            </p>
+                            <div>
+                                <a href='https://black-sea-0ab569f10.5.azurestaticapps.net/'
+                                   style='background-color: #229ef7; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block;'>
+                                   Complete seu cadastro
+                                </a>
+                            </div>
+                            <p style='color: #135686'>
+                                Estamos animados para tê-lo conosco e ansiosos para ver como você contribuirá para tornar a vida dos idosos mais confortável e feliz.
+                            </p>
+                        </body>
+                    </html>
+                 """;
+
+        Email email = new Email(novoUsuario.getEmail(), "Bem-Vindo ao Elder.ly!", htmlContent);
+
+        emailService.sendEmail(email);
 
         return novoUsuario;
     }
 
     @Transactional
-    public UsuarioEntity buscarUsuarioId(Integer userId) {
+    public UsuarioConsultaDto buscarUsuarioId(Integer userId) {
         UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado.")
+                () -> new RecursoNaoEncontradoException("Usuário", userId)
         );
 
-        return usuario;
+        return UsuarioMapper.toDto(usuario);
     }
 
     public List<UsuarioEntity> buscarUsuarios() {
@@ -134,9 +156,9 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioEntity buscarPorEmail(String email) {
+    public UsuarioConsultaDto buscarPorEmail(String email) {
         UsuarioEntity usuario = usuarioRepository.findByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Email não encontrado")
+                () -> new RecursoNaoEncontradoException("Email", email)
         );
 
         return buscarUsuarioId(usuario.getId());
@@ -144,7 +166,7 @@ public class UsuarioService {
 
     public void excluirUsuario(@PathVariable Integer id){
         UsuarioEntity usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Cliente não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
         if (usuario.getResidencias() != null){
             usuario.getResidencias()
@@ -156,9 +178,9 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
-    public UsuarioEntity atualizarCliente(Integer id, AtualizarUsuarioInput input) {
+    public UsuarioEntity atualizarUsuario(Integer id, AtualizarUsuarioInput input) {
         UsuarioEntity usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
         if (input.nome() != null){
             usuario.setNome(input.nome());

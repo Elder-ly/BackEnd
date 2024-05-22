@@ -21,17 +21,17 @@ public class Endereco {
     @Column(name = "zip_code")
     private String cep;
 
-    @Column(name = "public_place")
+    @Column(name = "street")
     private String logradouro;
+
+    @Column(name = "complement")
+    private String complemento;
 
     @Column(name = "neighborhood")
     private String bairro;
 
     @Column(name = "number")
     private String numero;
-
-    @Column(name = "complement")
-    private String complemento;
 
     @Column(name = "city")
     private String cidade;
