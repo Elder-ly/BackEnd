@@ -31,7 +31,6 @@ public class CalendarioController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos para a criação do evento."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PostMapping("/eventos")
@@ -57,7 +56,6 @@ public class CalendarioController {
             @ApiResponse(responseCode = "400", description = "Requisição inválida."),
             @ApiResponse(responseCode = "401", description = "Não autorizado."),
             @ApiResponse(responseCode = "403", description = "Acesso proibido."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/eventos")

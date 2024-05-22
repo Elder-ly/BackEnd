@@ -89,7 +89,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuários encontrados com sucesso."),
             @ApiResponse(responseCode = "204", description = "Nenhum usuário encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping
@@ -105,7 +104,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso."),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/{codigo}")
@@ -119,7 +117,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso."),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/email/{email}")
@@ -133,7 +130,6 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Erro ao atualizar usuário."),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PutMapping("/{id}")
@@ -146,7 +142,6 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário excluído com sucesso."),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @DeleteMapping("/{id}")
@@ -158,7 +153,6 @@ public class UsuarioController {
     @Operation(summary = "Baixa um arquivo CSV contendo os colaboradores.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Arquivo CSV baixado com sucesso."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping(value = "colaboradores/csv", produces = "text/csv")

@@ -41,7 +41,6 @@ public class EspecialidadeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Especialidade encontrada com sucesso."),
             @ApiResponse(responseCode = "404", description = "Especialidade não encontrada."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/{id}")
@@ -54,7 +53,6 @@ public class EspecialidadeController {
             @ApiResponse(responseCode = "200", description = "Especialidade atualizada com sucesso."),
             @ApiResponse(responseCode = "400", description = "Erro na atualização da especialidade."),
             @ApiResponse(responseCode = "404", description = "Especialidade não encontrada."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PutMapping("/{id}")
@@ -67,7 +65,6 @@ public class EspecialidadeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Especialidade excluída com sucesso."),
             @ApiResponse(responseCode = "404", description = "Especialidade não encontrada."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @DeleteMapping("/{id}")
