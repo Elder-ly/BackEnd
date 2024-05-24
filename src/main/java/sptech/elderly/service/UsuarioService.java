@@ -202,6 +202,14 @@ public class UsuarioService {
             usuario.setBiografia(input.biografia());
         }
 
+        if(input.fotoPerfil() != null){
+            usuario.setFotoPerfil(input.fotoPerfil());
+        }
+
+        if(input.genero() != null){
+            usuario.setGenero(validarGenero(input.genero()));
+        }
+
         if(input.endereco() != null){
             enderecoService.atualizarEndereco(idEndereco(usuario), input.endereco());
         }
