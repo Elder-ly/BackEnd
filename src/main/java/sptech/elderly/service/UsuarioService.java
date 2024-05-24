@@ -130,9 +130,7 @@ public class UsuarioService {
                         </body>
                     </html>
                  """;
-
         Email email = new Email(novoUsuario.getEmail(), "Bem-Vindo ao Elder.ly!", htmlContent);
-
         emailService.sendEmail(email);
 
         return novoUsuario;
@@ -182,6 +180,8 @@ public class UsuarioService {
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
+//        validarDocumento(input.documento());
+
         if (input.nome() != null){
             usuario.setNome(input.nome());
         }
@@ -206,9 +206,11 @@ public class UsuarioService {
             enderecoService.atualizarEndereco(idEndereco(usuario), input.endereco());
         }
 
+
+/*
         if(input.especialidades() != null){
             usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.especialidades()));
-        }
+        }*/
 
         return usuarioRepository.save(usuario);
     }

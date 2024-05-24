@@ -36,7 +36,7 @@ public class UsuarioMapper {
         dto.setDataNascimento(usuario.getDataNascimento());
         dto.setBiografia(usuario.getBiografia());
         dto.setFotoPerfil(usuario.getFotoPerfil());
-        dto.setTipoUsuario(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() ? TipoUsuarioEnum.COLABORADOR.getCodigo() : TipoUsuarioEnum.CLIENTE.getCodigo());
+        dto.setTipoUsuario(usuario.getTipoUsuario().getId());
         dto.setGenero(usuario.getGenero() != null ? usuario.getGenero().getId() : null);
 
         if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {

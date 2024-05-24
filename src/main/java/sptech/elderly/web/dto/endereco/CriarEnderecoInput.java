@@ -8,7 +8,8 @@ import java.io.Serializable;
 /**
  * DTO for {@link Endereco}
  */
-public record CriarEnderecoInput(@NotBlank String cep,
+public record CriarEnderecoInput(Integer id,
+                                 @NotBlank String cep,
                                  @NotBlank String logradouro,
                                  String complemento,
                                  @NotBlank String bairro,

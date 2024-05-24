@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "adresses")

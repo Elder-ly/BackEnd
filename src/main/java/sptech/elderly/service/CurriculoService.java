@@ -21,10 +21,7 @@ public class CurriculoService {
 
     public void salvarEspecialidades(List<Especialidade> especialidades) {
         Curriculo curriculo = new Curriculo();
-
-        curriculo.setEspecialidade(especialidades.get(0));
-
-        curriculoRepository.save(curriculo);
+        
     }
 
     public void excluirEspecialidade(Especialidade especialidade) {
