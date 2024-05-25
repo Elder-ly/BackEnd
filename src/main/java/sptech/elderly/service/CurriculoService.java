@@ -19,12 +19,12 @@ public class CurriculoService {
     private final CurriculoRepository curriculoRepository;
     private final EspecialidadeRepository especialidadeRepository;
 
-    public void excluirEspecialidade(Integer idUsuario) {
+    public void excluirUsuario(Integer idUsuario) {
         curriculoRepository.deleteByUsuarioId(idUsuario);
     }
 
     public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Integer> idEspecialidades) {
-        excluirEspecialidade(usuario.getId());
+        excluirUsuario(usuario.getId());
 
         List<Curriculo> curriculosAtualizados = idEspecialidades.stream()
                 .map(idEspecialidade -> {

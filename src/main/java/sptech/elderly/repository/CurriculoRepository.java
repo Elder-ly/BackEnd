@@ -8,8 +8,6 @@ import sptech.elderly.entity.Curriculo;
 import sptech.elderly.entity.Especialidade;
 import sptech.elderly.entity.UsuarioEntity;
 
-import java.util.Optional;
-
 public interface CurriculoRepository extends JpaRepository<Curriculo, Integer> {
     @Transactional
     void deleteByUsuarioId(Integer usuarioId);

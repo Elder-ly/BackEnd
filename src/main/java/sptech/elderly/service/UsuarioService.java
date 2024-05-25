@@ -176,6 +176,10 @@ public class UsuarioService {
                     });
         }
 
+        if(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo()){
+            curriculoService.excluirUsuario(usuario.getId());
+        }
+
         enderecoService.excluirEndereco(idEndereco(usuario));
         usuarioRepository.delete(usuario);
     }
