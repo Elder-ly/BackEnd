@@ -19,15 +19,12 @@ public class CurriculoService {
     private final CurriculoRepository curriculoRepository;
     private final EspecialidadeRepository especialidadeRepository;
 
-    public void excluirEspecialidade(Especialidade especialidade) {
-        Curriculo curriculo = curriculoRepository.findByEspecialidade(especialidade);
-
-        if (curriculo.getEspecialidade() != null) {
-            curriculoRepository.delete(curriculo);
-        }
+    public void excluirEspecialidade(Integer idUsuario) {
+        curriculoRepository.deleteByUsuarioId(idUsuario);
     }
 
     public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Integer> idEspecialidades) {
+        excluirEspecialidade(usuario.getId());
 
         List<Curriculo> curriculosAtualizados = idEspecialidades.stream()
                 .map(idEspecialidade -> {
@@ -42,12 +39,6 @@ public class CurriculoService {
                         curriculoExistente.setUsuario(usuario);
                         curriculoExistente.setEspecialidade(especialidade);
                         curriculoRepository.save(curriculoExistente);
-                    }
-
-                    else if (curriculoRepository.findByUsuario(usuario) != null){
-                        curriculoExistente.setUsuario(usuario);
-                        curriculoExistente.setEspecialidade(especialidade);
-                        curriculoRepository.atualizarCurriculo(usuario, especialidade);
                     }
 
                     return curriculoExistente;
