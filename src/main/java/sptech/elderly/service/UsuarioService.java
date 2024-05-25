@@ -107,29 +107,32 @@ public class UsuarioService {
         novoUsuario = usuarioRepository.save(novoUsuario);
         residenciaService.salvar(novoUsuario, endereco);
 
+        novoUsuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(novoUsuario, input.especialidades()));
+
         String htmlContent = """
-                 <html>
-                        <body style='font-family: Roboto, sans-serif; text-align: center;'>
-                            <div style='padding: 3px; text-align: center; width: 35%;'>
-                                <img style='height: 50px;' src='https://github.com/Elder-ly/FrontEnd/blob/dev/src/assets/img/logo.svg?raw=true' alt='Elder.ly Logo'>
-                            </div>
-                            <h1 style='color: #0f456c'>Bem-vindo ao Elder.ly!</h1>
-                            <p style='color: #135686'>
-                                Seja muito bem-vindo à nossa comunidade dedicada ao cuidado de idosos. Você foi convidado pelo seu agente para fazer parte dessa inovação. <br>
-                                Para começar a utilizar a plataforma, por favor, complete seu cadastro clicando no botão abaixo:
-                            </p>
-                            <div>
-                                <a href='https://black-sea-0ab569f10.5.azurestaticapps.net/'
-                                   style='background-color: #229ef7; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block;'>
-                                   Complete seu cadastro
-                                </a>
-                            </div>
-                            <p style='color: #135686'>
-                                Estamos animados para tê-lo conosco e ansiosos para ver como você contribuirá para tornar a vida dos idosos mais confortável e feliz.
-                            </p>
-                        </body>
-                    </html>
-                 """;
+                <html>
+        <body style='font-family: Roboto, sans-serif; text-align: center;'>
+            <div style='padding: 3px; text-align: center; width: 35%;'>
+            </div>
+            <h1 style='color: #0f456c'>Bem-vindo ao Elder.ly!</h1>
+            <p style='color: #135686'>
+                Seja muito bem-vindo à nossa comunidade dedicada ao cuidado de idosos. Você foi convidado pelo seu agente para fazer parte dessa inovação. <br>
+                Para começar a utilizar a plataforma, por favor, complete seu cadastro clicando no botão abaixo:
+            </p>
+            <div>
+                <a href='https://black-sea-0ab569f10.5.azurestaticapps.net/'
+                   style='background-color: #229ef7; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block;'>
+                   Complete seu cadastro
+                </a>
+            </div>
+            <p style='color: #135686'>
+                Estamos animados para tê-lo conosco e ansiosos para ver como você contribuirá para tornar a vida dos idosos mais confortável e feliz.
+            </p>
+        </body>
+    </html>
+                """;
+
+
         Email email = new Email(novoUsuario.getEmail(), "Bem-Vindo ao Elder.ly!", htmlContent);
         emailService.sendEmail(email);
 
@@ -173,6 +176,7 @@ public class UsuarioService {
                     });
         }
 
+        enderecoService.excluirEndereco(idEndereco(usuario));
         usuarioRepository.delete(usuario);
     }
 
@@ -181,6 +185,8 @@ public class UsuarioService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
 //        validarDocumento(input.documento());
+
+        usuario.setId(id);
 
         if (input.nome() != null){
             usuario.setNome(input.nome());
@@ -214,11 +220,9 @@ public class UsuarioService {
             enderecoService.atualizarEndereco(idEndereco(usuario), input.endereco());
         }
 
-
-/*
-        if(input.especialidades() != null){
+        if(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() && input.especialidades() != null){
             usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.especialidades()));
-        }*/
+        }
 
         return usuarioRepository.save(usuario);
     }

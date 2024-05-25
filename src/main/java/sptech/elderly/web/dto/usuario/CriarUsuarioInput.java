@@ -6,6 +6,7 @@ import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * DTO for {@link UsuarioEntity}
@@ -18,5 +19,6 @@ public record CriarUsuarioInput(@NotBlank String nome,
                                 String fotoPerfil,
                                 Integer tipoUsuario,
                                 Integer genero,
-                                CriarEnderecoInput endereco) implements Serializable {
+                                CriarEnderecoInput endereco,
+                                List<Integer> especialidades) implements Serializable {
 }

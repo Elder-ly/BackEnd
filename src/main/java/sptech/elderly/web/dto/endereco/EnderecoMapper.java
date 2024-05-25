@@ -7,7 +7,8 @@ import sptech.elderly.entity.Endereco;
 
 @Component @RequiredArgsConstructor
 public class EnderecoMapper {
-    private static final ModelMapper mapper = new ModelMapper();
+
+    private final ModelMapper mapper;
 
     public Endereco mapearEndereco(CriarEnderecoInput input){
         return mapper.map(input, Endereco.class);

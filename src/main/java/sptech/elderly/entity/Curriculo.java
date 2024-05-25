@@ -15,7 +15,7 @@ public class Curriculo {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne @JoinColumn(name = "user_id")
+    @ManyToOne @JoinColumn(name = "user_id", nullable = true)
     private UsuarioEntity usuario;
 
     @ManyToOne @JoinColumn(name = "specialtie_id")

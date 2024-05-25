@@ -1,23 +1,22 @@
 package sptech.elderly.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.Especialidade;
-import sptech.elderly.repository.EspecialidadeRepository;
 import sptech.elderly.service.EspecialidadeService;
 import sptech.elderly.web.dto.especialidade.AtualizarEspecialidade;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,7 +24,6 @@ import static org.springframework.http.ResponseEntity.*;
 public class EspecialidadeController {
 
     private final EspecialidadeService especialidadeService;
-    private final EspecialidadeRepository especialidadeRepository;
 
     @Operation(summary = "Cria uma nova especialidade.")
     @ApiResponses(value = {

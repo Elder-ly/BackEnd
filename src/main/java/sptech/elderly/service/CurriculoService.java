@@ -19,15 +19,12 @@ public class CurriculoService {
     private final CurriculoRepository curriculoRepository;
     private final EspecialidadeRepository especialidadeRepository;
 
-    public void salvarEspecialidades(List<Especialidade> especialidades) {
-        Curriculo curriculo = new Curriculo();
-        
-    }
-
     public void excluirEspecialidade(Especialidade especialidade) {
         Curriculo curriculo = curriculoRepository.findByEspecialidade(especialidade);
 
-        curriculoRepository.delete(curriculo);
+        if (curriculo.getEspecialidade() != null) {
+            curriculoRepository.delete(curriculo);
+        }
     }
 
     public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Integer> idEspecialidades) {
