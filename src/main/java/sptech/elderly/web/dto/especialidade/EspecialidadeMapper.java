@@ -15,7 +15,11 @@ public class EspecialidadeMapper {
 
     public List<Especialidade> toEntities(List<String> nomes){
         return nomes.stream()
-                .map(nome -> mapper.map(nome, Especialidade.class))
+                .map(nome -> {
+                    Especialidade especialidade = new Especialidade();
+                    especialidade.setNome(nome);
+                    return especialidade;
+                })
                 .collect(Collectors.toList());
     }
 

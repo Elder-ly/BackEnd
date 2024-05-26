@@ -13,6 +13,7 @@ import sptech.elderly.web.dto.especialidade.EspecialidadeMapper;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class EspecialidadeService {
@@ -24,15 +25,14 @@ public class EspecialidadeService {
 
     public List<Especialidade> salvar(CriarEspecialidadeInput input) {
         List<Especialidade> especialidades = especialidadeMapper.toEntities(input.especialidades());
-        List<Especialidade> especialidadesCriadas = especialidadeRepository.saveAll(especialidades);
-        curriculoService.salvarEspecialidades(especialidadesCriadas);
-        return especialidadesCriadas;
+        return especialidadeRepository.saveAll(especialidades);
     }
 
     @Transactional
     public Especialidade atualizarEspecialidade(Integer id, AtualizarEspecialidade input) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
+        especialidade.setId(id);
         especialidade.setNome(input.especialidade());
         return especialidadeRepository.save(especialidade);
     }
@@ -40,13 +40,13 @@ public class EspecialidadeService {
     public EspecialidadeOutput buscarEspecialidade(Integer id) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
+
         return especialidadeMapper.toDto(especialidade);
     }
 
     public void deletarEspecialidade(Integer id) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
-        curriculoService.excluirEspecialidade(especialidade);
         especialidadeRepository.delete(especialidade);
     }
 

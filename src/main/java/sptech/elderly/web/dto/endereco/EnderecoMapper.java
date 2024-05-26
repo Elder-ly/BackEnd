@@ -14,6 +14,21 @@ public class EnderecoMapper {
         return mapper.map(input, Endereco.class);
     }
 
+    public static Endereco atualizarEndereco(CriarEnderecoInput input, Integer id){
+        Endereco endereco = new Endereco();
+
+        endereco.setId(id);
+        endereco.setCep(input.cep());
+        endereco.setLogradouro(input.logradouro());
+        endereco.setComplemento(input.complemento());
+        endereco.setBairro(input.bairro());
+        endereco.setNumero(input.numero());
+        endereco.setCidade(input.cidade());
+        endereco.setUf(input.uf());
+
+        return endereco;
+    }
+
     public static EnderecoOutput toDto(Endereco endereco){
         return new EnderecoOutput(
                 endereco.getId(),
