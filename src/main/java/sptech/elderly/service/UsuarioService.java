@@ -1,6 +1,7 @@
 package sptech.elderly.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import sptech.elderly.web.dto.usuario.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class UsuarioService {
 //  Atributos Usuarios
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final GoogleCalendarService googleCalendarService;
 
 //  Atributo Genero
     private final GeneroRepository generoRepository;
@@ -272,5 +275,15 @@ public class UsuarioService {
             System.out.println("Erro ao gravar o arquivo");
             return "Erro ao gravar o arquivo";
         }
+    }
+
+    public List<UsuarioConsultaDto> buscarColaboradoresPorEspecialidadeEDispoibilidade(String accessToken, BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
+        return usuarioMapper.toDto(
+                googleCalendarService.filtrarFuncionariosPorDisponibilidade(
+                        accessToken,
+                        input.dataHoraInicio(),
+                        input.dataHoraFim(),
+                        usuarioRepository.findByEspecialidades(input.especialidades())
+                ));
     }
 }
