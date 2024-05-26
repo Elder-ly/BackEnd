@@ -10,7 +10,9 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Calendario;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.repository.CalendarioRepository;
@@ -250,6 +252,8 @@ public class GoogleCalendarService {
             DateTime dataHoraFim,
             List<UsuarioEntity> usuarios
     ) throws GeneralSecurityException, IOException {
+        if (usuarios.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+
         autenticarCalendar(accessToken);
 
         List<Calendario> calendarios = calendarioRepository.findByUsuarioIn(usuarios);
@@ -262,6 +266,11 @@ public class GoogleCalendarService {
         for (Calendario calendario : calendarios) {
             FreeBusyRequestItem item = new FreeBusyRequestItem();
             item.setId(calendario.getCalendarId());
+            itemList.add(item);
+        }
+        for (UsuarioEntity usuario : usuarios) {
+            FreeBusyRequestItem item = new FreeBusyRequestItem();
+            item.setId(usuario.getEmail());
             itemList.add(item);
         }
         request.setItems(itemList);
