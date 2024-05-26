@@ -254,6 +254,8 @@ public class GoogleCalendarService {
 
         List<Calendario> calendarios = calendarioRepository.findByUsuarioIn(usuarios);
 
+        if (calendarios.isEmpty()) return usuarios;
+
         FreeBusyRequest request = new FreeBusyRequest();
         request.setTimeMin(dataHoraInicio);
         request.setTimeMax(dataHoraFim);

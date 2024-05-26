@@ -14,6 +14,8 @@ import sptech.elderly.service.EmailService;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.*;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.status;
@@ -163,7 +165,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/colaboradores")
-    public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestBody @Valid BuscarColaboradorInput input) {
-        return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(input));
+    public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestHeader String accessToken, @RequestBody @Valid BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
+        return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(accessToken, input));
     }
 }

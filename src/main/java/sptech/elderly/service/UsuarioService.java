@@ -19,6 +19,7 @@ import sptech.elderly.web.dto.usuario.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class UsuarioService {
 //  Atributos Usuarios
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final GoogleCalendarService googleCalendarService;
 
 //  Atributo Genero
     private final GeneroRepository generoRepository;
@@ -275,7 +277,13 @@ public class UsuarioService {
         }
     }
 
-    public List<UsuarioConsultaDto> buscarColaboradoresPorEspecialidadeEDispoibilidade(BuscarColaboradorInput input) {
-        return usuarioMapper.toDto(usuarioRepository.findByEspecialidades(input.especialidades()));
+    public List<UsuarioConsultaDto> buscarColaboradoresPorEspecialidadeEDispoibilidade(String accessToken, BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
+        return usuarioMapper.toDto(
+                googleCalendarService.filtrarFuncionariosPorDisponibilidade(
+                        accessToken,
+                        input.dataHoraInicio(),
+                        input.dataHoraFim(),
+                        usuarioRepository.findByEspecialidades(input.especialidades())
+                ));
     }
 }
