@@ -161,4 +161,9 @@ public class UsuarioController {
         response.setHeader("Content-Disposition", "inline; filename=cuidadores_elderly.csv");
         return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
     }
+
+    @GetMapping("/colaboradores")
+    public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestBody @Valid BuscarColaboradorInput input) {
+        return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(input));
+    }
 }

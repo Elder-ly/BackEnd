@@ -1,6 +1,7 @@
 package sptech.elderly.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -272,5 +273,9 @@ public class UsuarioService {
             System.out.println("Erro ao gravar o arquivo");
             return "Erro ao gravar o arquivo";
         }
+    }
+
+    public List<UsuarioConsultaDto> buscarColaboradoresPorEspecialidadeEDispoibilidade(BuscarColaboradorInput input) {
+        return usuarioMapper.toDto(usuarioRepository.findByEspecialidades(input.especialidades()));
     }
 }

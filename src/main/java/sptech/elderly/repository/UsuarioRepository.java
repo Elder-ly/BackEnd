@@ -14,4 +14,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
     Optional<UsuarioEntity> findByEmail(String email);
 
     Boolean existsByDocumento(String documento);
+
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.id IN (SELECT c.usuario.id FROM Curriculo c WHERE c.especialidade.nome IN ?1 GROUP BY c.usuario.id)")
+    List<UsuarioEntity> findByEspecialidades(List<String> especialidades);
 }
