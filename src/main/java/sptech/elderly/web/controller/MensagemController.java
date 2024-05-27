@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sptech.elderly.service.MensagemService;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
 import sptech.elderly.web.dto.mensagem.UsuarioConversaOutput;
+import sptech.elderly.web.dto.mensagem.UsuarioMensagemOutput;
 import sptech.elderly.web.dto.mensagem.MensagemOutput;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class MensagemController {
         return ResponseEntity.of(Optional.ofNullable(mensagemService.buscarMensagensEntreUsuarios(remetenteId, destinatarioId)));
     }
 
-    @GetMapping("/conversas")
-    public List<UsuarioConversaOutput> getConversas(@RequestParam Integer userId) {
-        return null;
+    @GetMapping("/conversas/{userId}")
+    public ResponseEntity<List<UsuarioConversaOutput>> getConversas(@PathVariable Integer userId) {
+        return ResponseEntity.status(200).body(mensagemService.buscarConversas(userId));
     }
 }

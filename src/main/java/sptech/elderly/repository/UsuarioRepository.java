@@ -17,4 +17,10 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 
     @Query("SELECT u FROM UsuarioEntity u WHERE u.id IN (SELECT c.usuario.id FROM Curriculo c WHERE c.especialidade.nome IN ?1 GROUP BY c.usuario.id)")
     List<UsuarioEntity> findByEspecialidades(List<String> especialidades);
+
+    @Query("SELECT DISTINCT u FROM UsuarioEntity u " +
+            "WHERE u.id <> ?1 AND (" +
+            "EXISTS (SELECT m FROM Mensagem m WHERE m.remetente.id = ?1 AND m.destinatario.id = u.id) OR " +
+            "EXISTS (SELECT m FROM Mensagem m WHERE m.remetente.id = u.id AND m.destinatario.id = ?1))")
+    List<UsuarioEntity> findConversas(Integer userId);
 }

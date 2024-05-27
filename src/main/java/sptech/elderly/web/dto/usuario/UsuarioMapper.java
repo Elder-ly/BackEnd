@@ -54,7 +54,7 @@ public class UsuarioMapper {
         return dto;
     }
 
-    private static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
+    public static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
         if (curriculos == null){
             return null;
         }

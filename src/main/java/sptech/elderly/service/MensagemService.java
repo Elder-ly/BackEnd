@@ -1,6 +1,5 @@
 package sptech.elderly.service;
 
-import com.google.api.client.util.DateTime;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -8,11 +7,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Mensagem;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.MensagemRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
 import sptech.elderly.web.dto.mensagem.MensagemOutput;
+import sptech.elderly.web.dto.mensagem.UsuarioConversaOutput;
+import sptech.elderly.web.dto.mensagem.UsuarioMensagemOutput;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,5 +54,12 @@ public class MensagemService {
         if (mensagens.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         return mapper.map(mensagens,
                 new TypeToken<List<MensagemOutput>>() {}.getType());
+    }
+
+    public List<UsuarioConversaOutput> buscarConversas(Integer userId) {
+        if (!usuarioRepository.existsById(userId)) throw new RecursoNaoEncontradoException("Usuário", userId);
+
+        return mapper.map(usuarioRepository.findConversas(userId),
+                new TypeToken<List<UsuarioConversaOutput>>() {}.getType());
     }
 }

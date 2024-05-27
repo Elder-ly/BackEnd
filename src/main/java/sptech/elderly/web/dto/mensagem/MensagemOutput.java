@@ -11,6 +11,6 @@ public class MensagemOutput {
     private Integer id;
     private String conteudo;
     private LocalDateTime dataHora;
-    private UsuarioConversaOutput remetente;
-    private UsuarioConversaOutput destinatario;
+    private UsuarioMensagemOutput remetente;
+    private UsuarioMensagemOutput destinatario;
 }
