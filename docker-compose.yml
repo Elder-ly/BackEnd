@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://elderly-prod-database.postgres.database.azure.com:5432/elder_ly
+      DB_USER: TildaCat
+      DB_PASSWORD: Elder123
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: elderly.noreply@gmail.com
+      MAIL_PASSWORD: rmwn kdhq zwmh knwk
+      MAIL_AUTH: true
+      MAIL_STARTTLS: true
