@@ -1,9 +1,12 @@
 package sptech.elderly.web.controller;
 
-import com.google.api.services.calendar.model.Event;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sptech.elderly.entity.Calendario;
 import sptech.elderly.service.GoogleCalendarService;
-import sptech.elderly.util.ListaObj;
 import sptech.elderly.web.dto.google.CriarEventoInput;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 
@@ -11,9 +14,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/calendarios")
@@ -65,5 +66,13 @@ public class CalendarioController {
             @RequestParam(value = "ordenarPor", required = false, defaultValue = "dataHoraInicio") String ordenarPor
     ) throws IOException, GeneralSecurityException {
         return service.listarEventos(accessToken, ordenarPor);
+    }
+
+    @PostMapping
+    public ResponseEntity<Calendario> criarCalendario(
+            @RequestHeader String acessToken,
+            @RequestParam Integer usuarioId
+    ) throws GeneralSecurityException, IOException {
+        return status(201).body(service.salvarCalendario(usuarioId, acessToken));
     }
 }
