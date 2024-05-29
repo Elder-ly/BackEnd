@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://elderlybackend.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_c0b816faaf0b4e25aef1eecf4a9f989f }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_8f9316e4079b496abc8925ff8d5b587c }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_32a2c3d469c941dab31b665cbab9d026 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_08e0fc323ef14a5ab4c33bbffe177acf }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: elderlybackend.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c0b816faaf0b4e25aef1eecf4a9f989f }}/elderly-backend-dev:${{ github.sha }}
+        tags: elderlybackend.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_32a2c3d469c941dab31b665cbab9d026 }}/elderly-app:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'elderly-backend'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b19404cdbecb4c2b9441c61fc4115c13 }}
-        images: 'elderlybackend.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c0b816faaf0b4e25aef1eecf4a9f989f }}/elderly-backend-dev:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_4da68e1586c6480fabee05589004015b }}
+        images: 'elderlybackend.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_32a2c3d469c941dab31b665cbab9d026 }}/elderly-app:${{ github.sha }}'
