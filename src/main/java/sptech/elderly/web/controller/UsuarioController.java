@@ -164,7 +164,7 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
     }
 
-    @Operation(summary = "Retorna uma lista de todos os colaboradores disponíveis no horario e especialidades solicitadas")
+    @Operation(summary = "Retorna uma lista de todos os colaboradores disponíveis no horario e especialidades inseridas")
     @GetMapping("/colaboradores")
     public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestHeader String accessToken, @RequestBody @Valid BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
         return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(accessToken, input));
