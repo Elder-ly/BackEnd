@@ -119,6 +119,9 @@
 							<version>1.18.32</version>
 						</path>
 					</annotationProcessorPaths>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
