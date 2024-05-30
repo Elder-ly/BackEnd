@@ -41,8 +41,25 @@ jobs:
       run: |
         sshpass -p "$SERVER_PASSWORD" scp /home/runner/work/BackEnd/BackEnd/target/elder-ly-0.3.jar $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER
         sshpass -p "$SERVER_PASSWORD" scp /home/runner/work/BackEnd/BackEnd/start.sh $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER
+
+    - name: Kill current Instance
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+      run: |
         sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST << 'EOF'
           pkill -f 'java -jar'
+          exit
+        EOF
+
+    - name: Start Application
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+      run: |
+        sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST << 'EOF'
           chmod +x start.sh
           ./start.sh
           exit
