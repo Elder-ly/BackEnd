@@ -45,4 +45,5 @@ jobs:
           pkill -f 'java -jar'
           chmod +x start.sh
           ./start.sh
+          exit
         EOF
