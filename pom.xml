@@ -6,11 +6,11 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>sptech</groupId>
 	<artifactId>elder-ly</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.3</version>
 	<name>elder-ly</name>
 	<description>Projeto configurado em Spring da Elder.ly</description>
 
@@ -95,6 +95,18 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Plugin do compilador -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
