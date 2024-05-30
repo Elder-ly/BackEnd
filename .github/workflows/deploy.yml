@@ -1,0 +1,39 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v1
+      with:
+        java-version: 17
+
+    - name: Build with Maven
+      run: ./mvnw clean package -DskipTests
+
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    - name: Deploy to Server
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+      run: |
+        sshpass -p "$SERVER_PASSWORD" scp target/your-application.jar $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER/
+        sshpass -p "$SERVER_PASSWORD" scp start.sh $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER/
+        sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST << 'EOF'
+          chmod +x /home/$SERVER_USER/start.sh
+          /home/$SERVER_USER/start.sh
+        EOF
