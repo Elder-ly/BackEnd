@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - deploy-dev
 
 jobs:
   build:
