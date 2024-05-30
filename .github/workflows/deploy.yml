@@ -49,7 +49,7 @@ jobs:
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
       run: |
         sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST << 'EOF'
-          pkill -f 'java -jar'
+          pkill -f 'java -jar' || echo "No Instance found"
           exit
         EOF
 
