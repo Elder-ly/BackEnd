@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - deploy-dev
 
 jobs:
   build:
@@ -19,17 +20,13 @@ jobs:
       with:
         java-version: 17
 
-    - name: Set execute permissions for mvnw
-      run: chmod +x ./mvnw
-
     - name: Build with Maven
-      run: ./mvnw clean package -DskipTests
+      run: |
+        chmod +x ./mvnw
+        ./mvnw clean package -DskipTests
 
     - name: Install sshpass
       run: sudo apt-get install -y sshpass
-
-    - name: Create .ssh directory
-      run: mkdir -p ~/.ssh
 
     - name: Add server to known hosts
       run: |
