@@ -39,7 +39,7 @@ jobs:
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
       run: |
-        sshpass -p "$SERVER_PASSWORD" scp target/your-application.jar $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER/
+        sshpass -p "$SERVER_PASSWORD" scp target/elder-ly-0.3.jar $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER/
         sshpass -p "$SERVER_PASSWORD" scp start.sh $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER/
         sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST << 'EOF'
           chmod +x /home/$SERVER_USER/start.sh
