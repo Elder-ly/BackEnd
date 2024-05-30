@@ -4,4 +4,4 @@ set -a
 source .env
 set +a
 
-java -jar elder-ly-0.3.jar
+nohup java -jar elder-ly-0.3.jar > application.log 2>&1 &
