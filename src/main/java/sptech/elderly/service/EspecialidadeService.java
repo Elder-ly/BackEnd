@@ -13,7 +13,6 @@ import sptech.elderly.web.dto.especialidade.EspecialidadeMapper;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class EspecialidadeService {
