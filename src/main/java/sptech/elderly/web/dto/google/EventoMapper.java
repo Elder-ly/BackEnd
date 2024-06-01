@@ -1,15 +1,14 @@
 package sptech.elderly.web.dto.google;
 
 import com.google.api.services.calendar.model.Event;
-import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.w3c.dom.events.EventException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import sptech.elderly.util.ListaObj;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@Component @RequiredArgsConstructor
 public class EventoMapper {
     public EventoConsultaDTO toDTO(Event event) {
         int organizerIndex = event.getAttendees().get(0).getOrganizer() != null

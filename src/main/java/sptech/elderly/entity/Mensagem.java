@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "messages")
