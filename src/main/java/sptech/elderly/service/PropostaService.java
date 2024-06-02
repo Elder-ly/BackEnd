@@ -19,6 +19,7 @@ import sptech.elderly.web.dto.mensagem.MensagemComPropostaInput;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
 import sptech.elderly.web.dto.mensagem.MensagemComPropostaOutput;
 import sptech.elderly.web.dto.proposta.PropostaInput;
+import sptech.elderly.web.dto.proposta.PropostaOutput;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -67,14 +68,18 @@ public class PropostaService {
         proposta.setDataHoraInicio(input.dataHoraInicio());
         proposta.setDataHoraFim(input.dataHoraFim());
         proposta.setPreco(input.preco());
+        proposta.setAceita(false);
         proposta.setMensagem(mensagem);
         return propostaRepository.save(proposta);
     }
 
-    public EventoConsultaDTO aceitarProposta(String accessToken, Integer idProposta) throws GeneralSecurityException, IOException {
+    public PropostaOutput aceitarProposta(String accessToken, Integer idProposta) throws GeneralSecurityException, IOException {
         Proposta proposta = propostaRepository.findById(idProposta)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Proposta", idProposta));
-        return googleCalendarService.inserirEvento(
+
+        proposta.setAceita(true);
+
+        googleCalendarService.inserirEvento(
                 accessToken,
                 proposta.getMensagem().getConteudo(),
                 proposta.getMensagem().getDestinatario().getEmail(),
@@ -83,5 +88,7 @@ public class PropostaService {
                 new DateTime(proposta.getDataHoraFim().toInstant(ZoneOffset.of("-03:00")).toEpochMilli()),
                 null,
                 proposta.getDescricao());
+
+        return mapper.map(propostaRepository.save(proposta), PropostaOutput.class);
     }
 }

@@ -27,6 +27,9 @@ public class Proposta {
     @Column(name = "price")
     private BigDecimal preco;
 
+    @Column(name = "accepted")
+    private Boolean aceita;
+
     @OneToOne @JoinColumn(name = "message_id")
     private Mensagem mensagem;
 }

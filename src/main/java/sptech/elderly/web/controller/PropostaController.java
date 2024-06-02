@@ -10,6 +10,7 @@ import sptech.elderly.web.dto.google.EventoConsultaDTO;
 import sptech.elderly.web.dto.mensagem.MensagemComPropostaInput;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
 import sptech.elderly.web.dto.mensagem.MensagemComPropostaOutput;
+import sptech.elderly.web.dto.proposta.PropostaOutput;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,8 +29,8 @@ public class PropostaController {
     }
 
     @PatchMapping("/aceitar/{idProposta}")
-    public ResponseEntity<EventoConsultaDTO> aceitarProposta(@RequestHeader String accessToken,
-                                                             @PathVariable Integer idProposta) throws GeneralSecurityException, IOException {
+    public ResponseEntity<PropostaOutput> aceitarProposta(@RequestHeader String accessToken,
+                                                          @PathVariable Integer idProposta) throws GeneralSecurityException, IOException {
         return ResponseEntity.status(200).body(propostaService.aceitarProposta(accessToken, idProposta));
     }
 }

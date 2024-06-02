@@ -18,4 +18,5 @@ public class PropostaOutput {
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
     private BigDecimal preco;
+    private Boolean aceita;
 }
