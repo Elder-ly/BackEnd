@@ -8,10 +8,11 @@ import sptech.elderly.web.dto.proposta.PropostaOutput;
 import java.time.LocalDateTime;
 
 @Getter @NoArgsConstructor @AllArgsConstructor
-public class MensagemOutput {
+public class MensagemComPropostaOutput {
     private Integer id;
     private String conteudo;
     private LocalDateTime dataHora;
     private UsuarioMensagemOutput remetente;
     private UsuarioMensagemOutput destinatario;
+    private PropostaOutput proposta;
 }

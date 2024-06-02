@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.service.MensagemService;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
-import sptech.elderly.web.dto.mensagem.UsuarioConversaOutput;
-import sptech.elderly.web.dto.mensagem.UsuarioMensagemOutput;
 import sptech.elderly.web.dto.mensagem.MensagemOutput;
+import sptech.elderly.web.dto.mensagem.UsuarioConversaOutput;
+import sptech.elderly.web.dto.mensagem.MensagemComPropostaOutput;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class MensagemController {
     }
 
     @GetMapping("/{remetenteId}/{destinatarioId}")
-    private ResponseEntity<List<MensagemOutput>> getMensagensComUsuario(@PathVariable Integer remetenteId, @PathVariable Integer destinatarioId) {
+    private ResponseEntity<List<MensagemComPropostaOutput>> getMensagensComUsuario(@PathVariable Integer remetenteId, @PathVariable Integer destinatarioId) {
         return ResponseEntity.of(Optional.ofNullable(mensagemService.buscarMensagensEntreUsuarios(remetenteId, destinatarioId)));
     }
 

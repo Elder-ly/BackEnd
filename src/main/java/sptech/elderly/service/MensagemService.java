@@ -7,13 +7,15 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Mensagem;
+import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.enums.TipoUsuarioEnum;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.MensagemRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.web.dto.mensagem.MensagemInput;
+import sptech.elderly.web.dto.mensagem.MensagemComPropostaOutput;
 import sptech.elderly.web.dto.mensagem.MensagemOutput;
 import sptech.elderly.web.dto.mensagem.UsuarioConversaOutput;
-import sptech.elderly.web.dto.mensagem.UsuarioMensagemOutput;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,25 +25,31 @@ import java.util.Objects;
 public class MensagemService {
     private final MensagemRepository mensagemRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PropostaService propostaService;
     private final ModelMapper mapper;
 
     public MensagemOutput enviarMensagem(MensagemInput input) {
         if (Objects.equals(input.destinatarioId(), input.remetenteId())) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetende e Destinatário não podem ser iguais");
         }
-        if (!usuarioRepository.existsById(input.remetenteId()) || !usuarioRepository.existsById(input.destinatarioId())) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Usuário não encontrado");
-        }
+
+        UsuarioEntity remetente = usuarioRepository.findById(input.remetenteId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", input.remetenteId()));
+        UsuarioEntity destinatario = usuarioRepository.findById(input.destinatarioId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", input.destinatarioId()));
+
         Mensagem novaMensagem = new Mensagem();
         novaMensagem.setDataHora(LocalDateTime.now());
-        novaMensagem.setRemetente(usuarioRepository.findById(input.remetenteId()).get());
-        novaMensagem.setDestinatario(usuarioRepository.findById(input.destinatarioId()).get());
+        novaMensagem.setRemetente(remetente);
+        novaMensagem.setDestinatario(destinatario);
         novaMensagem.setConteudo(input.conteudo());
 
-        return mapper.map(mensagemRepository.save(novaMensagem), MensagemOutput.class);
+        novaMensagem = mensagemRepository.save(novaMensagem);
+
+        return mapper.map(novaMensagem, MensagemOutput.class);
     }
 
-    public List<MensagemOutput> buscarMensagensEntreUsuarios(Integer remetenteId, Integer destinatarioId) {
+    public List<MensagemComPropostaOutput> buscarMensagensEntreUsuarios(Integer remetenteId, Integer destinatarioId) {
         if (Objects.equals(destinatarioId, remetenteId)) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetende e Destinatário não podem ser iguais");
         }
@@ -53,7 +61,7 @@ public class MensagemService {
 
         if (mensagens.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         return mapper.map(mensagens,
-                new TypeToken<List<MensagemOutput>>() {}.getType());
+                new TypeToken<List<MensagemComPropostaOutput>>() {}.getType());
     }
 
     public List<UsuarioConversaOutput> buscarConversas(Integer userId) {
