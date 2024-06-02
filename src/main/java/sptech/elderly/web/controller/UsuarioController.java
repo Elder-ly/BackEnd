@@ -8,9 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sptech.elderly.entity.Email;
 import sptech.elderly.entity.UsuarioEntity;
-import sptech.elderly.service.EmailService;
 import sptech.elderly.service.UsuarioService;
 import sptech.elderly.web.dto.usuario.*;
 
@@ -63,7 +61,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum cliente encontrado."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
-    @GetMapping("/buscar-clientes")
+    @GetMapping("/clientes")
     public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
@@ -78,7 +76,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum colaborador encontrado."),
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
-    @GetMapping("/buscar-colaboradores")
+    @GetMapping("/colaboradores")
     public ResponseEntity<List<ColaboradorOutput>> buscarColaboradores() {
         List<UsuarioEntity> usuarios = usuarioService.buscarUsuarios();
 
@@ -164,7 +162,7 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
     }
 
-    @GetMapping("/colaboradores")
+    @GetMapping("/colaboradores-disponiveis")
     public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestHeader String accessToken, @RequestBody @Valid BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
         return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(accessToken, input));
     }

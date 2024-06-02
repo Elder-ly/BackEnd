@@ -54,7 +54,15 @@ public class UsuarioMapper {
         return dto;
     }
 
-    public static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
+    public static UsuarioConsultaCalendario toDtoCalendar(UsuarioEntity usuario){
+        return new UsuarioConsultaCalendario(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail()
+        );
+    }
+
+    private static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
         if (curriculos == null){
             return null;
         }

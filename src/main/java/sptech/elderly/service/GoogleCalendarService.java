@@ -11,16 +11,21 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Calendario;
 import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.enums.TipoUsuarioEnum;
+import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.CalendarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.util.ListaObj;
+import sptech.elderly.web.dto.google.CalendarioOutput;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 import sptech.elderly.web.dto.google.EventoMapper;
 import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
+import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -28,18 +33,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Service @RequiredArgsConstructor
 public class GoogleCalendarService {
 
     private final UsuarioRepository usuarioRepository;
     private final CalendarioRepository calendarioRepository;
     private final EventoMapper eventoMapper;
-
-    public GoogleCalendarService(UsuarioRepository usuarioRepository, CalendarioRepository calendarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.calendarioRepository = calendarioRepository;
-        this.eventoMapper = new EventoMapper();
-    }
 
     private Calendar service;
 
@@ -301,5 +300,26 @@ public class GoogleCalendarService {
         com.google.api.services.calendar.model.Calendar calendarioCriado = service.calendars().insert(calendar).execute();
 
         return calendarioCriado.getId();
+    }
+
+    public CalendarioOutput salvarCalendario(Integer usuarioId, String acessToken) throws GeneralSecurityException, IOException {
+        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", usuarioId));
+
+        if (usuario.getTipoUsuario().getId() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
+        }
+
+        Calendario calendario = new Calendario();
+        calendario.setCalendarId(inserirCalendarioDisponibilidade(acessToken));
+        calendario.setUsuario(usuario);
+
+        calendarioRepository.save(calendario);
+
+        return new CalendarioOutput(
+                calendario.getId(),
+                calendario.getCalendarId(),
+                UsuarioMapper.toDtoCalendar(calendario.getUsuario())
+                );
     }
 }

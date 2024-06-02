@@ -18,11 +18,8 @@ public class Proposta {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "content")
-    private String conteudo;
-
-    @Column(name = "date_time")
-    private LocalDateTime dataHora;
+    @Column(name = "description")
+    private String descricao;
 
     @Column(name = "day_start_time")
     private LocalDateTime dataHoraInicio;
@@ -33,9 +30,6 @@ public class Proposta {
     @Column(name = "price")
     private BigDecimal preco;
 
-    @ManyToOne @JoinColumn(name = "recipient_id")
-    private UsuarioEntity destinatario;
-
-    @ManyToOne @JoinColumn(name = "sender_id")
-    private UsuarioEntity remetente;
+    @OneToOne @JoinColumn(name = "message_id")
+    private Mensagem mensagem;
 }
