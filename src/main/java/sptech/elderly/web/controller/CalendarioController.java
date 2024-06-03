@@ -3,10 +3,12 @@ package sptech.elderly.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.Calendario;
 import sptech.elderly.service.GoogleCalendarService;
+import sptech.elderly.web.dto.google.CalendarioOutput;
 import sptech.elderly.web.dto.google.CriarEventoInput;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 
@@ -16,15 +18,12 @@ import java.util.List;
 
 import static org.springframework.http.ResponseEntity.status;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/calendarios")
 public class CalendarioController {
 
     private final GoogleCalendarService service;
-
-    public CalendarioController(GoogleCalendarService service) {
-        this.service = service;
-    }
 
     @Operation(summary = "Insere um novo evento no calendário.")
     @ApiResponses(value = {
@@ -69,7 +68,7 @@ public class CalendarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Calendario> criarCalendario(
+    public ResponseEntity<CalendarioOutput> criarCalendario(
             @RequestHeader String acessToken,
             @RequestParam Integer usuarioId
     ) throws GeneralSecurityException, IOException {
