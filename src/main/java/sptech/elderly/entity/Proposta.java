@@ -1,10 +1,7 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +26,9 @@ public class Proposta {
 
     @Column(name = "price")
     private BigDecimal preco;
+
+    @Column(name = "accepted")
+    private Boolean aceita;
 
     @OneToOne @JoinColumn(name = "message_id")
     private Mensagem mensagem;

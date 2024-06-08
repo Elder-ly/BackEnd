@@ -28,4 +28,7 @@ public class Mensagem {
 
     @ManyToOne @JoinColumn(name = "sender_id")
     private UsuarioEntity remetente;
+
+    @OneToOne(mappedBy = "mensagem", fetch = FetchType.LAZY)
+    private Proposta proposta;
 }

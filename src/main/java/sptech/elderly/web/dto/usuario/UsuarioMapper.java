@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import sptech.elderly.entity.*;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
+import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class UsuarioMapper {
         );
     }
 
-    private static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
+    public static List<Especialidade> mapCurriculosToEspecialidades(List<Curriculo> curriculos) {
         if (curriculos == null){
             return null;
         }
