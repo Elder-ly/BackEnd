@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import sptech.elderly.entity.Especialidade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,5 +26,14 @@ public class EspecialidadeMapper {
 
     public EspecialidadeOutput toDto(Especialidade especialidade){
         return mapper.map(especialidade, EspecialidadeOutput.class);
+    }
+
+    public List<EspecialidadeOutput> toDtos(List<Especialidade> especialidades) {
+        return especialidades.stream()
+                .map(especialidade -> new EspecialidadeOutput(
+                        especialidade.getId(),
+                        especialidade.getNome()
+                ))
+                .collect(Collectors.toList());
     }
 }

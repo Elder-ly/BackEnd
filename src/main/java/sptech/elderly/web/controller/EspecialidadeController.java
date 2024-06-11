@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.elderly.entity.Especialidade;
 import sptech.elderly.service.EspecialidadeService;
+import sptech.elderly.util.FilaObj;
 import sptech.elderly.web.dto.especialidade.AtualizarEspecialidade;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
@@ -82,7 +83,7 @@ public class EspecialidadeController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping
-    public ResponseEntity<List<Especialidade>> buscarEspecialidades(){
-        return status(200).body(especialidadeService.buscarEspecialidade());
+    public ResponseEntity<Object[]> buscarEspecialidades(){
+        return status(200).body(especialidadeService.buscarEspecialidadesFila());
     }
 }

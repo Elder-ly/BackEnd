@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Calendario;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.enums.TipoUsuarioEnum;
+import sptech.elderly.exceptions.DadosDuplicadosException;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.CalendarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
@@ -306,7 +307,11 @@ public class GoogleCalendarService {
         UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", usuarioId));
 
-        if (usuario.getTipoUsuario().getId() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
+        if (calendarioRepository.existsByUsuario(usuario)){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+        }
+
+        if (usuario.getTipoUsuario().getId() != TipoUsuarioEnum.COLABORADOR.getCodigo() || usuario.getTipoUsuario().getId() != TipoUsuarioEnum.ADM.getCodigo() ){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
 

@@ -69,9 +69,9 @@ public class CalendarioController {
 
     @PostMapping
     public ResponseEntity<CalendarioOutput> criarCalendario(
-            @RequestHeader String acessToken,
+            @RequestHeader String accessToken,
             @RequestParam Integer usuarioId
     ) throws GeneralSecurityException, IOException {
-        return status(201).body(service.salvarCalendario(usuarioId, acessToken));
+        return status(201).body(service.salvarCalendario(usuarioId, accessToken));
     }
 }
