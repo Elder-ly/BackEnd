@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Especialidade;
 import sptech.elderly.repository.EspecialidadeRepository;
+import sptech.elderly.util.FilaObj;
 import sptech.elderly.web.dto.especialidade.AtualizarEspecialidade;
 import sptech.elderly.web.dto.especialidade.CriarEspecialidadeInput;
 import sptech.elderly.web.dto.especialidade.EspecialidadeMapper;
 import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class EspecialidadeService {
@@ -49,8 +52,19 @@ public class EspecialidadeService {
         especialidadeRepository.delete(especialidade);
     }
 
-    public List<Especialidade> buscarEspecialidade() {
-        return especialidadeRepository.findAll();
+    public List<EspecialidadeOutput> buscarEspecialidades() {
+        return especialidadeMapper.toDtos(especialidadeRepository.findAll());
     }
 
+    public Object[] buscarEspecialidadesFila(){
+        List<EspecialidadeOutput> especialidadeOutputs = buscarEspecialidades().stream()
+                .sorted(Comparator.comparingLong(EspecialidadeOutput::id))
+                .toList();
+
+        FilaObj<EspecialidadeOutput> filaEspecialidades = new FilaObj<>(especialidadeOutputs.size());
+
+        especialidadeOutputs.forEach(filaEspecialidades::insert);
+
+        return filaEspecialidades.getFila();
+    }
 }

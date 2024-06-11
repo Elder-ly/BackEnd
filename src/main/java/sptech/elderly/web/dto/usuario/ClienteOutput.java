@@ -6,7 +6,6 @@ import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * DTO for {@link sptech.elderly.entity.UsuarioEntity}

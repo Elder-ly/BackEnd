@@ -51,6 +51,13 @@
 			<version>42.7.3</version>
 		</dependency>
 
+		<!-- Dependência do H2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- Dependência de Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

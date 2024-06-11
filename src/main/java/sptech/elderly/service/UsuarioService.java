@@ -133,7 +133,7 @@ public class UsuarioService {
             </p>
         </body>
     </html>
-                """;
+    """;
 
 
         Email email = new Email(novoUsuario.getEmail(), "Bem-Vindo ao Elder.ly!", htmlContent);
@@ -191,10 +191,7 @@ public class UsuarioService {
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
-//        validarDocumento(input.documento());
-
         usuario.setId(id);
-
         if (input.nome() != null){
             usuario.setNome(input.nome());
         }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.CONFLICT)
 public class DadosDuplicadosException extends RuntimeException {
 
-    public DadosDuplicadosException(String recurso, String campo, Object valor){
+    public DadosDuplicadosException(String recurso, Object campo, Object valor){
         super("O recurso %s com o campo %s de valor %s já existe.".formatted(recurso, campo, valor));
     }
 }
