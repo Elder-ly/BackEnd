@@ -311,7 +311,7 @@ public class GoogleCalendarService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
 
-        if (usuario.getTipoUsuario().getId() != TipoUsuarioEnum.COLABORADOR.getCodigo() || usuario.getTipoUsuario().getId() != TipoUsuarioEnum.ADM.getCodigo() ){
+        if (usuario.getTipoUsuario().getId() == TipoUsuarioEnum.CLIENTE.getCodigo()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
 

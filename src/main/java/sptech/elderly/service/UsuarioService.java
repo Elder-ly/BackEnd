@@ -123,7 +123,7 @@ public class UsuarioService {
                 Para começar a utilizar a plataforma, por favor, complete seu cadastro clicando no botão abaixo:
             </p>
             <div>
-                <a href='https://black-sea-0ab569f10.5.azurestaticapps.net/'
+                <a href='https://elderly.space/'
                    style='background-color: #229ef7; color: #ffffff; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block;'>
                    Complete seu cadastro
                 </a>
@@ -224,7 +224,7 @@ public class UsuarioService {
             enderecoService.atualizarEndereco(idEndereco(usuario), input.endereco());
         }
 
-        if(usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() && input.especialidades() != null){
+        if((usuario.getTipoUsuario().getId() == TipoUsuarioEnum.COLABORADOR.getCodigo() && input.especialidades() != null) || (usuario.getTipoUsuario().getId() == TipoUsuarioEnum.ADM.getCodigo() && input.especialidades() != null)){
             usuario.setCurriculos(curriculoService.associarColaboradorEspecialidade(usuario, input.especialidades()));
         }
 

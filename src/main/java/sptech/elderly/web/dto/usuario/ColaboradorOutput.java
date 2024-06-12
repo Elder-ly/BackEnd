@@ -18,6 +18,8 @@ public record ColaboradorOutput(@NotNull Integer id,
                                 @NotBlank String email,
                                 @NotBlank String documento,
                                 @NotBlank LocalDate dataNascimento,
+                                String fotoPerfil,
+                                String biografia,
                                 EnderecoOutput endereco,
                                 List<Especialidade> especialidades) implements Serializable {
 }
