@@ -1,6 +1,6 @@
 package sptech.elderly.web.dto.usuario;
 
-import sptech.elderly.web.dto.endereco.AtualizarEnderecoInput;
+import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,6 +14,8 @@ public record AtualizarUsuarioInput(String nome,
                                     String documento,
                                     LocalDate dataNascimento,
                                     String biografia,
-                                    AtualizarEnderecoInput endereco,
+                                    String fotoPerfil,
+                                    Integer genero,
+                                    CriarEnderecoInput endereco,
                                     List<Integer> especialidades) implements Serializable {
 }

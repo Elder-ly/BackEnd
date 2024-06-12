@@ -1,14 +1,10 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
 @Entity @Table(name = "proposals")
@@ -19,11 +15,8 @@ public class Proposta {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "content")
-    private String conteudo;
-
-    @Column(name = "date_time")
-    private LocalDateTime dataHora;
+    @Column(name = "description")
+    private String descricao;
 
     @Column(name = "day_start_time")
     private LocalDateTime dataHoraInicio;
@@ -34,9 +27,9 @@ public class Proposta {
     @Column(name = "price")
     private BigDecimal preco;
 
-    @ManyToOne @JoinColumn(name = "recipient_id")
-    private UsuarioEntity destinatario;
+    @Column(name = "accepted")
+    private Boolean aceita;
 
-    @ManyToOne @JoinColumn(name = "sender_id")
-    private UsuarioEntity remetente;
+    @OneToOne @JoinColumn(name = "message_id")
+    private Mensagem mensagem;
 }

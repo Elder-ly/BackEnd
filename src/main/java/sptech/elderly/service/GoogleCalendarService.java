@@ -10,27 +10,36 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import sptech.elderly.entity.Calendario;
+import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.enums.TipoUsuarioEnum;
+import sptech.elderly.exceptions.DadosDuplicadosException;
+import sptech.elderly.exceptions.RecursoNaoEncontradoException;
+import sptech.elderly.repository.CalendarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
 import sptech.elderly.util.ListaObj;
+import sptech.elderly.web.dto.google.CalendarioOutput;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 import sptech.elderly.web.dto.google.EventoMapper;
+import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
+import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Service @RequiredArgsConstructor
 public class GoogleCalendarService {
 
     private final UsuarioRepository usuarioRepository;
+    private final CalendarioRepository calendarioRepository;
     private final EventoMapper eventoMapper;
-
-    public GoogleCalendarService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.eventoMapper = new EventoMapper();
-    }
 
     private Calendar service;
 
@@ -235,5 +244,87 @@ public class GoogleCalendarService {
             ordenarEventosPorDataInicio(events, i, indFim);
         }
         return events;
+    }
+
+    public List<UsuarioEntity> filtrarFuncionariosPorDisponibilidade(
+            String accessToken,
+            DateTime dataHoraInicio,
+            DateTime dataHoraFim,
+            List<UsuarioEntity> usuarios
+    ) throws GeneralSecurityException, IOException {
+        if (usuarios.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+
+        autenticarCalendar(accessToken);
+
+        List<Calendario> calendarios = calendarioRepository.findByUsuarioIn(usuarios);
+
+        FreeBusyRequest request = new FreeBusyRequest();
+        request.setTimeMin(dataHoraInicio);
+        request.setTimeMax(dataHoraFim);
+
+        List<FreeBusyRequestItem> itemList = new ArrayList<>();
+        for (Calendario calendario : calendarios) {
+            FreeBusyRequestItem item = new FreeBusyRequestItem();
+            item.setId(calendario.getCalendarId());
+            itemList.add(item);
+        }
+        for (UsuarioEntity usuario : usuarios) {
+            FreeBusyRequestItem item = new FreeBusyRequestItem();
+            item.setId(usuario.getEmail());
+            itemList.add(item);
+        }
+        request.setItems(itemList);
+
+        Calendar.Freebusy.Query fbq = service.freebusy().query(request);
+        FreeBusyResponse response = fbq.execute();
+
+        // Analisando calendários de "Disponibilidade"
+        for (Calendario calendario : calendarios) {
+            if (response.getCalendars().get(calendario.getCalendarId()).getBusy().isEmpty()) {
+                usuarios.remove(calendario.getUsuario());
+            }
+        }
+
+        // Analisando calendários principais
+        usuarios.removeIf(usuario -> !response.getCalendars().get(usuario.getEmail()).getBusy().isEmpty());
+
+        return usuarios;
+    }
+
+    public String inserirCalendarioDisponibilidade(String accessToken) throws GeneralSecurityException, IOException {
+        autenticarCalendar(accessToken);
+
+        com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
+        calendar.setSummary("Disponibilidade");
+        calendar.setTimeZone("America/Sao_Paulo");
+
+        com.google.api.services.calendar.model.Calendar calendarioCriado = service.calendars().insert(calendar).execute();
+
+        return calendarioCriado.getId();
+    }
+
+    public CalendarioOutput salvarCalendario(Integer usuarioId, String acessToken) throws GeneralSecurityException, IOException {
+        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", usuarioId));
+
+        if (calendarioRepository.existsByUsuario(usuario)){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+        }
+
+        if (usuario.getTipoUsuario().getId() == TipoUsuarioEnum.CLIENTE.getCodigo()){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
+        }
+
+        Calendario calendario = new Calendario();
+        calendario.setCalendarId(inserirCalendarioDisponibilidade(acessToken));
+        calendario.setUsuario(usuario);
+
+        calendarioRepository.save(calendario);
+
+        return new CalendarioOutput(
+                calendario.getId(),
+                calendario.getCalendarId(),
+                UsuarioMapper.toDtoCalendar(calendario.getUsuario())
+                );
     }
 }

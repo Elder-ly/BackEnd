@@ -2,6 +2,7 @@ package sptech.elderly.web.dto.usuario;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import sptech.elderly.entity.Especialidade;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public record ColaboradorOutput(@NotNull Integer id,
                                 @NotBlank String email,
                                 @NotBlank String documento,
                                 @NotBlank LocalDate dataNascimento,
+                                String fotoPerfil,
+                                String biografia,
                                 EnderecoOutput endereco,
-                                List<String> especialidades) implements Serializable {
+                                List<Especialidade> especialidades) implements Serializable {
 }
