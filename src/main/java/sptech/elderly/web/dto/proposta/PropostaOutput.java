@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter @AllArgsConstructor @NoArgsConstructor
 public class PropostaOutput {
-    private Integer id;
+    private Long id;
     private String descricao;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;

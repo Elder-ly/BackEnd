@@ -30,7 +30,7 @@ public class PropostaController {
 
     @PatchMapping("/aceitar/{idProposta}")
     public ResponseEntity<PropostaOutput> aceitarProposta(@RequestHeader String accessToken,
-                                                          @PathVariable Integer idProposta) throws GeneralSecurityException, IOException {
+                                                          @PathVariable Long idProposta) throws GeneralSecurityException, IOException {
         return ResponseEntity.status(200).body(propostaService.aceitarProposta(accessToken, idProposta));
     }
 }

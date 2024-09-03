@@ -11,13 +11,11 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Calendario;
 import sptech.elderly.entity.UsuarioEntity;
 import sptech.elderly.enums.TipoUsuarioEnum;
-import sptech.elderly.exceptions.DadosDuplicadosException;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.CalendarioRepository;
 import sptech.elderly.repository.UsuarioRepository;
@@ -25,7 +23,6 @@ import sptech.elderly.util.ListaObj;
 import sptech.elderly.web.dto.google.CalendarioOutput;
 import sptech.elderly.web.dto.google.EventoConsultaDTO;
 import sptech.elderly.web.dto.google.EventoMapper;
-import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
 import sptech.elderly.web.dto.usuario.UsuarioMapper;
 
 import java.io.IOException;
@@ -303,7 +300,7 @@ public class GoogleCalendarService {
         return calendarioCriado.getId();
     }
 
-    public CalendarioOutput salvarCalendario(Integer usuarioId, String acessToken) throws GeneralSecurityException, IOException {
+    public CalendarioOutput salvarCalendario(Long usuarioId, String acessToken) throws GeneralSecurityException, IOException {
         UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", usuarioId));
 

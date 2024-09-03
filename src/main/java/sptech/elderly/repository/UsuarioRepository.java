@@ -8,7 +8,7 @@ import sptech.elderly.entity.UsuarioEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
+public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     Boolean existsByEmail(String email);
     Optional<UsuarioEntity> findByEmail(String email);
@@ -22,5 +22,5 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
             "WHERE u.id <> ?1 AND (" +
             "EXISTS (SELECT m FROM Mensagem m WHERE m.remetente.id = ?1 AND m.destinatario.id = u.id) OR " +
             "EXISTS (SELECT m FROM Mensagem m WHERE m.remetente.id = u.id AND m.destinatario.id = ?1))")
-    List<UsuarioEntity> findConversas(Integer userId);
+    List<UsuarioEntity> findConversas(Long userId);
 }

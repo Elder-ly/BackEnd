@@ -73,7 +73,7 @@ public class PropostaService {
         return propostaRepository.save(proposta);
     }
 
-    public PropostaOutput aceitarProposta(String accessToken, Integer idProposta) throws GeneralSecurityException, IOException {
+    public PropostaOutput aceitarProposta(String accessToken, Long idProposta) throws GeneralSecurityException, IOException {
         Proposta proposta = propostaRepository.findById(idProposta)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Proposta", idProposta));
 

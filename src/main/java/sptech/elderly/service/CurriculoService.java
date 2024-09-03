@@ -19,11 +19,11 @@ public class CurriculoService {
     private final CurriculoRepository curriculoRepository;
     private final EspecialidadeRepository especialidadeRepository;
 
-    public void excluirUsuario(Integer idUsuario) {
+    public void excluirUsuario(Long idUsuario) {
         curriculoRepository.deleteByUsuarioId(idUsuario);
     }
 
-    public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Integer> idEspecialidades) {
+    public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Long> idEspecialidades) {
         excluirUsuario(usuario.getId());
 
         List<Curriculo> curriculosAtualizados = idEspecialidades.stream()

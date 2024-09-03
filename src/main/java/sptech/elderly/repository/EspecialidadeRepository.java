@@ -9,5 +9,5 @@ import sptech.elderly.entity.UsuarioEntity;
 import java.util.List;
 
 public interface EspecialidadeRepository extends
-        JpaRepository<Especialidade, Integer> {
+        JpaRepository<Especialidade, Long> {
 }

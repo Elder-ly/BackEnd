@@ -15,7 +15,7 @@ public record AtualizarUsuarioInput(String nome,
                                     LocalDate dataNascimento,
                                     String biografia,
                                     String fotoPerfil,
-                                    Integer genero,
+                                    Long genero,
                                     CriarEnderecoInput endereco,
-                                    List<Integer> especialidades) implements Serializable {
+                                    List<Long> especialidades) implements Serializable {
 }

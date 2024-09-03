@@ -15,15 +15,15 @@ import java.util.List;
  */
 @Getter @Setter @NoArgsConstructor
 public class UsuarioConsultaDto implements Serializable {
-    private Integer id;
+    private Long id;
     private String nome;
     private String email;
     private String documento;
     private LocalDate dataNascimento;
     private String biografia;
     private String fotoPerfil;
-    private Integer tipoUsuario;
-    private Integer genero;
+    private Long tipoUsuario;
+    private Long genero;
     private EnderecoOutput endereco;
     private List<Especialidade> especialidades;
 }

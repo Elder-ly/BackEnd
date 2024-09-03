@@ -3,17 +3,21 @@ package sptech.elderly.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "proposals")
-public class Proposta {
+@Getter @Setter @NoArgsConstructor
+@Entity @Table(name = "tb_proposals", schema = "elder_ly")
+@SequenceGenerator(name = "sq_co_proposal", sequenceName = "seq_co_proposal", allocationSize = 1, initialValue = 1, schema = "elder_ly")
+public class Proposta implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "sq_co_proposal", strategy = GenerationType.SEQUENCE)
+    @Column(name = "co_proposal")
+    private Long id;
 
     @Column(name = "description")
     private String descricao;

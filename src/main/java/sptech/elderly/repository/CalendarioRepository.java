@@ -6,7 +6,7 @@ import sptech.elderly.entity.UsuarioEntity;
 
 import java.util.List;
 
-public interface CalendarioRepository extends JpaRepository<Calendario, Integer> {
+public interface CalendarioRepository extends JpaRepository<Calendario, Long> {
     List<Calendario> findByUsuarioIn(List<UsuarioEntity> usuarios);
 
     boolean existsByUsuario(UsuarioEntity usuario);

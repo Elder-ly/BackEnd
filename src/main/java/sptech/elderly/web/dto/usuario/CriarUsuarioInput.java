@@ -17,8 +17,8 @@ public record CriarUsuarioInput(@NotBlank String nome,
                                 LocalDate dataNascimento,
                                 String biografia,
                                 String fotoPerfil,
-                                Integer tipoUsuario,
-                                Integer genero,
+                                Long tipoUsuario,
+                                Long genero,
                                 CriarEnderecoInput endereco,
-                                List<Integer> especialidades) implements Serializable {
+                                List<Long> especialidades) implements Serializable {
 }

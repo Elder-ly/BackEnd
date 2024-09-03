@@ -109,7 +109,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/{codigo}")
-    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Integer codigo){
+    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Long codigo){
         UsuarioConsultaDto usuario = usuarioService.buscarUsuarioId(codigo);
         return status(200).body(usuario);
     }
@@ -134,7 +134,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Integer id, @RequestBody AtualizarUsuarioInput input){
+    public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Long id, @RequestBody AtualizarUsuarioInput input){
         UsuarioEntity usuario = usuarioService.atualizarUsuario(id, input);
         return status(200).body(UsuarioMapper.toDto(usuario));
     }
@@ -146,7 +146,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id){
+    public ResponseEntity<Void> excluirUsuario(@PathVariable Long id){
         usuarioService.excluirUsuario(id);
         return status(204).build();
     }

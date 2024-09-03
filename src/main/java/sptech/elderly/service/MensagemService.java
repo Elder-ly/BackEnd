@@ -49,7 +49,7 @@ public class MensagemService {
         return mapper.map(novaMensagem, MensagemOutput.class);
     }
 
-    public List<MensagemComPropostaOutput> buscarMensagensEntreUsuarios(Integer remetenteId, Integer destinatarioId) {
+    public List<MensagemComPropostaOutput> buscarMensagensEntreUsuarios(Long remetenteId, Long destinatarioId) {
         if (Objects.equals(destinatarioId, remetenteId)) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetende e Destinatário não podem ser iguais");
         }
@@ -64,7 +64,7 @@ public class MensagemService {
                 new TypeToken<List<MensagemComPropostaOutput>>() {}.getType());
     }
 
-    public List<UsuarioConversaOutput> buscarConversas(Integer userId) {
+    public List<UsuarioConversaOutput> buscarConversas(Long userId) {
         if (!usuarioRepository.existsById(userId)) throw new RecursoNaoEncontradoException("Usuário", userId);
 
         return mapper.map(usuarioRepository.findConversas(userId),

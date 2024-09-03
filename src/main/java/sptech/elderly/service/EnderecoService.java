@@ -20,7 +20,7 @@ public class EnderecoService {
         return this.enderecoRepository.save(enderecoMapper.mapearEndereco(novoEndereco));
     }
 
-    public Endereco atualizarEndereco(Integer id, CriarEnderecoInput input) {
+    public Endereco atualizarEndereco(Long id, CriarEnderecoInput input) {
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Endereço", id));
 
@@ -30,7 +30,7 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
-    public void excluirEndereco(Integer id) {
+    public void excluirEndereco(Long id) {
         Endereco endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Endereço não encontrado"));
 

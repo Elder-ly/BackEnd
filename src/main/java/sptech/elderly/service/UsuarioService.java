@@ -59,13 +59,13 @@ public class UsuarioService {
         }
     }
 
-    public Genero validarGenero(Integer generoId){
+    public Genero validarGenero(Long generoId){
         return generoRepository.findById(generoId).orElseThrow(
                         () -> new RecursoNaoEncontradoException("Genero", generoId)
                 );
     }
 
-    public TipoUsuario validarTipoUsuario(Integer tipoUsuarioId){
+    public TipoUsuario validarTipoUsuario(Long tipoUsuarioId){
         return tipoUsuarioRepository.findById(tipoUsuarioId).orElseThrow(
                         () -> new RecursoNaoEncontradoException("TipoUsuario", tipoUsuarioId)
                 );
@@ -143,7 +143,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioConsultaDto buscarUsuarioId(Integer userId) {
+    public UsuarioConsultaDto buscarUsuarioId(Long userId) {
         UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Usuário", userId)
         );
@@ -168,7 +168,7 @@ public class UsuarioService {
         return buscarUsuarioId(usuario.getId());
     }
 
-    public void excluirUsuario(@PathVariable Integer id){
+    public void excluirUsuario(@PathVariable Long id){
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
@@ -187,7 +187,7 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
-    public UsuarioEntity atualizarUsuario(Integer id, AtualizarUsuarioInput input) {
+    public UsuarioEntity atualizarUsuario(Long id, AtualizarUsuarioInput input) {
         UsuarioEntity usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
@@ -231,7 +231,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Integer idEndereco(UsuarioEntity usuario) {
+    public Long idEndereco(UsuarioEntity usuario) {
         if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
             Residencia residencia = usuario.getResidencias().get(0);
             Endereco endereco = residencia.getEndereco();

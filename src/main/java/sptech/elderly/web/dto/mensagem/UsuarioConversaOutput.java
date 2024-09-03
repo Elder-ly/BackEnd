@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter @AllArgsConstructor @NoArgsConstructor
 public class UsuarioConversaOutput {
-    private Integer id;
+    private Long id;
     private String nome;
     private String fotoPerfil;
     @JsonIgnore

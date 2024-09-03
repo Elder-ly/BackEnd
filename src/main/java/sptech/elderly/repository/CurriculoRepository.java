@@ -8,9 +8,9 @@ import sptech.elderly.entity.Curriculo;
 import sptech.elderly.entity.Especialidade;
 import sptech.elderly.entity.UsuarioEntity;
 
-public interface CurriculoRepository extends JpaRepository<Curriculo, Integer> {
+public interface CurriculoRepository extends JpaRepository<Curriculo, Long> {
     @Transactional
-    void deleteByUsuarioId(Integer usuarioId);
+    void deleteByUsuarioId(Long usuarioId);
 
     Curriculo findByUsuarioAndEspecialidade(UsuarioEntity usuario, Especialidade especialidade);
 

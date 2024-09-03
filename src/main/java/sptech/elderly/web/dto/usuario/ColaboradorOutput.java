@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * DTO for {@link sptech.elderly.entity.UsuarioEntity}
  */
-public record ColaboradorOutput(@NotNull Integer id,
+public record ColaboradorOutput(@NotNull Long id,
                                 @NotBlank String nome,
                                 @NotBlank String email,
                                 @NotBlank String documento,

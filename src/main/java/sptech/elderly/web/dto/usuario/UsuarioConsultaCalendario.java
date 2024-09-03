@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * DTO for {@link sptech.elderly.entity.UsuarioEntity}
  */
-public record UsuarioConsultaCalendario(Integer id,
+public record UsuarioConsultaCalendario(Long id,
                                         String nome,
                                         String email) implements Serializable {
 }

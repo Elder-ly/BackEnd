@@ -6,16 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "user_types")
-public class TipoUsuario {
+@Entity @Table(name = "tb_user_types", schema = "elder_ly")
+@SequenceGenerator(name = "seq_co_user_type", sequenceName = "seq_co_user_type", allocationSize = 1, initialValue = 1, schema = "elder_ly")
+public class TipoUsuario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "co_user_type")
+    private Long id;
 
     @Column(name = "name")
     private String nome;
