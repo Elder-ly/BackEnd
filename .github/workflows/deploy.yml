@@ -25,23 +25,17 @@ jobs:
         chmod +x ./mvnw
         ./mvnw clean package -DskipTests
 
-    - name: Add server to known hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-
-    - name: Prepare SSH key
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-        chmod 600 private_key.pem
-
-    - name: Deploy to Server
+    - name: Copy Jar to EC2 via Jump Host
       env:
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
+        PRIVATE_EC2_IP: ${{ secrets.PRIVATE_EC2_IP }}
+        PUBLIC_EC2_IP: ${{ secrets.PUBLIC_EC2_IP }}
+        JUMP_HOST_USER: ${{ secrets.JUMP_HOST_USER }}
+        PRIVATE_HOST_USER: ${{ secrets.PRIVATE_HOST_USER }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        scp -i private_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER
-        scp -i private_key.pem /home/runner/work/BackEnd/BackEnd/start.sh $SERVER_USER@$SERVER_HOST:/home/$SERVER_USER
+        echo "$SSH_KEY" > ssh_key.pem
+        chmod 600 ssh_key.pem
+        scp -o StrictHostKeyChecking=no -o ProxyJump=${JUMP_HOST_USER}@${PUBLIC_EC2_IP} -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
 
     - name: Kill current Instance
       env:
