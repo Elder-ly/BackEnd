@@ -33,9 +33,10 @@ jobs:
       run: |
         echo "$SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
+        mkdir -p ~/.ssh
         ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
-        scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
-        scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/start.sh ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
+        scp -vvv -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
+        scp -vvv -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/start.sh ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
 
     - name: Transfer file from Public EC2 to Private EC2 and start app
       env:
