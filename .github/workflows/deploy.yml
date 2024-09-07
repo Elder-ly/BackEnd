@@ -33,6 +33,7 @@ jobs:
       run: |
         echo "$SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
+        ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
         scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
         scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/start.sh ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
 
@@ -46,6 +47,7 @@ jobs:
       run: |
         echo "$SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
+        ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
         ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} << 'EOF_JUMP'
           scp -i ssh_key.pem elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
           scp -i ssh_key.pem start.sh ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
