@@ -52,7 +52,7 @@ jobs:
         ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} << 'EOF_JUMP'
           scp -i Elderly.pem elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
           scp -i Elderly.pem start.sh ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
-          ssh -i Elderly.pem ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP} << 'EOF_PRIVATE'
+          ssh -t -i Elderly.pem ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP} << 'EOF_PRIVATE'
             pkill -f 'java -jar' || echo "No running instance found"
             chmod +x start.sh
             ./start.sh
