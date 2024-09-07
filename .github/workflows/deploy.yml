@@ -25,34 +25,27 @@ jobs:
         chmod +x ./mvnw
         ./mvnw clean package -DskipTests
 
-    - name: Upload file to Public EC2
+    - name: Upload and Transfer file between EC2s
       env:
         PUBLIC_EC2_IP: ${{ secrets.PUBLIC_EC2_IP }}
-        JUMP_HOST_USER: ${{ secrets.JUMP_HOST_USER }}
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-      run: |
-        echo "$SSH_KEY" > ssh_key.pem
-        chmod 600 ssh_key.pem
-        mkdir -p ~/.ssh
-        ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
-        scp -vvv -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
-        scp -vvv -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/start.sh ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
-
-    - name: Transfer file from Public EC2 to Private EC2 and start app
-      env:
         PRIVATE_EC2_IP: ${{ secrets.PRIVATE_EC2_IP }}
-        PUBLIC_EC2_IP: ${{ secrets.PUBLIC_EC2_IP }}
         JUMP_HOST_USER: ${{ secrets.JUMP_HOST_USER }}
         PRIVATE_HOST_USER: ${{ secrets.PRIVATE_HOST_USER }}
         SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
         echo "$SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
+        ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} 'mkdir -p ~/.ssh'
         ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
+        scp -i ssh_key.pem ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/.ssh/private_key.pem
+        ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} "chmod 600 ~/.ssh/private_key.pem"
+        scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/target/elder-ly-1.0.jar ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
+        scp -i ssh_key.pem /home/runner/work/BackEnd/BackEnd/start.sh ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/
+        ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} "ssh-keyscan -H ${PRIVATE_EC2_IP} >> ~/.ssh/known_hosts"
         ssh -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} << 'EOF_JUMP'
-          scp -i ssh_key.pem elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
-          scp -i ssh_key.pem start.sh ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
-          ssh -i ssh_key.pem ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP} << 'EOF_PRIVATE'
+          scp -i ~/.ssh/private_key.pem elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
+          scp -i ~/.ssh/private_key.pem start.sh ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
+          ssh -i ~/.ssh/private_key.pem ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP} << 'EOF_PRIVATE'
             pkill -f 'java -jar' || echo "No running instance found"
             chmod +x start.sh
             ./start.sh
