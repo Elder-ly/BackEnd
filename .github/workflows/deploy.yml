@@ -50,9 +50,9 @@ jobs:
         chmod 600 ssh_key.pem
         ssh-keyscan -H $PUBLIC_EC2_IP >> ~/.ssh/known_hosts
         ssh -t -i ssh_key.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP} << 'EOF_JUMP'
-          scp -i Elderly.pem elder-ly-1.0.jar ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
-          scp -i Elderly.pem start.sh ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP}:/home/${PRIVATE_HOST_USER}/
           ssh -t -i Elderly.pem ${PRIVATE_HOST_USER}@${PRIVATE_EC2_IP} << 'EOF_PRIVATE'
+            scp -i Elderly.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/elder-ly-1.0.jar ./
+            scp -i Elderly.pem ${JUMP_HOST_USER}@${PUBLIC_EC2_IP}:/home/${JUMP_HOST_USER}/start.sh ./
             pkill -f 'java -jar' || echo "No running instance found"
             chmod +x start.sh
             ./start.sh
