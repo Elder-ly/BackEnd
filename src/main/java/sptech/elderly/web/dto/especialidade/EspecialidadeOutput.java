@@ -9,6 +9,6 @@ import java.io.Serializable;
 /**
  * DTO for {@link Especialidade}
  */
-public record EspecialidadeOutput(@NotNull Integer id,
+public record EspecialidadeOutput(@NotNull Long id,
                                   @NotBlank String nome) implements Serializable {
 }

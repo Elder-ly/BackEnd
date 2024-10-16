@@ -1,7 +1,7 @@
 package sptech.elderly.web.dto.usuario;
 
 import jakarta.validation.constraints.NotBlank;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.web.dto.endereco.CriarEnderecoInput;
 
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * DTO for {@link UsuarioEntity}
+ * DTO for {@link Usuario}
  */
 public record CriarUsuarioInput(@NotBlank String nome,
                                 @NotBlank String email,
@@ -17,8 +17,8 @@ public record CriarUsuarioInput(@NotBlank String nome,
                                 LocalDate dataNascimento,
                                 String biografia,
                                 String fotoPerfil,
-                                Integer tipoUsuario,
-                                Integer genero,
+                                Long tipoUsuario,
+                                Long genero,
                                 CriarEnderecoInput endereco,
-                                List<Integer> especialidades) implements Serializable {
+                                List<Long> especialidades) implements Serializable {
 }

@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor @AllArgsConstructor
 public class UsuarioMensagemOutput {
-    private Integer id;
+    private Long id;
     private String nome;
 }

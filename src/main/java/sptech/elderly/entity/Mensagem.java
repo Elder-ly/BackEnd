@@ -1,21 +1,24 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode
-@Entity @Table(name = "messages")
-public class Mensagem {
+@Getter @Setter @NoArgsConstructor
+@Entity @Table(name = "tb_messages", schema = "elder_ly")
+@SequenceGenerator(name = "sq_co_message", sequenceName = "seq_co_message", allocationSize = 1, initialValue = 1, schema = "elder_ly")
+public class Mensagem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "sq_co_message", strategy = GenerationType.SEQUENCE)
+    @Column(name = "co_message")
+    private Long id;
 
     @Column(name = "content")
     private String conteudo;
@@ -24,10 +27,10 @@ public class Mensagem {
     private LocalDateTime dataHora;
 
     @ManyToOne @JoinColumn(name = "recipient_id")
-    private UsuarioEntity destinatario;
+    private Usuario destinatario;
 
     @ManyToOne @JoinColumn(name = "sender_id")
-    private UsuarioEntity remetente;
+    private Usuario remetente;
 
     @OneToOne(mappedBy = "mensagem", fetch = FetchType.LAZY)
     private Proposta proposta;

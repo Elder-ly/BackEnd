@@ -14,7 +14,7 @@ public class EnderecoMapper {
         return mapper.map(input, Endereco.class);
     }
 
-    public static Endereco atualizarEndereco(CriarEnderecoInput input, Integer id){
+    public static Endereco atualizarEndereco(CriarEnderecoInput input, Long id){
         Endereco endereco = new Endereco();
 
         endereco.setId(id);

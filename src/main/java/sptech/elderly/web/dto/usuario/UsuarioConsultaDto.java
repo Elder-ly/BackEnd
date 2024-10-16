@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sptech.elderly.entity.Especialidade;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
 
 import java.io.Serializable;
@@ -11,19 +12,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * DTO for {@link sptech.elderly.entity.UsuarioEntity}
+ * DTO for {@link Usuario}
  */
 @Getter @Setter @NoArgsConstructor
 public class UsuarioConsultaDto implements Serializable {
-    private Integer id;
+    private Long id;
     private String nome;
     private String email;
     private String documento;
     private LocalDate dataNascimento;
     private String biografia;
     private String fotoPerfil;
-    private Integer tipoUsuario;
-    private Integer genero;
+    private Long tipoUsuario;
+    private Long genero;
     private EnderecoOutput endereco;
     private List<Especialidade> especialidades;
 }

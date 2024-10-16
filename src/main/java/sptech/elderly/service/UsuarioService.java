@@ -1,7 +1,6 @@
 package sptech.elderly.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -59,19 +58,19 @@ public class UsuarioService {
         }
     }
 
-    public Genero validarGenero(Integer generoId){
+    public Genero validarGenero(Long generoId){
         return generoRepository.findById(generoId).orElseThrow(
                         () -> new RecursoNaoEncontradoException("Genero", generoId)
                 );
     }
 
-    public TipoUsuario validarTipoUsuario(Integer tipoUsuarioId){
+    public TipoUsuario validarTipoUsuario(Long tipoUsuarioId){
         return tipoUsuarioRepository.findById(tipoUsuarioId).orElseThrow(
                         () -> new RecursoNaoEncontradoException("TipoUsuario", tipoUsuarioId)
                 );
     }
 
-    public UsuarioEntity salvarCliente(CriarUsuarioInput input) {
+    public Usuario salvarCliente(CriarUsuarioInput input) {
         if (input.tipoUsuario() != TipoUsuarioEnum.CLIENTE.getCodigo()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
@@ -79,7 +78,7 @@ public class UsuarioService {
         validarEmail(input.email());
         validarDocumento(input.documento());
 
-        UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
+        Usuario novoUsuario = usuarioMapper.mapearEntidade(input);
 
         novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.CLIENTE.getCodigo()));
         novoUsuario.setGenero(validarGenero(input.genero()));
@@ -92,7 +91,7 @@ public class UsuarioService {
         return novoUsuario;
     }
 
-    public UsuarioEntity salvarColaborador(CriarUsuarioInput input) {
+    public Usuario salvarColaborador(CriarUsuarioInput input) {
         if (input.tipoUsuario() != TipoUsuarioEnum.COLABORADOR.getCodigo()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Tipo de usuário inválido.");
         }
@@ -100,7 +99,7 @@ public class UsuarioService {
         validarEmail(input.email());
         validarDocumento(input.documento());
 
-        UsuarioEntity novoUsuario = usuarioMapper.mapearEntidade(input);
+        Usuario novoUsuario = usuarioMapper.mapearEntidade(input);
 
         novoUsuario.setTipoUsuario(validarTipoUsuario(TipoUsuarioEnum.COLABORADOR.getCodigo()));
         novoUsuario.setGenero(validarGenero(input.genero()));
@@ -143,33 +142,33 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioConsultaDto buscarUsuarioId(Integer userId) {
-        UsuarioEntity usuario = usuarioRepository.findById(userId).orElseThrow(
+    public UsuarioConsultaDto buscarUsuarioId(Long userId) {
+        Usuario usuario = usuarioRepository.findById(userId).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Usuário", userId)
         );
 
         return UsuarioMapper.toDto(usuario);
     }
 
-    public List<UsuarioEntity> buscarUsuarios() {
-        List<UsuarioEntity> todosUsuarios = usuarioRepository.findAll();
+    public List<Usuario> buscarUsuarios() {
+        List<Usuario> todosUsuarios = usuarioRepository.findAll();
 
-        Set<UsuarioEntity> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
+        Set<Usuario> usuariosSemDuplicacao = new HashSet<>(todosUsuarios);
 
         return usuariosSemDuplicacao.stream().collect(Collectors.toList());
     }
 
     @Transactional
     public UsuarioConsultaDto buscarPorEmail(String email) {
-        UsuarioEntity usuario = usuarioRepository.findByEmail(email).orElseThrow(
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Email", email)
         );
 
         return buscarUsuarioId(usuario.getId());
     }
 
-    public void excluirUsuario(@PathVariable Integer id){
-        UsuarioEntity usuario = usuarioRepository.findById(id)
+    public void excluirUsuario(@PathVariable Long id){
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
         if (usuario.getResidencias() != null){
@@ -187,8 +186,8 @@ public class UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
-    public UsuarioEntity atualizarUsuario(Integer id, AtualizarUsuarioInput input) {
-        UsuarioEntity usuario = usuarioRepository.findById(id)
+    public Usuario atualizarUsuario(Long id, AtualizarUsuarioInput input) {
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
 
         usuario.setId(id);
@@ -231,7 +230,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Integer idEndereco(UsuarioEntity usuario) {
+    public Long idEndereco(Usuario usuario) {
         if (usuario.getResidencias() != null && !usuario.getResidencias().isEmpty()) {
             Residencia residencia = usuario.getResidencias().get(0);
             Endereco endereco = residencia.getEndereco();
@@ -281,6 +280,7 @@ public class UsuarioService {
                         input.dataHoraInicio(),
                         input.dataHoraFim(),
                         usuarioRepository.findByEspecialidades(input.especialidades())
-                ));
+                )
+        );
     }
 }

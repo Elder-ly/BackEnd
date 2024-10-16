@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * DTO for {@link Endereco}
  */
-public record EnderecoOutput(@NotNull Integer id,
+public record EnderecoOutput(@NotNull Long id,
                              @NotBlank String cep,
                              @NotBlank String logradouro,
                              @NotBlank String bairro,

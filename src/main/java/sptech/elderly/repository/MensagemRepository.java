@@ -6,7 +6,7 @@ import sptech.elderly.entity.Mensagem;
 
 import java.util.List;
 
-public interface MensagemRepository extends JpaRepository<Mensagem, Integer> {
+public interface MensagemRepository extends JpaRepository<Mensagem, Long> {
     @Query("SELECT m FROM Mensagem m WHERE (m.remetente.id = ?1 AND m.destinatario.id = ?2) OR (m.remetente.id = ?2 AND m.destinatario.id = ?1) ORDER BY m.dataHora")
-    List<Mensagem> findByRemetenteAndDestinatario(Integer remetenteId, Integer destinatarioId);
+    List<Mensagem> findByRemetenteAndDestinatario(Long remetenteId, Long destinatarioId);
 }
