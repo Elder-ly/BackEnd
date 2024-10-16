@@ -1,7 +1,6 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor
 @Entity @Table(name = "tb_users", schema = "elder_ly")
 @SequenceGenerator(name = "sq_co_user", sequenceName = "seq_co_user", allocationSize = 1, initialValue = 1, schema = "elder_ly")
-public class UsuarioEntity implements Serializable {
+public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

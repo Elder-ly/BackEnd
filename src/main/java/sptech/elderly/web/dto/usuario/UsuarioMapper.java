@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import sptech.elderly.entity.*;
 import sptech.elderly.web.dto.endereco.EnderecoMapper;
 import sptech.elderly.web.dto.endereco.EnderecoOutput;
-import sptech.elderly.web.dto.especialidade.EspecialidadeOutput;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,17 +15,17 @@ public class UsuarioMapper {
 
     private final ModelMapper mapper;
 
-    public UsuarioEntity mapearEntidade(CriarUsuarioInput input){
-        return mapper.map(input, UsuarioEntity.class);
+    public Usuario mapearEntidade(CriarUsuarioInput input){
+        return mapper.map(input, Usuario.class);
     }
 
-    public static List<UsuarioConsultaDto> toDto(List<UsuarioEntity> usuarios) {
+    public static List<UsuarioConsultaDto> toDto(List<Usuario> usuarios) {
         return usuarios.stream()
                 .map(UsuarioMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public static UsuarioConsultaDto toDto(UsuarioEntity usuario) {
+    public static UsuarioConsultaDto toDto(Usuario usuario) {
         UsuarioConsultaDto dto = new UsuarioConsultaDto();
 
         dto.setId(usuario.getId());
@@ -54,7 +53,7 @@ public class UsuarioMapper {
         return dto;
     }
 
-    public static UsuarioConsultaCalendario toDtoCalendar(UsuarioEntity usuario){
+    public static UsuarioConsultaCalendario toDtoCalendar(Usuario usuario){
         return new UsuarioConsultaCalendario(
                 usuario.getId(),
                 usuario.getNome(),
@@ -73,7 +72,7 @@ public class UsuarioMapper {
                 .collect(Collectors.toList());
     }
 
-    public static List<ColaboradorOutput> ofColaborador(List<UsuarioEntity> users){
+    public static List<ColaboradorOutput> ofColaborador(List<Usuario> users){
         return users.stream()
                 .filter(usuario -> usuario.getTipoUsuario().getId() == 2)
                 .map(usuario -> {

@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Calendario;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.enums.TipoUsuarioEnum;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.CalendarioRepository;
@@ -243,11 +243,11 @@ public class GoogleCalendarService {
         return events;
     }
 
-    public List<UsuarioEntity> filtrarFuncionariosPorDisponibilidade(
+    public List<Usuario> filtrarFuncionariosPorDisponibilidade(
             String accessToken,
             DateTime dataHoraInicio,
             DateTime dataHoraFim,
-            List<UsuarioEntity> usuarios
+            List<Usuario> usuarios
     ) throws GeneralSecurityException, IOException {
         if (usuarios.isEmpty()) throw new ResponseStatusException(HttpStatusCode.valueOf(204));
 
@@ -265,7 +265,7 @@ public class GoogleCalendarService {
             item.setId(calendario.getCalendarId());
             itemList.add(item);
         }
-        for (UsuarioEntity usuario : usuarios) {
+        for (Usuario usuario : usuarios) {
             FreeBusyRequestItem item = new FreeBusyRequestItem();
             item.setId(usuario.getEmail());
             itemList.add(item);
@@ -301,7 +301,7 @@ public class GoogleCalendarService {
     }
 
     public CalendarioOutput salvarCalendario(Long usuarioId, String acessToken) throws GeneralSecurityException, IOException {
-        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario", usuarioId));
 
         if (calendarioRepository.existsByUsuario(usuario)){

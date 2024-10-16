@@ -6,17 +6,17 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import sptech.elderly.entity.Curriculo;
 import sptech.elderly.entity.Especialidade;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.entity.Usuario;
 
 public interface CurriculoRepository extends JpaRepository<Curriculo, Long> {
     @Transactional
     void deleteByUsuarioId(Long usuarioId);
 
-    Curriculo findByUsuarioAndEspecialidade(UsuarioEntity usuario, Especialidade especialidade);
+    Curriculo findByUsuarioAndEspecialidade(Usuario usuario, Especialidade especialidade);
 
-    Curriculo findByUsuario(UsuarioEntity usuario);
+    Curriculo findByUsuario(Usuario usuario);
 
     @Transactional @Modifying
     @Query("UPDATE Curriculo c SET c.usuario = ?1 WHERE c.especialidade = ?2")
-    void atualizarCurriculo(UsuarioEntity usuario, Especialidade especialidade);
+    void atualizarCurriculo(Usuario usuario, Especialidade especialidade);
 }

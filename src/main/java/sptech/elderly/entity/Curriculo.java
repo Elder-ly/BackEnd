@@ -25,7 +25,7 @@ public class Curriculo implements Serializable {
     private Long id;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private UsuarioEntity usuario;
+    private Usuario usuario;
 
     @ManyToOne @JoinColumn(name = "specialtie_id")
     private Especialidade especialidade;

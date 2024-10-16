@@ -28,22 +28,5 @@ public class Calendario implements Serializable {
     private String tipo;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private UsuarioEntity usuario;
+    private Usuario usuario;
 }
-
-/*
-     *  Construtor de cadastro de observações
-     * @param coObservacao
-     * @param coColaborador
-     * @param nomeObservacao
-     * @param dtObservacao
-
-    public ObservacaoModel(Long coObservacao, Long coColaborador, String nomeObservacao, Date dtObservacao){
-        super();
-        this.coObservacao = coObservacao;
-        this.coColaborador = coColaborador;
-        this.noObservacao = nomeObservacao;
-        this.dtObservacao = dtObservacao;
-    }
-}
-*/

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Curriculo;
 import sptech.elderly.entity.Especialidade;
-import sptech.elderly.entity.UsuarioEntity;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.repository.CurriculoRepository;
 import sptech.elderly.repository.EspecialidadeRepository;
 
@@ -23,7 +23,7 @@ public class CurriculoService {
         curriculoRepository.deleteByUsuarioId(idUsuario);
     }
 
-    public List<Curriculo> associarColaboradorEspecialidade(UsuarioEntity usuario, List<Long> idEspecialidades) {
+    public List<Curriculo> associarColaboradorEspecialidade(Usuario usuario, List<Long> idEspecialidades) {
         excluirUsuario(usuario.getId());
 
         List<Curriculo> curriculosAtualizados = idEspecialidades.stream()

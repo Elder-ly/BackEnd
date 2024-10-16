@@ -1,7 +1,6 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,7 @@ public class Residencia implements Serializable {
     private Long id;
 
     @ManyToOne @JoinColumn(name = "user_id")
-    private UsuarioEntity usuario;
+    private Usuario usuario;
 
     @ManyToOne @JoinColumn(name = "adresse_id")
     private Endereco endereco;

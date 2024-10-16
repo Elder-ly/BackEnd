@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Mensagem;
-import sptech.elderly.entity.UsuarioEntity;
-import sptech.elderly.enums.TipoUsuarioEnum;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
 import sptech.elderly.repository.MensagemRepository;
 import sptech.elderly.repository.UsuarioRepository;
@@ -33,9 +32,9 @@ public class MensagemService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetende e Destinatário não podem ser iguais");
         }
 
-        UsuarioEntity remetente = usuarioRepository.findById(input.remetenteId())
+        Usuario remetente = usuarioRepository.findById(input.remetenteId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", input.remetenteId()));
-        UsuarioEntity destinatario = usuarioRepository.findById(input.destinatarioId())
+        Usuario destinatario = usuarioRepository.findById(input.destinatarioId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", input.destinatarioId()));
 
         Mensagem novaMensagem = new Mensagem();

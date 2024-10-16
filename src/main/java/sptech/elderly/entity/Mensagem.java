@@ -1,7 +1,6 @@
 package sptech.elderly.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,10 +27,10 @@ public class Mensagem implements Serializable {
     private LocalDateTime dataHora;
 
     @ManyToOne @JoinColumn(name = "recipient_id")
-    private UsuarioEntity destinatario;
+    private Usuario destinatario;
 
     @ManyToOne @JoinColumn(name = "sender_id")
-    private UsuarioEntity remetente;
+    private Usuario remetente;
 
     @OneToOne(mappedBy = "mensagem", fetch = FetchType.LAZY)
     private Proposta proposta;
