@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Getter @Setter @NoArgsConstructor
-@Entity @Table(name = "tb_residences")
+@Entity @Table(name = "tb_residences", schema = "elder_ly")
 @SequenceGenerator(name = "sq_co_residence", sequenceName = "seq_co_residence", allocationSize = 1, initialValue = 1, schema = "elder_ly")
 public class Residencia implements Serializable {
 
