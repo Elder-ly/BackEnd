@@ -12,9 +12,11 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long> {
 
     List<Proposta> findByDataHoraInicioBetween(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim);
 
-    @Query("SELECT MONTH(p.dataHoraInicio) as mes, SUM(p.preco) as total " +
+    @Query("SELECT MONTH(p.dataHoraInicio), SUM(p.preco) " +
             "FROM Proposta p " +
             "WHERE YEAR(p.dataHoraInicio) = :ano " +
+            "AND p.aceita = true " +
             "GROUP BY MONTH(p.dataHoraInicio)")
     List<Object[]> calcularFaturamentoPorMes(@Param("ano") int ano);
+
 }

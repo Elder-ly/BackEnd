@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sptech.elderly.entity.Calendario;
 import sptech.elderly.service.GoogleCalendarService;
 import sptech.elderly.web.dto.google.CalendarioOutput;
 import sptech.elderly.web.dto.google.CriarEventoInput;

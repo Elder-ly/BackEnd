@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
@@ -127,12 +128,12 @@ public class PropostaService {
         List<Object[]> resultados = repository.calcularFaturamentoPorMes(ano);
 
         Map<String, BigDecimal> faturamentoPorMes = new HashMap<>();
-        String[] meses = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 
         for (Object[] resultado : resultados) {
-            Integer mes = (Integer) resultado[0];
+            Integer mesNumero = (Integer) resultado[0];
             BigDecimal total = (BigDecimal) resultado[1];
-            faturamentoPorMes.put(meses[mes - 1], total);  // Meses em inglês
+            String mesNome = Month.of(mesNumero).name().toLowerCase(); // Obtem o nome do mês
+            faturamentoPorMes.put(mesNome, total);
         }
 
         return faturamentoPorMes;
