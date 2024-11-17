@@ -19,4 +19,8 @@ public class ResidenciaService {
 
         return residenciaRepository.save(residencia);
     }
+
+    public Long buscarEnderecoByUser(Long codigoUser) {
+        return residenciaRepository.findEnderecoIdByUsuarioId(codigoUser);
+    }
 }
