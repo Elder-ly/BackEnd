@@ -47,7 +47,7 @@ public class EspecialidadeController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<EspecialidadeOutput> buscarEspecialidade(@PathVariable Integer id){
+    public ResponseEntity<EspecialidadeOutput> buscarEspecialidade(@PathVariable Long id){
         return ok(especialidadeService.buscarEspecialidade(id));
     }
 
@@ -59,7 +59,7 @@ public class EspecialidadeController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Especialidade> atualizarEspecialidade(@PathVariable Integer id, @RequestBody @Valid AtualizarEspecialidade input){
+    public ResponseEntity<Especialidade> atualizarEspecialidade(@PathVariable Long id, @RequestBody @Valid AtualizarEspecialidade input){
         Especialidade especialidade = especialidadeService.atualizarEspecialidade(id, input);
         return status(200).body(especialidade);
     }
@@ -71,7 +71,7 @@ public class EspecialidadeController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirEspecialidade(@PathVariable Integer id){
+    public ResponseEntity<Void> excluirEspecialidade(@PathVariable Long id){
         especialidadeService.deletarEspecialidade(id);
         return status(204).build();
     }

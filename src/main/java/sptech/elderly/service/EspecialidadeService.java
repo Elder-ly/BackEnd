@@ -31,7 +31,7 @@ public class EspecialidadeService {
     }
 
     @Transactional
-    public Especialidade atualizarEspecialidade(Integer id, AtualizarEspecialidade input) {
+    public Especialidade atualizarEspecialidade(Long id, AtualizarEspecialidade input) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
         especialidade.setId(id);
@@ -39,14 +39,14 @@ public class EspecialidadeService {
         return especialidadeRepository.save(especialidade);
     }
 
-    public EspecialidadeOutput buscarEspecialidade(Integer id) {
+    public EspecialidadeOutput buscarEspecialidade(Long id) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
 
         return especialidadeMapper.toDto(especialidade);
     }
 
-    public void deletarEspecialidade(Integer id) {
+    public void deletarEspecialidade(Long id) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
         especialidadeRepository.delete(especialidade);

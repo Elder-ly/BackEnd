@@ -8,10 +8,10 @@ public enum TipoUsuarioEnum {
     COLABORADOR(2, "Colaborador"),
     CLIENTE(3, "Cliente");
 
-    private final int codigo;
+    private final long codigo;
     private final String descricao;
 
-    TipoUsuarioEnum(int codigo, String descricao) {
+    TipoUsuarioEnum(long codigo, String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }

@@ -34,10 +34,7 @@ public class CalendarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @PostMapping("/eventos")
-    public EventoConsultaDTO inserirEvento(
-            @RequestHeader String accessToken,
-            @RequestBody CriarEventoInput eventoInput
-    ) throws GeneralSecurityException, IOException {
+    public EventoConsultaDTO inserirEvento(@RequestHeader String accessToken, @RequestBody CriarEventoInput eventoInput) throws GeneralSecurityException, IOException {
         return service.inserirEvento(
                 accessToken,
                 eventoInput.nomeProposta(),
@@ -70,7 +67,7 @@ public class CalendarioController {
     @PostMapping
     public ResponseEntity<CalendarioOutput> criarCalendario(
             @RequestHeader String accessToken,
-            @RequestParam Integer usuarioId
+            @RequestParam Long usuarioId
     ) throws GeneralSecurityException, IOException {
         return status(201).body(service.salvarCalendario(usuarioId, accessToken));
     }

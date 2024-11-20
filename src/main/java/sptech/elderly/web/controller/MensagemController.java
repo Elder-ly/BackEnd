@@ -25,12 +25,12 @@ public class MensagemController {
     }
 
     @GetMapping("/{remetenteId}/{destinatarioId}")
-    private ResponseEntity<List<MensagemComPropostaOutput>> getMensagensComUsuario(@PathVariable Integer remetenteId, @PathVariable Integer destinatarioId) {
+    private ResponseEntity<List<MensagemComPropostaOutput>> getMensagensComUsuario(@PathVariable Long remetenteId, @PathVariable Long destinatarioId) {
         return ResponseEntity.of(Optional.ofNullable(mensagemService.buscarMensagensEntreUsuarios(remetenteId, destinatarioId)));
     }
 
     @GetMapping("/conversas/{userId}")
-    public ResponseEntity<List<UsuarioConversaOutput>> getConversas(@PathVariable Integer userId) {
+    public ResponseEntity<List<UsuarioConversaOutput>> getConversas(@PathVariable Long userId) {
         return ResponseEntity.status(200).body(mensagemService.buscarConversas(userId));
     }
 }

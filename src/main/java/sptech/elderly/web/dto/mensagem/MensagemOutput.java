@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter @NoArgsConstructor @AllArgsConstructor
 public class MensagemOutput {
-    private Integer id;
+    private Long id;
     private String conteudo;
     private LocalDateTime dataHora;
     private UsuarioMensagemOutput remetente;

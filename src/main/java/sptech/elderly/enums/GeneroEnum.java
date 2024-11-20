@@ -9,10 +9,10 @@ public enum GeneroEnum {
     FEMININO(2, "Feminino"),
     PREFIRO_NAO_INFORMAR(3, "Prefiro não informar");
 
-    private final int codigo;
+    private final long codigo;
     private final String descricao;
 
-    GeneroEnum(int codigo, String descricao){
+    GeneroEnum(long codigo, String descricao){
         this.codigo = codigo;
         this.descricao = descricao;
     }
