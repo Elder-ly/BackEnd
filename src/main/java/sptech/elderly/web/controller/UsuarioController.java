@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioService service;
 
     @Operation(summary = "Cria um usuário do tipo cliente.")
     @ApiResponses(value = {
@@ -36,7 +36,7 @@ public class UsuarioController {
     })
     @PostMapping("/cliente")
     public ResponseEntity<UsuarioConsultaDto> criarCliente(@RequestBody @Valid CriarUsuarioInput novoCliente){
-        Usuario usuario = usuarioService.salvarCliente(novoCliente);
+        Usuario usuario = service.salvarCliente(novoCliente);
         return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
@@ -51,7 +51,7 @@ public class UsuarioController {
     })
     @PostMapping("/colaborador")
     public ResponseEntity<UsuarioConsultaDto> criarFuncionario(@RequestBody @Valid CriarUsuarioInput novoUser){
-        Usuario usuario = usuarioService.salvarColaborador(novoUser);
+        Usuario usuario = service.salvarColaborador(novoUser);
         return status(201).body(UsuarioMapper.toDto(usuario));
     }
 
@@ -63,7 +63,7 @@ public class UsuarioController {
     })
     @GetMapping("/clientes")
     public ResponseEntity<List<UsuarioSimplesCliente>> buscarClientes() {
-        List<Usuario> usuarios = usuarioService.buscarUsuarios();
+        List<Usuario> usuarios = service.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
@@ -78,7 +78,7 @@ public class UsuarioController {
     })
     @GetMapping("/colaboradores")
     public ResponseEntity<List<ColaboradorOutput>> buscarColaboradores() {
-        List<Usuario> usuarios = usuarioService.buscarUsuarios();
+        List<Usuario> usuarios = service.buscarUsuarios();
 
         return usuarios.isEmpty()
                 ? status(204).build()
@@ -93,7 +93,7 @@ public class UsuarioController {
     })
     @GetMapping
     public ResponseEntity<List<UsuarioConsultaDto>> buscarUsuarios(){
-        List<Usuario> usuarios = usuarioService.buscarUsuarios();
+        List<Usuario> usuarios = service.buscarUsuarios();
 
         List<UsuarioConsultaDto> usuarioConsultaDto = UsuarioMapper.toDto(usuarios);
 
@@ -109,8 +109,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/{codigo}")
-    public ResponseEntity<UsuarioConsultaDto> buscarIdUsuario(@PathVariable Long codigo){
-        UsuarioConsultaDto usuario = usuarioService.buscarUsuarioId(codigo);
+    public ResponseEntity<UsuarioConsultaDto> buscarUsuarioPorId(@PathVariable Long codigo){
+        UsuarioConsultaDto usuario = service.buscarUsuarioId(codigo);
         return status(200).body(usuario);
     }
 
@@ -121,8 +121,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "503", description = "Serviço indisponível.")
     })
     @GetMapping("/email/{email}")
-    public ResponseEntity<UsuarioConsultaDto> buscarPorEmail(@PathVariable String email){
-        UsuarioConsultaDto user = usuarioService.buscarPorEmail(email);
+    public ResponseEntity<UsuarioConsultaDto> buscarUsuarioPorEmail(@PathVariable String email){
+        UsuarioConsultaDto user = service.buscarPorEmail(email);
         return status(200).body(user);
     }
 
@@ -135,7 +135,7 @@ public class UsuarioController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(@PathVariable Long id, @RequestBody AtualizarUsuarioInput input){
-        Usuario usuario = usuarioService.atualizarUsuario(id, input);
+        Usuario usuario = service.atualizarUsuario(id, input);
         return status(200).body(UsuarioMapper.toDto(usuario));
     }
 
@@ -147,7 +147,7 @@ public class UsuarioController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirUsuario(@PathVariable Long id){
-        usuarioService.excluirUsuario(id);
+        service.excluirUsuario(id);
         return status(204).build();
     }
 
@@ -159,12 +159,12 @@ public class UsuarioController {
     @GetMapping(value = "colaboradores/csv", produces = "text/csv")
     public ResponseEntity<String> baixarCsvCuidadores(HttpServletResponse response) {
         response.setHeader("Content-Disposition", "inline; filename=cuidadores_elderly.csv");
-        return ResponseEntity.status(200).body(usuarioService.gerarStringCsv());
+        return ResponseEntity.status(200).body(service.gerarStringCsv());
     }
 
     @PostMapping("/colaboradores-disponiveis")
     public ResponseEntity<List<UsuarioConsultaDto>> buscarCuidadoresPorEspecialidadeEDisponibilidade(@RequestHeader String accessToken,
                                                                                                      @RequestBody @Valid BuscarColaboradorInput input) throws GeneralSecurityException, IOException {
-        return status(200).body(usuarioService.buscarColaboradoresPorEspecialidadeEDispoibilidade(accessToken, input));
+        return status(200).body(service.buscarColaboradoresPorEspecialidadeEDispoibilidade(accessToken, input));
     }
 }
