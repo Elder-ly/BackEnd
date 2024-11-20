@@ -15,6 +15,7 @@ public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
     private final EnderecoMapper enderecoMapper;
+    private final ResidenciaService residenciaService;
 
     public Endereco salvar(CriarEnderecoInput novoEndereco) {
         return this.enderecoRepository.save(enderecoMapper.mapearEndereco(novoEndereco));
@@ -42,5 +43,51 @@ public class EnderecoService {
         }
 
         enderecoRepository.delete(endereco);
+    }
+
+    public Endereco atualizarEnderecoMobile(Long codigoUser, CriarEnderecoInput input) {
+        Long enderecoId = residenciaService.buscarEnderecoByUser(codigoUser);
+
+        Endereco endereco = enderecoRepository.findById(enderecoId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Endereço", enderecoId));
+        endereco.setId(enderecoId);
+
+        if (input.cep() != null){
+            endereco.setCep(input.cep());
+        }
+
+        if (input.logradouro() != null){
+            endereco.setLogradouro(input.logradouro());
+        }
+
+        if (input.complemento() != null){
+            endereco.setComplemento(input.complemento());
+        }
+
+        if (input.bairro() != null){
+            endereco.setBairro(input.bairro());
+        }
+
+        if (input.numero() != null){
+            endereco.setNumero(input.numero());
+        }
+
+        if (input.cidade() != null){
+            endereco.setCidade(input.cidade());
+        }
+
+        if (input.uf() != null){
+            endereco.setUf(input.uf());
+        }
+
+        enderecoRepository.save(endereco);
+        return endereco;
+    }
+
+    public Endereco buscarEndereco(Long codigoUser) {
+        Long enderecoId = residenciaService.buscarEnderecoByUser(codigoUser);
+
+        return enderecoRepository.findById(enderecoId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Endereço", enderecoId));
     }
 }

@@ -50,28 +50,32 @@ public class PropostaController {
     }
 
     @GetMapping("/faturamento/{ano}")
-    public ResponseEntity<Map<String, BigDecimal>> obterFaturamentoPorAno(@PathVariable int ano) {
+    public ResponseEntity<Map<String, BigDecimal>> getFaturamentoPorAno(@PathVariable Integer ano) {
         Map<String, BigDecimal> faturamento = service.getFaturamentoAnual(ano);
         return ResponseEntity.ok(faturamento);
     }
 
     @GetMapping("/aceite/{ano}")
-    public ResponseEntity<List<?>> getAceitesPropostas(@PathVariable Integer ano){
-        return null;
+    public ResponseEntity<Map<String, List<Integer>>> getAceitesPropostas(@PathVariable Integer ano) {
+        Map<String, List<Integer>> response = service.getPropostasAceitasERecusadas(ano);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/faturamento-absoluto/{mes}")
-    public ResponseEntity<?> getFaturamentoAbsolutoMensal(@PathVariable String mes){
-        return null;
+    @GetMapping("/faturamento-absoluto/{mes}/{ano}")
+    public ResponseEntity<?> getFaturamentoAbsolutoMensal(@PathVariable String mes, @PathVariable String ano) {
+        BigDecimal faturamento = service.getFaturamentoAbsolutoMensal(mes, ano);
+        return ResponseEntity.ok(Map.of("faturamento", faturamento.toString()));
     }
 
-    @GetMapping("/lucro/{mes}")
-    public ResponseEntity<?> getLucroMensal(@PathVariable String mes){
+    /*
+    @GetMapping("/lucro/{mes}/{ano}")
+    public ResponseEntity<?> getLucroMensal(@PathVariable String mes, @PathVariable String ano){
         return null;
-    }
+    }*/
 
-    @GetMapping("/faturamento-diario/{mes}")
-    public ResponseEntity<?> getFaturamentoDiarioMensal(@PathVariable String mes){
-        return null;
+    @GetMapping("/faturamento-diario/{mes}/{ano}")
+    public ResponseEntity<Map<String, BigDecimal>> getFaturamentoDiarioMensal(@PathVariable String mes, @PathVariable String ano) {
+        Map<String, BigDecimal> faturamento = service.getFaturamentoDiarioMensal(mes, ano);
+        return ResponseEntity.ok(faturamento);
     }
 }
