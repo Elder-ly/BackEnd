@@ -50,5 +50,4 @@ public class Usuario implements Serializable {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Curriculo> curriculos;
-
 }
