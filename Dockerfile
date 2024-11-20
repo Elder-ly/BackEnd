@@ -11,10 +11,8 @@ RUN mvn clean package -DskipTests
 # Run
 FROM amazoncorretto:17.0.12-al2023-headless
 
-VOLUME /tmp
+WORKDIR /app
 
-EXPOSE 8080
+COPY --from=build /build/target/*.jar /app/app.jar
 
-COPY --from=build /app/target/elder-ly-1.0.jar app.jar
-
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+CMD ["java", "-jar", "app.jar"]
