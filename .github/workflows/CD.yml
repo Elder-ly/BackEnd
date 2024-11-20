@@ -11,14 +11,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+      - name: get-version
+        id: pom-version
+        uses: PERES-Richard/maven-get-version-action@v3.0.0
 
-      - name: Extract version from pom.xml
-        id: extract_version
-        run: |
-          version=$(xmllint --xpath "string(//project/version)" pom.xml)
-          echo "app_version=${version}" >> $GITHUB_ENV
+      - name: Insert version into environment
+        run: echo "APP_VERSION=${{ steps.pom-version.outputs.version }}" >> $GITHUB_ENV
 
   docker:
     runs-on: ubuntu-latest
@@ -42,7 +40,7 @@ jobs:
           push: true
           tags: |
             danilopedrazzi/elderly-api:latest
-            danilopedrazzi/elderly-api:${{ env.app_version }}
+            danilopedrazzi/elderly-api:${{ env.APP_VERSION }}
 
   create-release:
     runs-on: ubuntu-latest
@@ -60,8 +58,8 @@ jobs:
       - name: Create GitHub Release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.app_version }}
-          release_name: Release ${{ env.app_version }}
+          tag_name: ${{ env.APP_VERSION }}
+          release_name: Release ${{ env.APP_VERSION }}
           body: ${{ steps.get_commit_message.outputs.commit_message }}
           draft: false
           prerelease: false
