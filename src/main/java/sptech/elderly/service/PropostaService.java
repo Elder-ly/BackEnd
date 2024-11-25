@@ -6,12 +6,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sptech.elderly.entity.Lucro;
 import sptech.elderly.entity.Mensagem;
 import sptech.elderly.entity.Proposta;
 import sptech.elderly.entity.Usuario;
 import sptech.elderly.enums.TipoUsuarioEnum;
 import sptech.elderly.exceptions.ListEmptyException;
 import sptech.elderly.exceptions.RecursoNaoEncontradoException;
+import sptech.elderly.repository.LucroRepository;
 import sptech.elderly.repository.MensagemRepository;
 import sptech.elderly.repository.PropostaRepository;
 import sptech.elderly.repository.UsuarioRepository;
@@ -39,6 +41,7 @@ public class PropostaService {
     private final GoogleCalendarService googleCalendarService;
     private final ModelMapper mapper;
     private final PropostaMapper propostaMapper;
+    private final LucroRepository lucroRepository;
 
     public MensagemComPropostaOutput enviarProposta(MensagemComPropostaInput input) {
         if (Objects.equals(input.destinatarioId(), input.remetenteId())) {
@@ -218,5 +221,12 @@ public class PropostaService {
         }
 
         return faturamentoPorDia;
+    }
+
+    public BigDecimal calcularLucroMensal(String mes, String ano) {
+        String mesAno = mes + "/" + ano;
+        BigDecimal somaPropostas = repository.getSomaPropostasAceitas(mesAno);
+        BigDecimal lucroEsperado = lucroRepository.getLucroEsperado();
+        return somaPropostas.subtract(lucroEsperado);
     }
 }
