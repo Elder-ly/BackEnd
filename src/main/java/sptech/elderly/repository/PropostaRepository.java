@@ -44,4 +44,10 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long> {
             "GROUP BY EXTRACT(DAY FROM p.dataHoraInicio) " +
             "ORDER BY dia")
     List<Object[]> calcularFaturamentoDiario(@Param("mes") Integer mes, @Param("ano") Integer ano);
+
+    @Query("SELECT COALESCE(SUM(p.preco), 0) " +
+            "FROM Proposta p " +
+            "WHERE FUNCTION('TO_CHAR', p.dataHoraInicio, 'MM/YYYY') = :mesAno " +
+            "AND p.aceita = true")
+    BigDecimal getSomaPropostasAceitas(@Param("mesAno") String mesAno);
 }

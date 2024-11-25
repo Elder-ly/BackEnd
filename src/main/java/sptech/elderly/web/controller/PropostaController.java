@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,11 +68,15 @@ public class PropostaController {
         return ResponseEntity.ok(Map.of("faturamento", faturamento.toString()));
     }
 
-    /*
     @GetMapping("/lucro/{mes}/{ano}")
-    public ResponseEntity<?> getLucroMensal(@PathVariable String mes, @PathVariable String ano){
-        return null;
-    }*/
+    public ResponseEntity<Map<String, String>> getLucroMensal(@PathVariable String mes, @PathVariable String ano) {
+        BigDecimal lucro = service.calcularLucroMensal(mes, ano);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("lucro", lucro.toString());
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/faturamento-diario/{mes}/{ano}")
     public ResponseEntity<Map<String, BigDecimal>> getFaturamentoDiarioMensal(@PathVariable String mes, @PathVariable String ano) {
