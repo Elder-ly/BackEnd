@@ -41,8 +41,7 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long> {
             "WHERE p.aceita = TRUE " +
             "AND EXTRACT(MONTH FROM p.dataHoraInicio) = :mes " +
             "AND EXTRACT(YEAR FROM p.dataHoraInicio) = :ano " +
-            "GROUP BY EXTRACT(DAY FROM p.dataHoraInicio) " +
-            "ORDER BY dia")
+            "GROUP BY EXTRACT(DAY FROM p.dataHoraInicio) ")
     List<Object[]> calcularFaturamentoDiario(@Param("mes") Integer mes, @Param("ano") Integer ano);
 
     @Query("SELECT COALESCE(SUM(p.preco), 0) " +
