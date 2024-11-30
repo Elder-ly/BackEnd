@@ -45,7 +45,7 @@ public class PropostaService {
 
     public MensagemComPropostaOutput enviarProposta(MensagemComPropostaInput input) {
         if (Objects.equals(input.destinatarioId(), input.remetenteId())) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetende e Destinatário não podem ser iguais");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Remetente e Destinatário não podem ser iguais");
         }
 
         Usuario remetente = usuarioRepository.findById(input.remetenteId())

@@ -49,6 +49,8 @@ public class EspecialidadeService {
     public void deletarEspecialidade(Long id) {
         Especialidade especialidade = especialidadeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Especialidade não encontrada"));
+
+        curriculoService.excluirEspecialidade(id);
         especialidadeRepository.delete(especialidade);
     }
 

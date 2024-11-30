@@ -6,16 +6,16 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sptech.elderly.entity.Lucro;
+import sptech.elderly.entity.Usuario;
 import sptech.elderly.repository.LucroRepository;
 import sptech.elderly.web.dto.lucro.AtualizarLucroInput;
 import sptech.elderly.web.dto.lucro.CriarLucroInput;
 import sptech.elderly.web.dto.lucro.LucroMapper;
-import sptech.elderly.web.dto.lucro.LucroOutput;
-import sptech.elderly.web.dto.usuario.UsuarioConsultaDto;
 
 import java.util.List;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class LucroService {
 
     private final LucroRepository lucroRepository;
@@ -25,18 +25,19 @@ public class LucroService {
     private final LucroMapper lucroMapper;
 
     public Lucro salvarLucro(CriarLucroInput input) {
-        Lucro lucro = new Lucro();
-        UsuarioConsultaDto usuario = usuarioService.buscarUsuarioId(input.usuario());
+        Usuario usuario = usuarioService.buscarUsuario(input.usuario());
+        Lucro lucro = lucroMapper.mapearEntidade(input);
 
-        if (usuario != null){
-            lucro = lucroRepository.save(lucroMapper.mapearEntidade(input));
+        if (buscarLucroPorUsuario(usuario) ) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Métrica do usuário ja cadastrado!");
         }
 
-        return lucro;
+        lucro.setUsuario(usuario);
+        return lucroRepository.save(lucro);
     }
 
     @Transactional
-    public Lucro atualizarLucro(Long id, AtualizarLucroInput input){
+    public Lucro atualizarLucro(Long id, AtualizarLucroInput input) {
         Lucro lucro = buscarLucro(id);
 
         lucro.setId(id);
@@ -47,6 +48,10 @@ public class LucroService {
     public Lucro buscarLucro(Long codigo) {
         return lucroRepository.findById(codigo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Lucro não encontrado"));
+    }
+
+    public Boolean buscarLucroPorUsuario(Usuario usuario) {
+        return lucroRepository.existsByUsuario(usuario);
     }
 
     public List<Lucro> findLucros() {

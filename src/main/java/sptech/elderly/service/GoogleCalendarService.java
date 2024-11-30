@@ -9,6 +9,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -323,5 +324,10 @@ public class GoogleCalendarService {
                 calendario.getCalendarId(),
                 UsuarioMapper.toDtoCalendar(calendario.getUsuario())
                 );
+    }
+
+    @Transactional
+    public void excluirCalendario(Usuario usuario) {
+        calendarioRepository.deleteByUsuarioId(usuario.getId());
     }
 }

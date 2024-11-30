@@ -23,10 +23,14 @@ public class CurriculoService {
         curriculoRepository.deleteByUsuarioId(idUsuario);
     }
 
+    public void excluirEspecialidade(Long idEspecialidade) {
+        curriculoRepository.deleteByEspecialidadeId(idEspecialidade);
+    }
+
     public List<Curriculo> associarColaboradorEspecialidade(Usuario usuario, List<Long> idEspecialidades) {
         excluirUsuario(usuario.getId());
 
-        List<Curriculo> curriculosAtualizados = idEspecialidades.stream()
+        return idEspecialidades.stream()
                 .map(idEspecialidade -> {
 
                     Especialidade especialidade = especialidadeRepository.findById(idEspecialidade)
@@ -44,7 +48,5 @@ public class CurriculoService {
                     return curriculoExistente;
                 })
                 .collect(Collectors.toList());
-
-        return curriculosAtualizados;
     }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface CalendarioRepository extends JpaRepository<Calendario, Long> {
     List<Calendario> findByUsuarioIn(List<Usuario> usuarios);
-
     boolean existsByUsuario(Usuario usuario);
+    void deleteByUsuarioId(Long userId);
 }
