@@ -19,7 +19,9 @@ import sptech.elderly.web.dto.usuario.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
@@ -150,6 +152,12 @@ public class UsuarioService {
         return UsuarioMapper.toDto(usuario);
     }
 
+    public Usuario buscarUsuario(Long userId) {
+        return usuarioRepository.findById(userId).orElseThrow(
+                () -> new RecursoNaoEncontradoException("Usuário", userId)
+        );
+    }
+
     public List<Usuario> buscarUsuarios() {
         List<Usuario> todosUsuarios = usuarioRepository.findAll();
 
@@ -167,6 +175,7 @@ public class UsuarioService {
         return buscarUsuarioId(usuario.getId());
     }
 
+    @Transactional
     public void excluirUsuario(@PathVariable Long id){
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", id));
@@ -182,8 +191,9 @@ public class UsuarioService {
             curriculoService.excluirUsuario(usuario.getId());
         }
 
+        googleCalendarService.excluirCalendario(usuario);
         enderecoService.excluirEndereco(idEndereco(usuario));
-        usuarioRepository.delete(usuario);
+        usuarioRepository.deleteById(usuario.getId());
     }
 
     public Usuario atualizarUsuario(Long id, AtualizarUsuarioInput input) {
