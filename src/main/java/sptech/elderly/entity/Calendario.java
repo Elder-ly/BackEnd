@@ -29,6 +29,6 @@ public class Calendario implements Serializable {
     @Column(name = "type")
     private String tipo;
 
-    @ManyToOne @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "user_id")
     private Usuario usuario;
 }

@@ -326,7 +326,6 @@ public class GoogleCalendarService {
                 );
     }
 
-    @Transactional
     public void excluirCalendario(Usuario usuario) {
         calendarioRepository.deleteByUsuarioId(usuario.getId());
     }
